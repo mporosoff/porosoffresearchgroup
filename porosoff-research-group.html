@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porosoff Research Group — University of Rochester</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628; --deep: #12203a; --mid: #1e3460;
+    --accent: #c8a951; --gold: #e8c56d; --cream: #fdf8f0;
+    --text: #1a2535; --muted: #5a6a80; --white: #ffffff;
+    --border: rgba(200,169,81,0.25);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(10,22,40,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem; height: 64px;
+  }
+  .nav-brand { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1rem; text-decoration: none; }
+  .nav-links { display: flex; list-style: none; }
+  .nav-links a {
+    display: block; padding: 0 1rem; line-height: 64px;
+    color: rgba(255,255,255,0.65); text-decoration: none;
+    font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); background: rgba(200,169,81,0.05); }
+
+  .page { display: none; padding-top: 64px; min-height: calc(100vh - 64px); }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    min-height: calc(100vh - 64px); background: var(--navy);
+    display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(200,169,81,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,169,81,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 70% 50%, rgba(200,169,81,0.07) 0%, transparent 60%); }
+  .hero-left { display:flex; flex-direction:column; justify-content:center; padding:6rem 4rem 6rem 6rem; position:relative; z-index:1; }
+  .hero-eyebrow { font-family:'DM Mono',monospace; color:var(--accent); font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:1.5rem; animation:fadeUp 0.8s 0.2s both; }
+  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,4.5vw,4.5rem); font-weight:900; color:var(--white); line-height:1.05; margin-bottom:1.2rem; animation:fadeUp 0.8s 0.35s both; }
+  .hero-title em { font-style:italic; color:var(--gold); display:block; }
+  .hero-desc { color:rgba(255,255,255,0.58); font-size:1rem; line-height:1.8; max-width:480px; margin-bottom:2.5rem; font-weight:300; animation:fadeUp 0.8s 0.5s both; }
+  .hero-stats { display:flex; gap:2.5rem; animation:fadeUp 0.8s 0.65s both; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; color:var(--gold); line-height:1; }
+  .stat-label { font-size:0.68rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; margin-top:0.2rem; }
+  .hero-right { position:relative; z-index:1; display:flex; align-items:center; justify-content:center; padding:4rem; }
+  .mol-wrap { width:300px; height:300px; position:relative; }
+  .mol-ring { position:absolute; border-radius:50%; border:1px solid var(--border); animation:spin linear infinite; }
+  .mol-ring:nth-child(1) { inset:0; animation-duration:30s; }
+  .mol-ring:nth-child(2) { inset:13%; animation-duration:20s; animation-direction:reverse; border-color:rgba(200,169,81,0.18); }
+  .mol-ring:nth-child(3) { inset:26%; animation-duration:14s; border-color:rgba(200,169,81,0.35); }
+  .mol-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:84px; height:84px; border-radius:50%; background:radial-gradient(circle,var(--accent),var(--mid)); box-shadow:0 0 40px rgba(200,169,81,0.35); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:0.72rem; color:var(--gold); text-align:center; line-height:1.4; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  .announce-bar { background:linear-gradient(90deg,var(--navy),var(--mid)); color:var(--white); padding:0.8rem 3rem; display:flex; align-items:center; gap:0.75rem; font-size:0.83rem; border-bottom:2px solid var(--accent); }
+  .announce-bar strong { color:var(--gold); }
+  .announce-bar a { color:var(--gold); margin-left:0.5rem; }
+
+  .container { max-width:1160px; margin:0 auto; padding:0 3rem; }
+  section { padding:5rem 0; }
+  .sec-label { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem; }
+  .sec-title { font-family:'Playfair Display',serif; font-size:clamp(1.9rem,3.5vw,2.6rem); font-weight:700; color:var(--navy); line-height:1.2; margin-bottom:1.25rem; }
+  .sec-title em { font-style:italic; color:var(--accent); }
+  .sec-title-w { color:var(--white); }
+  .sec-label-w { color:rgba(200,169,81,0.7); }
+
+  /* RESEARCH GRID */
+  .r-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; background:#ddd; border:1.5px solid #ddd; margin-top:2.5rem; }
+  .r-card { background:var(--white); padding:2.25rem 1.75rem; position:relative; overflow:hidden; transition:transform 0.25s; }
+  .r-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+  .r-card:hover::before { transform:scaleX(1); }
+  .r-card:hover { transform:translateY(-2px); }
+  .r-num { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; color:rgba(200,169,81,0.12); line-height:1; margin-bottom:0.4rem; }
+  .r-card h3 { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--navy); margin-bottom:0.65rem; line-height:1.3; }
+  .r-card p { color:var(--muted); font-size:0.86rem; line-height:1.72; }
+  .r-tag { display:inline-block; margin-top:0.9rem; font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); background:rgba(200,169,81,0.1); padding:0.18rem 0.55rem; }
+
+  /* NEWS */
+  .news-list { display:flex; flex-direction:column; gap:1.75rem; margin-top:2rem; }
+  .news-item { display:grid; grid-template-columns:150px 1fr; border:1px solid var(--border); }
+  .ni-side { background:var(--accent); padding:1.75rem 1.25rem; display:flex; flex-direction:column; justify-content:space-between; }
+  .ni-type { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--navy); font-weight:600; }
+  .ni-journal { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:900; color:var(--navy); font-style:italic; line-height:1.2; margin:0.4rem 0; }
+  .ni-date { font-family:'DM Mono',monospace; font-size:0.58rem; color:rgba(10,22,40,0.6); }
+  .ni-body { background:var(--deep); padding:1.75rem 2.25rem; }
+  .ni-body h3 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:0.5rem; line-height:1.35; }
+  .ni-authors { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--accent); letter-spacing:0.03em; margin-bottom:0.65rem; }
+  .ni-body p { color:rgba(255,255,255,0.56); font-size:0.86rem; line-height:1.75; margin-bottom:0.9rem; }
+  .press-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:1.5rem; }
+  .press-card { background:var(--deep); border:1px solid var(--border); padding:1.4rem; text-decoration:none; transition:border-color 0.2s; display:block; }
+  .press-card:hover { border-color:var(--gold); }
+  .pc-out { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:0.45rem; }
+  .pc-title { color:rgba(255,255,255,0.78); font-size:0.85rem; line-height:1.5; font-family:'Playfair Display',serif; }
+
+  /* PUBLICATIONS */
+  .cover-row { display:flex; gap:1.25rem; margin:1.5rem 0 0.5rem; flex-wrap:wrap; }
+  .cover-card { background:var(--white); border:1px solid rgba(0,0,0,0.1); padding:1.1rem; width:170px; flex-shrink:0; text-align:center; transition:box-shadow 0.2s; }
+  .cover-card:hover { box-shadow:0 6px 24px rgba(200,169,81,0.15); }
+  .cover-img { width:140px; height:178px; object-fit:cover; display:block; margin:0 auto 0.65rem; }
+  .cover-ph { width:140px; height:178px; background:linear-gradient(135deg,var(--navy),var(--mid)); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.4rem; margin:0 auto 0.65rem; }
+  .cp-j { font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); }
+  .cp-t { font-family:'Playfair Display',serif; font-size:0.8rem; color:var(--white); font-style:italic; padding:0 0.4rem; text-align:center; line-height:1.3; }
+  .cp-b { background:var(--accent); color:var(--navy); font-size:0.57rem; padding:0.1rem 0.35rem; font-family:'DM Mono',monospace; letter-spacing:0.08em; text-transform:uppercase; margin-top:0.25rem; }
+  .cc-lbl { font-size:0.72rem; color:var(--muted); line-height:1.4; }
+  .cc-lbl strong { color:var(--text); display:block; margin-bottom:0.1rem; }
+
+  .pub-list { margin-top:1rem; }
+  .pub-item { padding:1.5rem 0; border-bottom:1px solid rgba(0,0,0,0.07); display:grid; grid-template-columns:70px 1fr; gap:1.25rem; align-items:start; }
+  .pub-yr { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:var(--accent); padding-top:0.1rem; }
+  .pub-jt { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.22rem; }
+  .pub-ti { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--navy); line-height:1.4; margin-bottom:0.22rem; }
+  .pub-au { font-size:0.79rem; color:var(--muted); line-height:1.5; }
+  .pub-au strong { color:var(--text); }
+  .pub-doi { display:inline-block; margin-top:0.35rem; font-family:'DM Mono',monospace; font-size:0.64rem; color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; letter-spacing:0.04em; transition:border-color 0.2s; }
+  .pub-doi:hover { border-color:var(--accent); }
+  .pub-new { display:inline-block; background:var(--accent); color:var(--navy); font-family:'DM Mono',monospace; font-size:0.56rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.07rem 0.32rem; margin-left:0.35rem; vertical-align:middle; }
+
+  /* PEOPLE */
+  .pi-block { display:grid; grid-template-columns:200px 1fr; gap:2.5rem; margin-top:2.5rem; padding:2.25rem; background:var(--cream); border:1px solid rgba(0,0,0,0.07); }
+  .pi-av { width:170px; height:170px; border-radius:2px; background:linear-gradient(135deg,var(--mid),var(--navy)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:2.8rem; color:var(--gold); font-weight:700; border-bottom:4px solid var(--accent); }
+  .pi-name { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--navy); margin-bottom:0.2rem; }
+  .pi-role { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:1.1rem; }
+  .pi-bio { color:var(--muted); line-height:1.8; font-size:0.9rem; margin-bottom:0.65rem; }
+  .chips { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.9rem; }
+  .chip { font-size:0.72rem; background:var(--navy); color:rgba(255,255,255,0.68); padding:0.2rem 0.65rem; border-radius:20px; }
+  .pi-contact { margin-top:0.9rem; font-family:'DM Mono',monospace; font-size:0.71rem; color:var(--muted); line-height:1.8; }
+  .pi-contact a { color:var(--accent); text-decoration:none; }
+  .grp-lbl { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin:2.5rem 0 1.1rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(0,0,0,0.08); }
+  .ppl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1.1rem; }
+  .ppl-card { padding:1.3rem; background:var(--cream); border:1px solid rgba(0,0,0,0.07); transition:border-color 0.2s,box-shadow 0.2s; }
+  .ppl-card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(200,169,81,0.08); }
+  .ppl-av { width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,var(--mid),var(--navy)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--gold); font-weight:700; margin-bottom:0.8rem; }
+  .ppl-name { font-family:'Playfair Display',serif; font-size:0.93rem; font-weight:700; color:var(--navy); margin-bottom:0.15rem; }
+  .ppl-role { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:0.5rem; }
+  .ppl-bio { font-size:0.77rem; color:var(--muted); line-height:1.6; }
+  .alum-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:0.8rem; margin-top:1.1rem; }
+  .alum-item { padding:0.8rem 1rem; background:var(--cream); border-left:3px solid var(--border); transition:border-color 0.2s; }
+  .alum-item:hover { border-color:var(--accent); }
+  .alum-name { font-weight:500; color:var(--navy); font-size:0.86rem; margin-bottom:0.12rem; }
+  .alum-info { font-size:0.74rem; color:var(--muted); }
+
+  /* PODCAT */
+  .podcat-grid { display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; margin-top:2.5rem; align-items:start; }
+  .pod-about { background:var(--deep); border:1px solid var(--border); padding:2.25rem; }
+  .pod-about h3 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:var(--white); margin-bottom:0.9rem; }
+  .pod-about p { color:rgba(255,255,255,0.58); font-size:0.87rem; line-height:1.75; margin-bottom:0.85rem; }
+  .hosts { display:flex; flex-direction:column; gap:0.9rem; margin-top:1.25rem; }
+  .host { display:flex; gap:0.9rem; align-items:center; }
+  .host-av { width:44px; height:44px; border-radius:50%; background:var(--mid); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; color:var(--gold); font-size:0.95rem; font-weight:700; flex-shrink:0; }
+  .host-name { font-weight:500; color:var(--white); font-size:0.86rem; }
+  .host-af { font-size:0.73rem; color:rgba(255,255,255,0.42); }
+  .listen-hdg { font-family:'DM Mono',monospace; font-size:0.67rem; letter-spacing:0.16em; text-transform:uppercase; color:rgba(200,169,81,0.7); margin-bottom:0.85rem; margin-top:1.5rem; }
+  .listen-links { display:flex; flex-direction:column; gap:0.65rem; }
+  .ll { display:flex; align-items:center; gap:0.7rem; padding:0.8rem 1.1rem; border:1px solid var(--border); text-decoration:none; color:rgba(255,255,255,0.72); font-size:0.84rem; transition:border-color 0.2s,color 0.2s; background:var(--deep); }
+  .ll:hover { border-color:var(--gold); color:var(--white); }
+  .ep-list { margin-top:2.5rem; }
+  .ep-hdg { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(200,169,81,0.7); margin-bottom:1.25rem; }
+  .ep { padding:1.1rem 0; border-bottom:1px solid rgba(255,255,255,0.07); }
+  .ep-ti { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:rgba(255,255,255,0.83); margin-bottom:0.25rem; }
+  .ep-de { font-size:0.78rem; color:rgba(255,255,255,0.42); line-height:1.6; }
+
+  /* CONTACT */
+  .ct-grid { display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; margin-top:2.5rem; }
+  .ct-item { display:flex; gap:0.9rem; align-items:flex-start; margin-bottom:1.75rem; }
+  .ct-icon { width:38px; height:38px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1rem; color:var(--gold); flex-shrink:0; }
+  .ct-lbl { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.22rem; }
+  .ct-val { color:rgba(255,255,255,0.76); font-size:0.88rem; line-height:1.55; }
+  .ct-val a { color:var(--gold); text-decoration:none; }
+  .join-box { background:var(--deep); border:1px solid var(--border); padding:2.25rem; }
+  .join-box h3 { font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; color:var(--white); margin-bottom:0.9rem; }
+  .join-box p { color:rgba(255,255,255,0.56); font-size:0.87rem; line-height:1.75; margin-bottom:0.85rem; }
+
+  .btn { display:inline-flex; align-items:center; gap:0.4rem; padding:0.6rem 1.25rem; font-size:0.77rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:500; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; cursor:pointer; border:none; }
+  .btn-gold { background:var(--accent); color:var(--navy); border:1px solid var(--accent); }
+  .btn-gold:hover { background:var(--gold); border-color:var(--gold); }
+  .btn-out { background:transparent; color:var(--gold); border:1px solid var(--border); }
+  .btn-out:hover { border-color:var(--gold); color:var(--white); }
+
+  footer { background:#060d1a; padding:1.6rem 3rem; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(200,169,81,0.1); }
+  .ft-brand { font-family:'Playfair Display',serif; color:var(--gold); font-size:0.88rem; }
+  .ft-copy { font-size:0.74rem; color:rgba(255,255,255,0.28); }
+
+  @media (max-width:960px) {
+    .hero { grid-template-columns:1fr; }
+    .hero-right { display:none; }
+    .r-grid { grid-template-columns:1fr; }
+    .podcat-grid { grid-template-columns:1fr; }
+    .ct-grid { grid-template-columns:1fr; }
+    .pi-block { grid-template-columns:1fr; }
+    nav { padding:0 1.25rem; }
+    .nav-links a { padding:0 0.6rem; font-size:0.68rem; }
+    .news-item { grid-template-columns:1fr; }
+    .press-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand" onclick="show('home');return false;">Porosoff Research Group</a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="show('home');return false;">Home</a></li>
+    <li><a href="#" onclick="show('news');return false;">News</a></li>
+    <li><a href="#" onclick="show('people');return false;">People</a></li>
+    <li><a href="#" onclick="show('research');return false;">Research</a></li>
+    <li><a href="#" onclick="show('pubs');return false;">Publications</a></li>
+    <li><a href="#" onclick="show('podcat');return false;">PodCAT</a></li>
+    <li><a href="#" onclick="show('contact');return false;">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="page active">
+  <div class="announce-bar">
+    <span>🆕</span>
+    <span><strong>2025–2026:</strong> Three landmark papers on tungsten carbide catalysis in ACS Catalysis, JACS &amp; EES Catalysis.
+    <a href="#" onclick="show('news');return false;">Read more →</a></span>
+  </div>
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-left">
+      <div class="hero-eyebrow">Department of Chemical &amp; Sustainability Engineering · University of Rochester</div>
+      <h1 class="hero-title">Catalysis for a<em>Sustainable Future</em></h1>
+      <p class="hero-desc">We develop next-generation catalysts to transform C1 and C2 resources — CO₂, CO, CH₄, C₂H₆ — into plastics, chemicals, and fuels. We combine precision synthesis, in situ characterization, and AI-driven discovery.</p>
+      <div class="hero-stats">
+        <div><div class="stat-num">20+</div><div class="stat-label">Peer-Reviewed Papers</div></div>
+        <div><div class="stat-num">6,037</div><div class="stat-label">Total Citations</div></div>
+        <div><div class="stat-num">2026</div><div class="stat-label">Latest Publication</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="mol-wrap">
+        <div class="mol-ring"></div><div class="mol-ring"></div><div class="mol-ring"></div>
+        <div class="mol-core">CO₂<br>→ Value</div>
+      </div>
+    </div>
+  </div>
+  <section style="background:var(--white);">
+    <div class="container">
+      <div class="sec-label">Research Areas</div>
+      <h2 class="sec-title">Three Frontiers of <em>Catalytic Science</em></h2>
+      <div class="r-grid">
+        <div class="r-card"><div class="r-num">01</div><h3>CO₂ Hydrogenation to Plastics, Chemicals &amp; Fuels</h3><p>Novel dual-functional catalysts to selectively produce hydrocarbons from CO₂ via RWGS and Fischer-Tropsch. Recent work establishes β-W₂C as a phase-selective, high-performance RWGS catalyst rivaling platinum at a fraction of the cost.</p><span class="r-tag">RWGS · FT · Tungsten Carbide</span></div>
+        <div class="r-card"><div class="r-num">02</div><h3>Selective Synthesis of Light Olefins from Syngas</h3><p>Direct CO/H₂ conversion via Fischer-Tropsch to Olefins (FTO), combining mesoporous supports, promoter engineering, and in situ XAFS/FTIR spectroscopy to reveal structure–activity relationships beyond the ASF distribution.</p><span class="r-tag">FTO · XAFS · In Situ Spectroscopy</span></div>
+        <div class="r-card"><div class="r-num">03</div><h3>Accelerating Decarbonization with AI &amp; LLMs</h3><p>Pioneering representation of catalysts using the text of synthesis procedures and reaction conditions, combined with Bayesian optimization — enabling discovery of earth-abundant active catalysts without expensive structural characterization.</p><span class="r-tag">LLMs · Bayesian Optimization · Trimetallic Catalysts</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ NEWS ══ -->
+<div id="news" class="page">
+  <section style="background:var(--navy);padding-top:5rem;">
+    <div class="container">
+      <div class="sec-label sec-label-w">Latest from the Lab</div>
+      <h2 class="sec-title sec-title-w">News &amp; <em>Highlights</em></h2>
+
+      <div class="news-list">
+        <div class="news-item">
+          <div class="ni-side"><div class="ni-type">New Paper</div><div class="ni-journal">ACS Catalysis</div><div class="ni-date">January 2026</div></div>
+          <div class="ni-body">
+            <h3>Achieving Phase Control of Polymorphic Tungsten Carbide Catalysts</h3>
+            <div class="ni-authors">Perera, S.M.H.D. · Ciuffetelli, E. · Porosoff, M.D.</div>
+            <p>By maintaining particle sizes below 10 nm and using temperature-programmed carburization, the team selectively synthesized β-W₂C — establishing it as an active and stable catalyst for the reverse water-gas shift reaction. This resolves longstanding phase ambiguities in tungsten carbide catalysis. Funded by the Alfred P. Sloan Foundation and DOE Office of Basic Energy Sciences.</p>
+            <a href="https://pubs.acs.org/doi/10.1021/acscatal.5c07774" target="_blank" class="btn btn-gold">View Paper →</a>
+          </div>
+        </div>
+
+        <div class="news-item">
+          <div class="ni-side"><div class="ni-type">New Paper</div><div class="ni-journal">JACS</div><div class="ni-date">December 2025</div></div>
+          <div class="ni-body">
+            <h3>Intrinsically Bifunctional Tungsten Carbide Enables Efficient PVC-Compatible Polyolefin Hydrocracking</h3>
+            <div class="ni-authors">Nwachukwu, U.C. · Moegling, M.J. · Perera, S.M.H.D. · … · Deshpande, S. · Porosoff, M.D. · Chen, L.</div>
+            <p>In collaboration with Linxiao Chen (Univ. North Texas) and UR's Siddharth Deshpande, the group demonstrated that phase-controlled tungsten carbide drives polyolefin hydrocracking more than 10× more efficiently than conventional platinum — and resists deactivation by PVC contaminants that kill noble-metal catalysts. Funded by NSF.</p>
+            <a href="https://pubs.acs.org/doi/10.1021/jacs.5c11845" target="_blank" class="btn btn-gold">View Paper →</a>
+          </div>
+        </div>
+
+        <div class="news-item">
+          <div class="ni-side"><div class="ni-type">Cover Article</div><div class="ni-journal">EES Catalysis</div><div class="ni-date">December 2025</div></div>
+          <div class="ni-body">
+            <h3>Leveraging and Understanding Exotherms in Tandem Catalysts with In Situ Luminescence Thermometry</h3>
+            <div class="ni-authors">Perera, S.M.H.D. · Harrington, B. · Fadhul, A. · Pickel, A.D. · Porosoff, M.D.</div>
+            <p>Using upconverting nanoparticle (UCNP)-based luminescence thermometry with the Pickel lab, the team measured catalyst surface temperatures directly — finding 10–100°C discrepancies vs. bulk readings. Selected as a <strong style="color:var(--gold)">HOT article and journal cover</strong>. Funded by NY State Energy Research and Development Authority (Carbontech Development Initiative).</p>
+            <a href="https://doi.org/10.1039/D5EY00319A" target="_blank" class="btn btn-gold">View Paper →</a>
+          </div>
+        </div>
+
+        <div class="news-item">
+          <div class="ni-side"><div class="ni-type">Honor</div><div class="ni-journal">EES Catalysis ECB</div><div class="ni-date">January 2026</div></div>
+          <div class="ni-body">
+            <h3>Prof. Porosoff Appointed to EES Catalysis Early Career Board</h3>
+            <div class="ni-authors">University of Rochester News · January 2026</div>
+            <p>Associate Professor Marc Porosoff was appointed to the Early Career Board of EES Catalysis (Royal Society of Chemistry), recognizing his research on AI-integrated catalyst discovery for sustainable CO₂ conversion.</p>
+            <a href="https://www.rochester.edu/newscenter/january-2026-faculty-awards-accolades-692622/" target="_blank" class="btn btn-gold">Read Announcement →</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:3rem;">
+        <div class="sec-label sec-label-w" style="margin-bottom:1rem;">Press Coverage</div>
+        <div class="press-grid">
+          <a href="https://www.rochester.edu/newscenter/tungsten-carbide-alternative-catalyst-petrochemicals-692152/" target="_blank" class="press-card"><div class="pc-out">University of Rochester</div><div class="pc-title">Engineering a low-cost alternative catalyst for sustainable petrochemicals</div></a>
+          <a href="https://www.sciencedaily.com/releases/2026/01/260124003806.htm" target="_blank" class="press-card"><div class="pc-out">ScienceDaily</div><div class="pc-title">New catalyst makes plastic upcycling 10× more efficient than platinum</div></a>
+          <a href="https://scitechdaily.com/scientists-found-a-platinum-alternative-hiding-in-plain-sight/" target="_blank" class="press-card"><div class="pc-out">SciTechDaily</div><div class="pc-title">Scientists found a platinum alternative hiding in plain sight</div></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ PEOPLE ══ -->
+<div id="people" class="page">
+  <section style="padding-top:5rem;">
+    <div class="container">
+      <div class="sec-label">The Team</div>
+      <h2 class="sec-title">Our <em>People</em></h2>
+
+      <div class="pi-block">
+        <div><div class="pi-av">MP</div></div>
+        <div>
+          <div class="pi-name">Marc D. Porosoff</div>
+          <div class="pi-role">Associate Professor · Principal Investigator</div>
+          <p class="pi-bio">Prof. Porosoff received his B.S. (2009) and M.S. (2010) in Chemical and Biomolecular Engineering from Johns Hopkins University, and his Ph.D. in Chemical Engineering from Columbia University in 2015 (thesis: catalysts for CO₂ conversion). He then served as an NRC-sponsored postdoctoral fellow at the Naval Research Laboratory on the "Seawater to Fuel" project.</p>
+          <p class="pi-bio">At Rochester, his group pioneers catalyst development for CO₂ conversion and leads integration of large language models into materials discovery. In early 2026 he was appointed to the Early Career Board of EES Catalysis (Royal Society of Chemistry).</p>
+          <div class="chips">
+            <span class="chip">EES Catalysis Early Career Board 2026</span>
+            <span class="chip">Scialog NES Fellow 2022 &amp; 2023</span>
+            <span class="chip">Sykes Engineering Faculty Award 2021 &amp; 2022</span>
+            <span class="chip">University Research Award 2018 &amp; 2022</span>
+            <span class="chip">NRC Postdoctoral Fellow 2015</span>
+          </div>
+          <div class="pi-contact">📍 4405 Wegmans Hall &nbsp;·&nbsp; ☎ (585) 276-7401 &nbsp;·&nbsp; ✉ <a href="mailto:marc.porosoff@rochester.edu">marc.porosoff@rochester.edu</a></div>
+        </div>
+      </div>
+
+      <div class="grp-lbl">Graduate Students</div>
+      <div class="ppl-grid">
+        <div class="ppl-card"><div class="ppl-av">SM</div><div class="ppl-name">Shane Michtavy</div><div class="ppl-role">Ph.D. Candidate</div><p class="ppl-bio">B.S. Chemical Engineering, University of Rochester. Research at Cornell and Brookhaven National Lab sparked his interest in AI-driven catalyst design. Focuses on novel heterogeneous catalysts for CO₂ valorization. Co-author on 2023 ACS Catalysis paper.</p></div>
+        <div class="ppl-card"><div class="ppl-av">HP</div><div class="ppl-name">Hasitha Perera</div><div class="ppl-role">Ph.D. Candidate</div><p class="ppl-bio">B.S. with honors and M.S. (Sustainable Process Engineering) from University of Moratuwa. Joined UR 2022. Focuses on catalyst design for CO₂ conversion. Lead author on 2026 EES Catalysis (cover) paper and co-author on 2026 ACS Catalysis paper.</p></div>
+      </div>
+
+      <div class="grp-lbl">Undergraduate Students</div>
+      <div class="ppl-grid">
+        <div class="ppl-card"><div class="ppl-av">SK</div><div class="ppl-name">Szymon Kuzniar</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Junior in ChE. Interested in catalyst research for renewable energy and tandem reactions. UR AIChE chapter member.</p></div>
+        <div class="ppl-card"><div class="ppl-av">PO</div><div class="ppl-name">Phyllis Ong</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Junior in ChE, minor in Environmental Engineering. Researches CO₂ adsorption on porous materials and ML for catalysis. AIChE member; Mock Trial executive board.</p></div>
+        <div class="ppl-card"><div class="ppl-av">AF</div><div class="ppl-name">Adel Fadhul</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Junior in ChE. Co-author on 2026 EES Catalysis paper. Peer Student Guide at KAUST.</p></div>
+        <div class="ppl-card"><div class="ppl-av">SP</div><div class="ppl-name">Sophia Pollack-Hurst</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Junior in ChE. Studied strong electrostatic adsorption catalyst synthesis. AIChE social chair for two years.</p></div>
+        <div class="ppl-card"><div class="ppl-av">EC</div><div class="ppl-name">Eva Ciuffetelli</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Sophomore in ChE '27, minor in Sustainability. Co-author on 2026 ACS Catalysis paper on tungsten carbide phase control. Leads paper-recycling initiative; Varsity Track &amp; Field.</p></div>
+        <div class="ppl-card"><div class="ppl-av">JR</div><div class="ppl-name">Jay-Brian Randone</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Junior in ChE (Italy/Indonesia). Works on rapid Joule heating and quenching of catalysts. Lead events coordinator, Asian Student Union.</p></div>
+        <div class="ppl-card"><div class="ppl-av">RR</div><div class="ppl-name">Ruth Reynolds</div><div class="ppl-role">Undergraduate Researcher</div><p class="ppl-bio">Sophomore in ChE. Interested in catalytic processes for energy storage. Project Assistant at Laboratory for Laser Energetics.</p></div>
+      </div>
+
+      <div class="grp-lbl">Alumni</div>
+      <div class="alum-grid">
+        <div class="alum-item"><div class="alum-name">Dr. Jane Agwara</div><div class="alum-info">Ph.D. 2024</div></div>
+        <div class="alum-item"><div class="alum-name">Dr. Mitchell Juneau</div><div class="alum-info">Ph.D. 2023</div></div>
+        <div class="alum-item"><div class="alum-name">Dr. Renjie Liu</div><div class="alum-info">Ph.D. 2023</div></div>
+        <div class="alum-item"><div class="alum-name">Levi Sunday-Lefkowitz</div><div class="alum-info">M.Sc. 2022</div></div>
+        <div class="alum-item"><div class="alum-name">Danielle Getz</div><div class="alum-info">B.S. ChE 2023 · Fulbright Fellow → Ph.D. Northwestern University</div></div>
+        <div class="alum-item"><div class="alum-name">Samuel Meil</div><div class="alum-info">B.S. ChE → Ph.D. University of Delaware</div></div>
+        <div class="alum-item"><div class="alum-name">Connor Pope</div><div class="alum-info">B.S. ChE → Ph.D. University of Florida</div></div>
+        <div class="alum-item"><div class="alum-name">Ahmad El Gazzar</div><div class="alum-info">B.S. ChE → Ph.D. Rice University</div></div>
+        <div class="alum-item"><div class="alum-name">Aime Laurent Twizerimana</div><div class="alum-info">B.S. ChE 2020 → Ph.D. University of Pittsburgh</div></div>
+        <div class="alum-item"><div class="alum-name">Daphna Yaffe</div><div class="alum-info">B.S. ChE → Intel Corporation</div></div>
+        <div class="alum-item"><div class="alum-name">Dr. Zhiqiang Ma</div><div class="alum-info">Postdoctoral Associate 2017–2019</div></div>
+        <div class="alum-item"><div class="alum-name">Rashad Ahmadov</div><div class="alum-info">Laboratory for Laser Energetics</div></div>
+        <div class="alum-item"><div class="alum-name">Eve Marealle</div><div class="alum-info">Undergraduate Researcher, Fall 2019</div></div>
+        <div class="alum-item"><div class="alum-name">Yikang Peng</div><div class="alum-info">M.Sc. 2019</div></div>
+        <div class="alum-item"><div class="alum-name">Akhilesh Malge</div><div class="alum-info">M.Sc. 2019</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ RESEARCH ══ -->
+<div id="research" class="page">
+  <section style="padding-top:5rem; background:var(--white);">
+    <div class="container">
+      <div class="sec-label">Research Program</div>
+      <h2 class="sec-title">Our <em>Research</em></h2>
+      <p style="color:var(--muted);max-width:640px;line-height:1.8;font-size:0.92rem;margin-bottom:2.5rem;">The Porosoff group focuses on developing new catalysts for upgrading C1 and C2 resources for efficient energy storage and low-cost production of plastics, chemicals and fuels. Understanding the relationships between chemical reactivity and catalyst electronic/structure properties requires controlled synthesis, in situ techniques, and theoretical calculations.</p>
+      <div class="r-grid">
+        <div class="r-card"><div class="r-num">01</div><h3>CO₂ Hydrogenation to Plastics, Chemicals &amp; Fuels</h3><p>Through catalytic reactions, waste CO₂ can be converted to oxygenates, specialty chemicals and hydrocarbons. We investigate dual-functional catalysts to selectively produce a tight distribution of hydrocarbons from CO₂ via RWGS followed by Fischer-Tropsch synthesis. Recent work demonstrates β-W₂C as a phase-selective, active RWGS catalyst with performance rivaling platinum.</p><span class="r-tag">RWGS · FT · Tungsten Carbide · Phase Control</span></div>
+        <div class="r-card"><div class="r-num">02</div><h3>Selective Synthesis of Light Olefins from CO and H₂</h3><p>Light olefins (C₂–C₄) are critical raw materials for plastics and fuels. We explore direct Fischer-Tropsch to Olefins (FTO), combining mesoporous high-surface-area supports with carefully selected promoters. In situ XAFS and FTIR spectroscopy probe the effect of promoters on catalyst structure and electronic properties — going beyond the Anderson-Schulz-Flory distribution.</p><span class="r-tag">FTO · XAFS · FTIR · Promoter Engineering</span></div>
+        <div class="r-card"><div class="r-num">03</div><h3>Accelerating Decarbonization with AI &amp; Language Models</h3><p>Rather than relying on expensive structural and electronic characterization, we leverage large language models (LLMs) to represent catalysts by the text of synthesis procedures and reaction conditions. Combined with Bayesian optimization, this accelerates discovery of earth-abundant, active catalysts for RWGS and beyond — with a focus on trimetallic systems that are otherwise difficult to characterize.</p><span class="r-tag">LLMs · NLP · Bayesian Optimization · Trimetallic Catalysts</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ PUBLICATIONS ══ -->
+<div id="pubs" class="page">
+  <section style="padding-top:5rem;">
+    <div class="container">
+      <div class="sec-label">Peer-Reviewed Work</div>
+      <h2 class="sec-title">Selected <em>Publications</em></h2>
+      <p style="color:var(--muted);font-size:0.87rem;margin-bottom:1rem;">6,037+ total citations · <strong>Porosoff</strong> in bold · <a href="https://scholar.google.com/citations?user=a3zZPXwAAAAJ" target="_blank" style="color:var(--accent)">Full list on Google Scholar →</a></p>
+
+      <div style="margin:1.5rem 0 0.25rem;"><div class="sec-label">Journal Covers</div></div>
+      <div class="cover-row" id="cover-row">
+        <div class="cover-card" id="ees-cover">
+          <div class="cover-ph" id="ees-ph"><div class="cp-j">EES Catalysis</div><div class="cp-t">In Situ Luminescence Thermometry</div><div class="cp-b">Cover Article · 2026</div></div>
+          <div class="cc-lbl"><strong>EES Catalysis, 2026</strong>Perera, Harrington, Fadhul, Pickel, Porosoff</div>
+        </div>
+        <div class="cover-card" id="lang-cover">
+          <div class="cover-ph" id="lang-ph"><div class="cp-j">Langmuir</div><div class="cp-t">Dual Functional Materials</div><div class="cp-b">Cover Article · 2024</div></div>
+          <div class="cc-lbl"><strong>Langmuir, 2024</strong>Ahmadov, Michtavy, Porosoff</div>
+        </div>
+      </div>
+      <p style="font-size:0.76rem;color:var(--muted);margin-bottom:2rem;font-style:italic;">Send cover images in your next message and they'll be added automatically.</p>
+
+      <div class="pub-list">
+        <div class="pub-item"><div class="pub-yr">2026</div><div><div class="pub-jt">ACS Catalysis</div><div class="pub-ti">Achieving Phase Control of Polymorphic Tungsten Carbide Catalysts <span class="pub-new">NEW</span></div><div class="pub-au">Perera, S.M.H.D.; Ciuffetelli, E.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acscatal.5c07774" target="_blank">DOI: 10.1021/acscatal.5c07774 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2026</div><div><div class="pub-jt">EES Catalysis · RSC · Cover Article</div><div class="pub-ti">Leveraging and Understanding Exotherms in Tandem Catalysts with In Situ Luminescence Thermometry <span class="pub-new">NEW</span></div><div class="pub-au">Perera, S.M.H.D.; Harrington, B.; Fadhul, A.; Pickel, A.D.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://doi.org/10.1039/D5EY00319A" target="_blank">DOI: 10.1039/D5EY00319A →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2025</div><div><div class="pub-jt">Journal of the American Chemical Society</div><div class="pub-ti">Intrinsically Bifunctional and Tunable Tungsten Carbide Catalysts Enable Efficient PVC-Compatible Polyolefin Hydrocracking <span class="pub-new">NEW</span></div><div class="pub-au">Nwachukwu, U.C.; Moegling, M.J.; Perera, S.M.H.D.; Pathan, A.N.; Chen, J.; Rezvani, F.; Valappil, A.R.V.; Zhou, C.; Rahman, L.; Liu, J.; Kim, S.; Eagan, J.M.; Deshpande, S.; <strong>Porosoff, M.D.</strong>; Chen, L.</div><a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/jacs.5c11845" target="_blank">DOI: 10.1021/jacs.5c11845 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-jt">Langmuir · ACS · Cover Article</div><div class="pub-ti">Dual Functional Materials: At the Interface of Catalysis and Separations</div><div class="pub-au">Ahmadov, R.; Michtavy, S.S.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acs.langmuir.3c03888" target="_blank">DOI: 10.1021/acs.langmuir.3c03888 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2023</div><div><div class="pub-jt">ACS Catalysis</div><div class="pub-ti">Reactive Separations of CO/CO₂ Mixtures over Ru-Co Single Atom Alloys</div><div class="pub-au">Liu, R.; El Berch, J.N.; House, S.; Meil, S.W.; Mpourmpakis, G.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acscatal.2c05110" target="_blank">DOI: 10.1021/acscatal.2c05110 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2022</div><div><div class="pub-jt">Nanoscale · RSC</div><div class="pub-ti">Establishing Tungsten Carbides as Active Catalysts for CO₂ Hydrogenation</div><div class="pub-au">Juneau, M.; Yaffe, D.; Liu, R.; Agwara, J.N.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://pubs.rsc.org/en/content/articlelanding/2022/NR/D2NR03281C" target="_blank">DOI: 10.1039/d2nr03281c →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2022</div><div><div class="pub-jt">ChemCatChem · Wiley</div><div class="pub-ti">Challenges and Opportunities of Fe-based Core-Shell Catalysts for Fischer-Tropsch Synthesis</div><div class="pub-au">Agwara, J.N.; Bakas, N.J.; Neidig, M.L.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/cctc.202200289" target="_blank">DOI: 10.1002/cctc.202200289 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2021</div><div><div class="pub-jt">Applied Catalysis B: Environmental · Elsevier</div><div class="pub-ti">Selective Hydrogenation of CO₂ and CO over Potassium Promoted Co/ZSM-5</div><div class="pub-au">Liu, R.; Leshchev, D.; Stavitski, E.; Juneau, M.; Agwara, J.N.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://doi.org/10.1016/j.apcatb.2020.119787" target="_blank">DOI: 10.1016/j.apcatb.2020.119787 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2021</div><div><div class="pub-jt">Chem · Cell Press</div><div class="pub-ti">Recent Advances in Carbon Dioxide Hydrogenation to Produce Olefins and Aromatics</div><div class="pub-au">Wang, D.; Xie, Z.; <strong>Porosoff, M.D.</strong>; Chen, J.G.</div><a class="pub-doi" href="https://doi.org/10.1016/j.chempr.2021.02.024" target="_blank">DOI: 10.1016/j.chempr.2021.02.024 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2021</div><div><div class="pub-jt">Applied Catalysis A: General · Elsevier</div><div class="pub-ti">Support Acidity as a Descriptor for Reverse Water-Gas Shift over Mo₂C-Based Catalysts</div><div class="pub-au">Juneau, M.; Pope, C.; Liu, R.J.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://doi.org/10.1016/j.apcata.2021.118034" target="_blank">DOI: 10.1016/j.apcata.2021.118034 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2020</div><div><div class="pub-jt">Energy &amp; Environmental Science · RSC</div><div class="pub-ti">Assessing the Viability of K-Mo₂C for Reversed Water-Gas Shift Scale-Up: Molecular to Laboratory to Pilot Scale</div><div class="pub-au">Juneau, M.; Vonglis, M.; Hartvigsen, J.; Frost, L.; Bayerl, D.; Dixit, M.; Mpourmpakis, G.; Morse, J.R.; Baldwin, J.; Willauer, H.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://pubs.rsc.org/en/content/articlelanding/2020/ee/d0ee01457e" target="_blank">DOI: 10.1039/d0ee01457e →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2020</div><div><div class="pub-jt">Journal of CO₂ Utilization · Elsevier</div><div class="pub-ti">Identifying Correlations in Fischer-Tropsch Synthesis and CO₂ Hydrogenation over Fe-based ZSM-5 Catalysts</div><div class="pub-au">Liu, R.J.; Ma, Z.; Sears, J.D.; Juneau, M.; Neidig, M.L.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://doi.org/10.1016/j.jcou.2020.101290" target="_blank">DOI: 10.1016/j.jcou.2020.101290 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2020</div><div><div class="pub-jt">ChemCatChem · Wiley</div><div class="pub-ti">Characterization of Metal-Zeolite Composite Catalysts: Determining the Environment of the Active Phase</div><div class="pub-au">Juneau, M.; Liu, R.J.; Peng, Y.; Malge, A.; Ma, Z.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/cctc.201902039" target="_blank">DOI: 10.1002/cctc.201902139 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2019</div><div><div class="pub-jt">ACS Catalysis</div><div class="pub-ti">Development of Tandem Catalysts for CO₂ Hydrogenation to Olefins</div><div class="pub-au">Ma, Z.; <strong>Porosoff, M.D.</strong></div><a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acscatal.8b05060" target="_blank">DOI: 10.1021/acscatal.8b05060 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2019</div><div><div class="pub-jt">Journal of CO₂ Utilization · Elsevier</div><div class="pub-ti">Alkali Promoted Tungsten Carbide as a Selective Catalyst for the Reverse Water Gas Shift Reaction</div><div class="pub-au">Morse, J.R.; Juneau, M.; Baldwin, J.W.; <strong>Porosoff, M.D.</strong>; Willauer, H.D.</div><a class="pub-doi" href="https://doi.org/10.1016/j.jcou.2019.08.024" target="_blank">DOI: 10.1016/j.jcou.2019.08.024 →</a></div></div>
+        <div class="pub-item"><div class="pub-yr">2017</div><div><div class="pub-jt">ChemSusChem · Wiley</div><div class="pub-ti">Potassium-Promoted Molybdenum Carbide as a Highly Active and Selective Catalyst for CO₂ Conversion to CO</div><div class="pub-au"><strong>Porosoff, M.D.</strong>; Baldwin, J.W.; Peng, X.; Mpourmpakis, G.; Willauer, H.D.</div></div></div>
+        <div class="pub-item"><div class="pub-yr">2017</div><div><div class="pub-jt">Catalysis Science &amp; Technology · RSC</div><div class="pub-ti">Elucidating the Role of Oxygen Coverage in CO₂ Reduction on Mo₂C</div><div class="pub-au">Dixit, M.; Peng, X.; <strong>Porosoff, M.D.</strong>; Willauer, H.D.; Mpourmpakis, G.</div></div></div>
+      </div>
+      <div style="margin-top:2rem;"><a href="https://scholar.google.com/citations?user=a3zZPXwAAAAJ" target="_blank" class="btn btn-gold">View All on Google Scholar →</a></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ PODCAT ══ -->
+<div id="podcat" class="page">
+  <section style="background:var(--navy);padding-top:5rem;">
+    <div class="container">
+      <div class="sec-label sec-label-w">Podcast</div>
+      <h2 class="sec-title sec-title-w"><em>PodCAT</em></h2>
+      <p style="color:rgba(255,255,255,0.52);font-size:0.97rem;line-height:1.8;max-width:580px;margin-bottom:0;">Your one-stop shop for academic heterogeneous catalysis — faculty interviews, career guidance, and cutting-edge research discussions. 50 episodes · 5.0 ★ · Updated monthly.</p>
+
+      <div class="podcat-grid">
+        <div>
+          <div class="pod-about">
+            <h3>About the Podcast</h3>
+            <p>PodCAT features interviews with leading catalysis researchers, guidance on faculty applications and early career development, and deep dives into current research themes in heterogeneous catalysis.</p>
+            <p>50 episodes · 5.0 ★ rating (19 reviews) · Science category · Available on Apple Podcasts, Spotify, and more.</p>
+            <div class="hosts">
+              <div class="host"><div class="host-av">MP</div><div><div class="host-name">Prof. Marc Porosoff</div><div class="host-af">University of Rochester</div></div></div>
+              <div class="host"><div class="host-av">EC</div><div><div class="host-name">Prof. Ezra Clark</div><div class="host-af">Penn State University</div></div></div>
+              <div class="host"><div class="host-av">TS</div><div><div class="host-name">Prof. Tom Senftle</div><div class="host-af">Rice University</div></div></div>
+            </div>
+          </div>
+          <div style="margin-top:1.25rem;">
+            <div class="listen-hdg">Listen On</div>
+            <div class="listen-links">
+              <a href="https://podcasts.apple.com/us/podcast/podcat/id1652952627" target="_blank" class="ll"><span>🎵</span> Apple Podcasts</a>
+              <a href="https://open.spotify.com/show/0tzTnMlZNcgBQfVUbvgchA" target="_blank" class="ll"><span>🎧</span> Spotify</a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="listen-hdg">Apple Podcasts Player</div>
+          <iframe
+            allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+            frameborder="0" height="450"
+            style="width:100%;overflow:hidden;background:transparent;"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src="https://embed.podcasts.apple.com/us/podcast/podcat/id1652952627">
+          </iframe>
+        </div>
+      </div>
+
+      <div class="ep-list">
+        <div class="ep-hdg">Recent Episodes</div>
+        <div class="ep"><div class="ep-ti">Prof. Jingguang Chen — Columbia University / Brookhaven National Lab</div><div class="ep-de">Thayer Lindsley Professor of ChE at Columbia. 500+ publications, 20+ US patents. Research on carbides, nitrides and bimetallic catalysts. · December 2025</div></div>
+        <div class="ep"><div class="ep-ti">Prof. Yuriy Román — MIT</div><div class="ep-de">Robert T. Haslam Professor of Chemical Engineering. 2024 Paul H. Emmett Award in Fundamental Catalysis, North American Catalysis Society.</div></div>
+        <div class="ep"><div class="ep-ti">Prof. Aditya Bhan — University of Minnesota</div><div class="ep-de">B. Tech. IIT Kanpur, Ph.D. Purdue University. Leading researcher in zeolite catalysis and C–H activation.</div></div>
+        <div class="ep"><div class="ep-ti">Dr. Bob McCabe — former NSF CBET-Catalysis Program Director</div><div class="ep-de">Retired in February 2025 after leading the NSF catalysis portfolio. Discusses funding landscape and the future of catalysis research.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<div id="contact" class="page">
+  <section style="background:var(--navy);padding-top:5rem;">
+    <div class="container">
+      <div class="sec-label sec-label-w">Get In Touch</div>
+      <h2 class="sec-title sec-title-w">Contact &amp; <em>Join Us</em></h2>
+      <div class="ct-grid">
+        <div>
+          <div class="ct-item"><div class="ct-icon">📍</div><div><div class="ct-lbl">Location</div><div class="ct-val">Department of Chemical &amp; Sustainability Engineering<br>4405 Wegmans Hall<br>University of Rochester<br>Rochester, NY 14627</div></div></div>
+          <div class="ct-item"><div class="ct-icon">✉</div><div><div class="ct-lbl">Email</div><div class="ct-val"><a href="mailto:marc.porosoff@rochester.edu">marc.porosoff@rochester.edu</a></div></div></div>
+          <div class="ct-item"><div class="ct-icon">☎</div><div><div class="ct-lbl">Phone</div><div class="ct-val">(585) 276-7401</div></div></div>
+          <div class="ct-item"><div class="ct-icon">🔗</div><div><div class="ct-lbl">University Profile</div><div class="ct-val"><a href="https://www.hajim.rochester.edu/che/people/faculty/porosoff_marc/index.html" target="_blank">Hajim School of Engineering →</a></div></div></div>
+          <div class="ct-item"><div class="ct-icon">📚</div><div><div class="ct-lbl">Google Scholar</div><div class="ct-val"><a href="https://scholar.google.com/citations?user=a3zZPXwAAAAJ" target="_blank">View Publication List →</a></div></div></div>
+        </div>
+        <div class="join-box">
+          <h3>Join the Group</h3>
+          <p>We are always looking for motivated graduate students, postdocs, and undergraduates excited about catalysis, sustainable chemistry, and AI-driven materials discovery. The group offers a collaborative, interdisciplinary environment at the intersection of experiment and computation.</p>
+          <p>Prospective graduate students should apply through the UR Department of Chemical &amp; Sustainability Engineering. Undergraduates and postdocs should reach out directly to Prof. Porosoff.</p>
+          <a href="mailto:marc.porosoff@rochester.edu" class="btn btn-gold" style="margin-right:0.5rem;margin-bottom:0.5rem;">Email Prof. Porosoff →</a>
+          <a href="https://www.hajim.rochester.edu/che/graduate/apply.html" target="_blank" class="btn btn-out">Apply to Graduate Program</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="ft-brand">Porosoff Research Group</div>
+  <div class="ft-copy">Department of Chemical &amp; Sustainability Engineering · University of Rochester</div>
+</footer>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Allow cover images to be swapped in later via console if needed:
+  // swapCover('ees-ph', 'url-to-image.jpg')
+  window.swapCover = function(placeholderId, imgSrc) {
+    const ph = document.getElementById(placeholderId);
+    if (!ph) return;
+    const img = document.createElement('img');
+    img.src = imgSrc; img.className = 'cover-img'; img.alt = 'Journal Cover';
+    ph.parentNode.replaceChild(img, ph);
+  };
+</script>
+</body>
+</html>

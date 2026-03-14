@@ -8,6 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .cover-card a img { transition: opacity 0.2s; }
+    .cover-card a:hover img { opacity: 0.88; }
+    .cover-card a { text-decoration: none; }
+    .cover-img { image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
+  </style>
 </head>
 <body>
 
@@ -37,7 +43,7 @@
   <span class="sec-label">Peer-Reviewed Work</span>
   <h1 class="sec-title">Selected <em>Publications</em></h1>
   <p style="color:var(--muted);font-size:0.88rem;margin-bottom:0.5rem;">
-    6,037+ total citations · <strong>Porosoff</strong> highlighted in bold ·
+    6,037+ total citations · * corresponding author ·
     <a href="https://scholar.google.com/citations?user=a3zZPXwAAAAJ" target="_blank" style="color:var(--accent);">Full list on Google Scholar →</a>
   </p>
 
@@ -45,50 +51,47 @@
   <div style="margin:2rem 0 0.25rem;"><span class="sec-label">Journal Covers</span></div>
   <div class="cover-row">
     <div class="cover-card">
-      <!--
-        To add the EES Catalysis cover image:
-        1. Place the file at: images/covers/ees-catalysis-2026.jpg
-        2. The image will appear automatically — remove the onerror placeholder below
-      -->
-      <img
-        src="images/covers/ees-catalysis-2026.jpg"
-        alt="EES Catalysis 2026 Cover"
-        class="cover-img"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-      >
-      <div class="cover-ph" style="display:none;">
-        <div class="cp-j">EES Catalysis</div>
-        <div class="cp-t">Luminescence Thermometry</div>
-        <div class="cp-b">Cover · 2026</div>
-      </div>
+      <a href="https://doi.org/10.1039/D5EY00319A" target="_blank" style="display:block;">
+        <img
+          src="images/covers/ees-catalysis-2026.jpg"
+          alt="EES Catalysis 2026 Cover"
+          class="cover-img"
+          style="image-rendering:auto;-webkit-filter:none;filter:none;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+        >
+        <div class="cover-ph" style="display:none;">
+          <div class="cp-j">EES Catalysis</div>
+          <div class="cp-t">Luminescence Thermometry</div>
+          <div class="cp-b">Cover · 2026</div>
+        </div>
+      </a>
       <div class="cc-lbl">
         <strong>EES Catalysis, 2026</strong>
-        Perera, Harrington, Fadhul, Pickel, Porosoff
+        Perera, Harrington, Fadhul, Pickel, Porosoff*
       </div>
     </div>
     <div class="cover-card">
-      <!--
-        To add the Langmuir cover image:
-        1. Place the file at: images/covers/langmuir-2024.jpg
-        2. The image will appear automatically
-      -->
-      <img
-        src="images/covers/langmuir-2024.jpg"
-        alt="Langmuir 2024 Cover"
-        class="cover-img"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-      >
-      <div class="cover-ph" style="display:none;">
-        <div class="cp-j">Langmuir</div>
-        <div class="cp-t">Dual Functional Materials</div>
-        <div class="cp-b">Cover · 2024</div>
-      </div>
+      <a href="https://pubs.acs.org/doi/10.1021/acs.langmuir.3c03888" target="_blank" style="display:block;">
+        <img
+          src="images/covers/langmuir-2024.jpg"
+          alt="Langmuir 2024 Cover"
+          class="cover-img"
+          style="image-rendering:auto;-webkit-filter:none;filter:none;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+        >
+        <div class="cover-ph" style="display:none;">
+          <div class="cp-j">Langmuir</div>
+          <div class="cp-t">Dual Functional Materials</div>
+          <div class="cp-b">Cover · 2024</div>
+        </div>
+      </a>
       <div class="cc-lbl">
         <strong>Langmuir, 2024</strong>
-        Ahmadov, Michtavy, Porosoff
+        Ahmadov, Michtavy, Porosoff*
       </div>
     </div>
   </div>
+
 
   <!-- PUBLICATION LIST -->
   <div class="pub-list">
@@ -98,7 +101,7 @@
       <div>
         <div class="pub-jt">ACS Catalysis</div>
         <div class="pub-ti">Achieving Phase Control of Polymorphic Tungsten Carbide Catalysts <span class="pub-new">NEW</span></div>
-        <div class="pub-au">Perera, S.M.H.D.; Ciuffetelli, E.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Perera, S.M.H.D.; Ciuffetelli, E.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acscatal.5c07774" target="_blank">DOI: 10.1021/acscatal.5c07774 →</a>
       </div>
     </div>
@@ -108,7 +111,7 @@
       <div>
         <div class="pub-jt">EES Catalysis · Royal Society of Chemistry · Cover Article &amp; HOT Article</div>
         <div class="pub-ti">Leveraging and Understanding Exotherms in Tandem Catalysts with In Situ Luminescence Thermometry <span class="pub-new">NEW</span></div>
-        <div class="pub-au">Perera, S.M.H.D.; Harrington, B.; Fadhul, A.; Pickel, A.D.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Perera, S.M.H.D.; Harrington, B.; Fadhul, A.; Pickel, A.D.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://doi.org/10.1039/D5EY00319A" target="_blank">DOI: 10.1039/D5EY00319A →</a>
       </div>
     </div>
@@ -118,7 +121,7 @@
       <div>
         <div class="pub-jt">Chem Catalysis · Cell Press · Preview <span class="pub-new">NEW</span></div>
         <div class="pub-ti">Balancing Carbon and Hydrogen Atom Efficiencies in Sustainable Syngas-to-Olefin Catalysis</div>
-        <div class="pub-au">Perera, S.M.H.D.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Perera, S.M.H.D.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://www.cell.com/chem-catalysis/abstract/S2667-1093(26)00009-6" target="_blank">Chem Catalysis, 2026, 6(2) →</a>
       </div>
     </div>
@@ -128,7 +131,7 @@
       <div>
         <div class="pub-jt">Journal of the American Chemical Society</div>
         <div class="pub-ti">Intrinsically Bifunctional and Tunable Tungsten Carbide Catalysts Enable Efficient PVC-Compatible Polyolefin Hydrocracking <span class="pub-new">NEW</span></div>
-        <div class="pub-au">Nwachukwu, U.C.; Moegling, M.J.; Perera, S.M.H.D.; Pathan, A.N.; Chen, J.; Rezvani, F.; Valappil, A.R.V.; Zhou, C.; Rahman, L.; Liu, J.; Kim, S.; Eagan, J.M.; Deshpande, S.; <strong>Porosoff, M.D.</strong>; Chen, L.</div>
+        <div class="pub-au">Nwachukwu, U.C.; Moegling, M.J.; Perera, S.M.H.D.; Pathan, A.N.; Chen, J.; Rezvani, F.; Valappil, A.R.V.; Zhou, C.; Rahman, L.; Liu, J.; Kim, S.; Eagan, J.M.; Deshpande, S.; Porosoff, M.D.*; Chen, L.</div>
         <a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/jacs.5c11845" target="_blank">DOI: 10.1021/jacs.5c11845 →</a>
       </div>
     </div>
@@ -138,7 +141,7 @@
       <div>
         <div class="pub-jt">Catalysis Science &amp; Technology · Royal Society of Chemistry</div>
         <div class="pub-ti">Effect of Pretreatment Conditions on Fe-ZSM-5 Properties and Performance for Fischer–Tropsch Synthesis <span class="pub-new">NEW</span></div>
-        <div class="pub-au">Agwara, J.N.; Leshchev, D.; Perera, S.M.H.D.; Bauer, A.K.; Neidig, M.L.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Agwara, J.N.; Leshchev, D.; Perera, S.M.H.D.; Bauer, A.K.; Neidig, M.L.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://doi.org/10.1039/D4CY00765D" target="_blank">DOI: 10.1039/D4CY00765D →</a>
       </div>
     </div>
@@ -148,7 +151,7 @@
       <div>
         <div class="pub-jt">Langmuir · ACS · Cover Article</div>
         <div class="pub-ti">Dual Functional Materials: At the Interface of Catalysis and Separations</div>
-        <div class="pub-au">Ahmadov, R.; Michtavy, S.S.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Ahmadov, R.; Michtavy, S.S.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acs.langmuir.3c03888" target="_blank">DOI: 10.1021/acs.langmuir.3c03888 →</a>
       </div>
     </div>
@@ -158,7 +161,7 @@
       <div>
         <div class="pub-jt">ACS Catalysis</div>
         <div class="pub-ti">Reactive Separations of CO/CO₂ Mixtures over Ru-Co Single Atom Alloys</div>
-        <div class="pub-au">Liu, R.; El Berch, J.N.; House, S.; Meil, S.W.; Mpourmpakis, G.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Liu, R.; El Berch, J.N.; House, S.; Meil, S.W.; Mpourmpakis, G.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acscatal.2c05110" target="_blank">DOI: 10.1021/acscatal.2c05110 →</a>
       </div>
     </div>
@@ -168,7 +171,7 @@
       <div>
         <div class="pub-jt">Nanoscale · Royal Society of Chemistry</div>
         <div class="pub-ti">Establishing Tungsten Carbides as Active Catalysts for CO₂ Hydrogenation</div>
-        <div class="pub-au">Juneau, M.; Yaffe, D.; Liu, R.; Agwara, J.N.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Juneau, M.; Yaffe, D.; Liu, R.; Agwara, J.N.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://pubs.rsc.org/en/content/articlelanding/2022/NR/D2NR03281C" target="_blank">DOI: 10.1039/d2nr03281c →</a>
       </div>
     </div>
@@ -178,7 +181,7 @@
       <div>
         <div class="pub-jt">ChemCatChem · Wiley</div>
         <div class="pub-ti">Challenges and Opportunities of Fe-based Core-Shell Catalysts for Fischer-Tropsch Synthesis</div>
-        <div class="pub-au">Agwara, J.N.; Bakas, N.J.; Neidig, M.L.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Agwara, J.N.; Bakas, N.J.; Neidig, M.L.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/cctc.202200289" target="_blank">DOI: 10.1002/cctc.202200289 →</a>
       </div>
     </div>
@@ -188,7 +191,7 @@
       <div>
         <div class="pub-jt">Applied Catalysis B: Environmental · Elsevier</div>
         <div class="pub-ti">Selective Hydrogenation of CO₂ and CO over Potassium Promoted Co/ZSM-5</div>
-        <div class="pub-au">Liu, R.; Leshchev, D.; Stavitski, E.; Juneau, M.; Agwara, J.N.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Liu, R.; Leshchev, D.; Stavitski, E.; Juneau, M.; Agwara, J.N.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://doi.org/10.1016/j.apcatb.2020.119787" target="_blank">DOI: 10.1016/j.apcatb.2020.119787 →</a>
       </div>
     </div>
@@ -198,7 +201,7 @@
       <div>
         <div class="pub-jt">Chem · Cell Press</div>
         <div class="pub-ti">Recent Advances in Carbon Dioxide Hydrogenation to Produce Olefins and Aromatics</div>
-        <div class="pub-au">Wang, D.; Xie, Z.; <strong>Porosoff, M.D.</strong>; Chen, J.G.</div>
+        <div class="pub-au">Wang, D.; Xie, Z.; Porosoff, M.D.*; Chen, J.G.</div>
         <a class="pub-doi" href="https://doi.org/10.1016/j.chempr.2021.02.024" target="_blank">DOI: 10.1016/j.chempr.2021.02.024 →</a>
       </div>
     </div>
@@ -208,7 +211,7 @@
       <div>
         <div class="pub-jt">Applied Catalysis A: General · Elsevier</div>
         <div class="pub-ti">Support Acidity as a Descriptor for Reverse Water-Gas Shift over Mo₂C-Based Catalysts</div>
-        <div class="pub-au">Juneau, M.; Pope, C.; Liu, R.J.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Juneau, M.; Pope, C.; Liu, R.J.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://doi.org/10.1016/j.apcata.2021.118034" target="_blank">DOI: 10.1016/j.apcata.2021.118034 →</a>
       </div>
     </div>
@@ -218,7 +221,7 @@
       <div>
         <div class="pub-jt">Energy &amp; Environmental Science · Royal Society of Chemistry</div>
         <div class="pub-ti">Assessing the Viability of K-Mo₂C for Reversed Water-Gas Shift Scale-Up: Molecular to Laboratory to Pilot Scale</div>
-        <div class="pub-au">Juneau, M.; Vonglis, M.; Hartvigsen, J.; Frost, L.; Bayerl, D.; Dixit, M.; Mpourmpakis, G.; Morse, J.R.; Baldwin, J.; Willauer, H.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Juneau, M.; Vonglis, M.; Hartvigsen, J.; Frost, L.; Bayerl, D.; Dixit, M.; Mpourmpakis, G.; Morse, J.R.; Baldwin, J.; Willauer, H.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://pubs.rsc.org/en/content/articlelanding/2020/ee/d0ee01457e" target="_blank">DOI: 10.1039/d0ee01457e →</a>
       </div>
     </div>
@@ -228,7 +231,7 @@
       <div>
         <div class="pub-jt">Journal of CO₂ Utilization · Elsevier</div>
         <div class="pub-ti">Identifying Correlations in Fischer-Tropsch Synthesis and CO₂ Hydrogenation over Fe-based ZSM-5 Catalysts</div>
-        <div class="pub-au">Liu, R.J.; Ma, Z.; Sears, J.D.; Juneau, M.; Neidig, M.L.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Liu, R.J.; Ma, Z.; Sears, J.D.; Juneau, M.; Neidig, M.L.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://doi.org/10.1016/j.jcou.2020.101290" target="_blank">DOI: 10.1016/j.jcou.2020.101290 →</a>
       </div>
     </div>
@@ -238,7 +241,7 @@
       <div>
         <div class="pub-jt">ChemCatChem · Wiley</div>
         <div class="pub-ti">Characterization of Metal-Zeolite Composite Catalysts: Determining the Environment of the Active Phase</div>
-        <div class="pub-au">Juneau, M.; Liu, R.J.; Peng, Y.; Malge, A.; Ma, Z.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Juneau, M.; Liu, R.J.; Peng, Y.; Malge, A.; Ma, Z.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/full/10.1002/cctc.201902039" target="_blank">DOI: 10.1002/cctc.201902139 →</a>
       </div>
     </div>
@@ -248,7 +251,7 @@
       <div>
         <div class="pub-jt">ACS Catalysis</div>
         <div class="pub-ti">Development of Tandem Catalysts for CO₂ Hydrogenation to Olefins</div>
-        <div class="pub-au">Ma, Z.; <strong>Porosoff, M.D.</strong></div>
+        <div class="pub-au">Ma, Z.; Porosoff, M.D.*</div>
         <a class="pub-doi" href="https://pubs.acs.org/doi/10.1021/acscatal.8b05060" target="_blank">DOI: 10.1021/acscatal.8b05060 →</a>
       </div>
     </div>
@@ -258,7 +261,7 @@
       <div>
         <div class="pub-jt">Journal of CO₂ Utilization · Elsevier</div>
         <div class="pub-ti">Alkali Promoted Tungsten Carbide as a Selective Catalyst for the Reverse Water Gas Shift Reaction</div>
-        <div class="pub-au">Morse, J.R.; Juneau, M.; Baldwin, J.W.; <strong>Porosoff, M.D.</strong>; Willauer, H.D.</div>
+        <div class="pub-au">Morse, J.R.; Juneau, M.; Baldwin, J.W.; Porosoff, M.D.*; Willauer, H.D.</div>
         <a class="pub-doi" href="https://doi.org/10.1016/j.jcou.2019.08.024" target="_blank">DOI: 10.1016/j.jcou.2019.08.024 →</a>
       </div>
     </div>
@@ -268,7 +271,7 @@
       <div>
         <div class="pub-jt">ChemSusChem · Wiley</div>
         <div class="pub-ti">Potassium-Promoted Molybdenum Carbide as a Highly Active and Selective Catalyst for CO₂ Conversion to CO</div>
-        <div class="pub-au"><strong>Porosoff, M.D.</strong>; Baldwin, J.W.; Peng, X.; Mpourmpakis, G.; Willauer, H.D.</div>
+        <div class="pub-au">Porosoff, M.D.*; Baldwin, J.W.; Peng, X.; Mpourmpakis, G.; Willauer, H.D.</div>
       </div>
     </div>
 
@@ -277,7 +280,7 @@
       <div>
         <div class="pub-jt">Catalysis Science &amp; Technology · Royal Society of Chemistry</div>
         <div class="pub-ti">Elucidating the Role of Oxygen Coverage in CO₂ Reduction on Mo₂C</div>
-        <div class="pub-au">Dixit, M.; Peng, X.; <strong>Porosoff, M.D.</strong>; Willauer, H.D.; Mpourmpakis, G.</div>
+        <div class="pub-au">Dixit, M.; Peng, X.; Porosoff, M.D.*; Willauer, H.D.; Mpourmpakis, G.</div>
       </div>
     </div>
 

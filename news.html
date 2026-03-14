@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News — Porosoff Research Group</title>
+  <meta name="description" content="Latest news, publications, awards, and press coverage from the Porosoff Research Group at the University of Rochester.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .news-item { display: grid; grid-template-columns: 150px 1fr; border: 1px solid var(--border); }
+    .ni-side   { background: var(--accent); padding: 1.75rem 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .ni-type   { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); font-weight: 600; }
+    .ni-journal{ font-family: var(--font-display); font-size: 1.15rem; font-weight: 900; color: var(--navy); font-style: italic; line-height: 1.2; margin: 0.4rem 0; }
+    .ni-date   { font-family: var(--font-mono); font-size: 0.58rem; color: rgba(10,22,40,0.6); }
+    .ni-body   { background: var(--deep); padding: 1.75rem 2.25rem; }
+    .ni-body h3{ font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; line-height: 1.35; }
+    .ni-authors{ font-family: var(--font-mono); font-size: 0.64rem; color: var(--accent); letter-spacing: 0.03em; margin-bottom: 0.6rem; }
+    .ni-body p { color: rgba(255,255,255,0.56); font-size: 0.85rem; line-height: 1.75; margin-bottom: 0.9rem; }
+
+    .feed-item { display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-thumb { width: 110px; flex-shrink: 0; aspect-ratio: 4/3; object-fit: cover; display: block; background: var(--mid); }
+    .feed-ph    { width: 110px; flex-shrink: 0; aspect-ratio: 4/3; background: var(--mid); display: block; }
+    .feed-content { flex: 1; min-width: 0; }
+    .feed-meta  { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+    .feed-title { font-family: var(--font-display); font-size: 0.97rem; font-weight: 700; color: rgba(255,255,255,0.85); line-height: 1.35; margin-bottom: 0.4rem; text-decoration: none; display: block; }
+    .feed-title:hover { color: var(--gold); }
+    .feed-sum   { font-size: 0.82rem; color: rgba(255,255,255,0.48); line-height: 1.65; }
+
+    .press-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 1.5rem; }
+    .press-card { background: var(--deep); border: 1px solid var(--border); padding: 1.4rem; text-decoration: none; display: block; transition: border-color 0.2s; }
+    .press-card:hover { border-color: var(--gold); }
+    .pc-out   { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+    .pc-title { color: rgba(255,255,255,0.78); font-size: 0.85rem; line-height: 1.5; font-family: var(--font-display); }
+
+    .arc-section { margin-top: 3rem; }
+    .arc-toggle {
+      display: flex; align-items: center; gap: 0.75rem; width: 100%;
+      padding: 1rem 1.5rem; background: var(--deep); border: 1px solid var(--border);
+      cursor: pointer; color: var(--white); font-family: var(--font-body);
+      font-size: 0.88rem; font-weight: 500; text-align: left; transition: background 0.2s;
+      margin-top: 3px;
+    }
+    .arc-toggle:first-child { margin-top: 0; }
+    .arc-toggle:hover { background: rgba(255,255,255,0.04); }
+    .arc-yr    { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-right: 0.25rem; }
+    .arc-arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.75rem; color: var(--gold); }
+    .arc-toggle.open .arc-arrow { transform: rotate(180deg); }
+    .arc-body  { display: none; border: 1px solid var(--border); border-top: none; padding: 0.25rem 1.5rem 0.75rem; background: rgba(10,22,40,0.45); }
+    .arc-body.open { display: block; }
+
+    @media (max-width: 768px) {
+      .news-item { grid-template-columns: 1fr; }
+      .ni-side { flex-direction: row; align-items: center; gap: 1rem; padding: 1rem 1.25rem; }
+      .press-grid { grid-template-columns: 1fr; }
+      .feed-item { flex-direction: column; }
+      .feed-thumb, .feed-ph { width: 100%; aspect-ratio: 16/9; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-brand">Porosoff Research Group</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="news.html">News</a></li>
+    <li><a href="people.html">People</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="publications.html">Publications</a></li>
+    <li><a href="podcat.html">PodCAT</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</nav>
+<nav class="nav-drawer">
+  <a href="index.html">Home</a><a href="news.html">News</a><a href="people.html">People</a>
+  <a href="research.html">Research</a><a href="publications.html">Publications</a>
+  <a href="podcat.html">PodCAT</a><a href="contact.html">Contact</a>
+</nav>
+
+<div class="page-wrap">
+<section style="background:var(--navy);padding-top:5rem;">
+<div class="container">
+
+  <span class="sec-label sec-label-w">Latest from the Lab</span>
+  <h1 class="sec-title sec-title-w">News &amp; <em>Highlights</em></h1>
+  <p style="color:rgba(255,255,255,0.5);font-size:0.93rem;line-height:1.75;max-width:580px;">
+    Recent publications, awards, press coverage, and lab updates. Pre-2025 stories are in the archive below.
+  </p>
+
+  <!-- ── FEATURED 2024–2026 ── -->
+  <div style="display:flex;flex-direction:column;gap:1.75rem;margin-top:2.5rem;">
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">Group Awards</div>
+        <div class="ni-journal">Spring 2025</div>
+        <div class="ni-date">March 2025</div>
+      </div>
+      <div class="ni-body">
+        <h3>Spring 2025 Porosoff Group Awards</h3>
+        <p><strong style="color:var(--gold)">Hasitha Perera</strong> — Kokes Award from NACS for NAM29 &nbsp;·&nbsp; <strong style="color:var(--gold)">Phyllis Ong</strong> — Department of Chemical Engineering 2025 ACS Award &nbsp;·&nbsp; <strong style="color:var(--gold)">Eva Ciuffetelli</strong> — inaugural Chemical Sustainability Scholar &nbsp;·&nbsp; <strong style="color:var(--gold)">Ruth Reynolds</strong> — Eisenberg Intern &nbsp;·&nbsp; <strong style="color:var(--gold)">Shane Michtavy</strong> — back-to-back Su Lecture Poster Award winner. Congratulations to all!</p>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">Honor</div>
+        <div class="ni-journal">EES Catalysis Board</div>
+        <div class="ni-date">January 2026</div>
+      </div>
+      <div class="ni-body">
+        <h3>Prof. Porosoff Appointed to EES Catalysis Early Career Board</h3>
+        <div class="ni-authors">University of Rochester News · January 2026</div>
+        <p>Associate Professor Marc Porosoff was appointed to the Early Career Board of EES Catalysis (Royal Society of Chemistry), recognizing his research program integrating AI and novel energy transfer mechanisms for sustainable CO₂ conversion.</p>
+        <a href="https://www.rochester.edu/newscenter/january-2026-faculty-awards-accolades-692622/" target="_blank" class="btn btn-gold">Read Announcement →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">New Paper</div>
+        <div class="ni-journal">ACS Catalysis</div>
+        <div class="ni-date">January 2026</div>
+      </div>
+      <div class="ni-body">
+        <h3>Achieving Phase Control of Polymorphic Tungsten Carbide Catalysts</h3>
+        <div class="ni-authors">Perera, S.M.H.D. · Ciuffetelli, E. · Porosoff, M.D.</div>
+        <p>By maintaining particle sizes below 10 nm and using temperature-programmed carburization, the team selectively synthesized β-W₂C — establishing it as an active and stable RWGS catalyst. Funded by the Alfred P. Sloan Foundation and DOE Office of Basic Energy Sciences.</p>
+        <a href="https://pubs.acs.org/doi/10.1021/acscatal.5c07774" target="_blank" class="btn btn-gold">View Paper →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">Cover Article</div>
+        <div class="ni-journal">EES Catalysis</div>
+        <div class="ni-date">Dec. 2025</div>
+      </div>
+      <div class="ni-body">
+        <h3>Leveraging and Understanding Exotherms in Tandem Catalysts with In Situ Luminescence Thermometry</h3>
+        <div class="ni-authors">Perera, S.M.H.D. · Harrington, B. · Fadhul, A. · Pickel, A.D. · Porosoff, M.D.</div>
+        <p>UCNP-based luminescence thermometry revealed 10–100°C discrepancies between bulk and surface temperatures in tandem catalytic systems. Selected as a <strong style="color:var(--gold)">HOT article and journal cover</strong>. Funded by NYSERDA Carbontech Development Initiative.</p>
+        <a href="https://doi.org/10.1039/D5EY00319A" target="_blank" class="btn btn-gold">View Paper →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">New Paper</div>
+        <div class="ni-journal">JACS</div>
+        <div class="ni-date">Dec. 2025</div>
+      </div>
+      <div class="ni-body">
+        <h3>Intrinsically Bifunctional Tungsten Carbide Enables Efficient PVC-Compatible Polyolefin Hydrocracking</h3>
+        <div class="ni-authors">Nwachukwu, U.C. · Moegling, M.J. · Perera, S.M.H.D. · … · Deshpande, S. · Porosoff, M.D. · Chen, L.</div>
+        <p>Phase-controlled tungsten carbide drives polyolefin hydrocracking more than 10× more efficiently than conventional platinum — and resists deactivation by PVC contaminants. Funded by NSF.</p>
+        <a href="https://pubs.acs.org/doi/10.1021/jacs.5c11845" target="_blank" class="btn btn-gold">View Paper →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">DOE Award</div>
+        <div class="ni-journal">DE-SC0026195</div>
+        <div class="ni-date">Aug. 2025</div>
+      </div>
+      <div class="ni-body">
+        <h3>DOE Award: Precise Control of Tungsten Carbide in Joule Reactors via NLP</h3>
+        <div class="ni-authors">DOE Office of Basic Energy Sciences · PI: Marc Porosoff · 2025–2028</div>
+        <p>Three-year DOE award funds work combining NLP-guided catalyst discovery with pulsed Joule heating to synthesize and control tungsten carbide phases for the RWGS reaction.</p>
+        <a href="https://pamspublic.science.energy.gov/webpamsexternal/Interface/Common/ViewPublicAbstract.aspx?rv=0a7846b0-b0dd-4eb4-8eb4-588adb7acf33&rtc=24&PRoleId=10" target="_blank" class="btn btn-gold">View Award Abstract →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">Cover Article</div>
+        <div class="ni-journal">Langmuir</div>
+        <div class="ni-date">May 2024</div>
+      </div>
+      <div class="ni-body">
+        <h3>Dual Functional Materials: At the Interface of Catalysis and Separations</h3>
+        <div class="ni-authors">Ahmadov, R. · Michtavy, S.S. · Porosoff, M.D.</div>
+        <p>Perspective on integrated carbon capture and utilization (ICCU) via thermally driven dual functional materials. Identifies key priorities for DFM design, interfacial cooperativity, and data reporting standards. Selected as a <strong style="color:var(--gold)">journal cover</strong>.</p>
+        <a href="https://pubs.acs.org/doi/10.1021/acs.langmuir.3c03888" target="_blank" class="btn btn-gold">View Paper →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">PodCAT</div>
+        <div class="ni-journal">Crossover Episode</div>
+        <div class="ni-date">Oct. 2024</div>
+      </div>
+      <div class="ni-body">
+        <h3>PodCAT Crossover: Darren Lipomi, A Catalyst for Change in Chemical Engineering</h3>
+        <div class="ni-authors">University of Rochester News · October 2024</div>
+        <p>Prof. Porosoff collaborated with department chair Darren Lipomi on a special crossover episode discussing leadership, mentorship, and the future of chemical engineering education.</p>
+        <a href="https://www.rochester.edu/newscenter/darren-lipomi-a-catalyst-for-change-in-chemical-engineering-621992/" target="_blank" class="btn btn-gold">Read More →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">Scialog Award</div>
+        <div class="ni-journal">NES Team Award</div>
+        <div class="ni-date">Jan. 2024</div>
+      </div>
+      <div class="ni-body">
+        <h3>Scialog NES: Porosoff Part of Awarded Cross-Disciplinary Team</h3>
+        <div class="ni-authors">Research Corporation for Science Advancement · Alfred P. Sloan Foundation · January 2024</div>
+        <p>In the fourth and final year of Scialog: Negative Emissions Science, Prof. Porosoff was part of one of seven cross-disciplinary teams awarded funding to advance the underlying science of greenhouse gas capture, utilization, and sequestration. The project focused on modular production of aviation fuel from biogas via zoned Joule heating, in collaboration with researchers from the University of Southern Mississippi and Yale.</p>
+        <a href="https://www.rochester.edu/newscenter/january-2024-faculty-awards-accolades-590762/" target="_blank" class="btn btn-gold">Read Announcement →</a>
+      </div>
+    </div>
+
+    <div class="news-item">
+      <div class="ni-side">
+        <div class="ni-type">New Paper</div>
+        <div class="ni-journal">ACS Catalysis</div>
+        <div class="ni-date">Jan. 2023</div>
+      </div>
+      <div class="ni-body">
+        <h3>Reactive Separations of CO/CO₂ Mixtures over Ru-Co Single Atom Alloys</h3>
+        <div class="ni-authors">Liu, R. · El Berch, J.N. · House, S. · Meil, S.W. · Mpourmpakis, G. · Porosoff, M.D.</div>
+        <p>Demonstrating Ru-Co single atom alloys for reactive separations of CO/CO₂ mixtures, combining experimental characterization with DFT calculations.</p>
+        <a href="https://pubs.acs.org/doi/10.1021/acscatal.2c05110" target="_blank" class="btn btn-gold">View Paper →</a>
+      </div>
+    </div>
+
+  </div><!-- end featured -->
+
+  <!-- ── Press Coverage ── -->
+  <div style="margin-top:3.5rem;">
+    <span class="sec-label sec-label-w">Press Coverage</span>
+    <h2 class="sec-title sec-title-w" style="font-size:1.5rem;">In the <em>Media</em></h2>
+    <div class="press-grid">
+      <a href="https://www.rochester.edu/newscenter/tungsten-carbide-alternative-catalyst-petrochemicals-692152/" target="_blank" class="press-card">
+        <div class="pc-out">University of Rochester · Jan 2026</div>
+        <div class="pc-title">Engineering a low-cost alternative catalyst for producing sustainable petrochemicals</div>
+      </a>
+      <a href="https://www.sciencedaily.com/releases/2026/01/260124003806.htm" target="_blank" class="press-card">
+        <div class="pc-out">ScienceDaily · Jan 2026</div>
+        <div class="pc-title">New catalyst makes plastic upcycling 10× more efficient than platinum</div>
+      </a>
+      <a href="https://scitechdaily.com/scientists-found-a-platinum-alternative-hiding-in-plain-sight/" target="_blank" class="press-card">
+        <div class="pc-out">SciTechDaily · Jan 2026</div>
+        <div class="pc-title">Scientists found a platinum alternative hiding in plain sight</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ARCHIVE
+  ══════════════════════════════════════════ -->
+  <div class="arc-section">
+    <span class="sec-label sec-label-w" style="margin-bottom:1rem;margin-top:1rem;display:block;">News Archive</span>
+
+    <!-- 2023 -->
+    <button class="arc-toggle">
+      <span class="arc-yr">2023</span>
+      <span style="color:rgba(255,255,255,0.4);font-size:0.82rem;">AIChE poster wins · Fulbright · Hajim video · PhD defenses</span>
+      <span class="arc-arrow">▼</span>
+    </button>
+    <div class="arc-body">
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/news/phyllis.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Nov 2023 · Student Award</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/2023/2023-11-04_aiche_poster_winner-sun.html" target="_blank">Undergrads Win Big at AIChE Annual Student Conference</a>
+          <p class="feed-sum">Phyllis Ong won 1st place in Catalysis and Reaction Engineering (Division III); Adel Fadhul won 2nd place in Fuels, Petrochem and Energy (Division II) at the 2023 AIChE annual student conference in Orlando, Florida.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/getz.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">May 2023 · Student Award</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/2023/2023-05-22_getz.html" target="_blank">Danielle Getz Receives a Fulbright Grant</a>
+          <p class="feed-sum">Danielle Getz was awarded a Fulbright U.S. Student Grant to attend the University of Copenhagen's Center for High Entropy Alloy Catalysis, where she conducted research on high-entropy alloy catalysts for renewable chemical production.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <span class="feed-ph"></span>
+        <div class="feed-content">
+          <div class="feed-meta">2023 · Video</div>
+          <a class="feed-title" href="https://youtu.be/fGBcf3_VHEs" target="_blank">New Hajim School Promo Video Featuring Jane Agwara</a>
+          <p class="feed-sum">PhD candidate Jane Agwara was featured in the new Hajim School of Engineering promotional video highlighting CO₂ conversion research.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <span class="feed-ph"></span>
+        <div class="feed-content">
+          <div class="feed-meta">May 2023 · PhD Defenses</div>
+          <div class="feed-title" style="cursor:default;color:rgba(255,255,255,0.85)">Dr. Mitchell Juneau and Dr. Renjie Liu Complete PhD Degrees</div>
+          <p class="feed-sum">Congratulations to Mitch Juneau (PhD 2023) and Renjie Liu (PhD 2023) on completing their doctoral degrees, representing major milestones for the group's RWGS and CO₂ hydrogenation programs.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2022 -->
+    <button class="arc-toggle">
+      <span class="arc-yr">2022</span>
+      <span style="color:rgba(255,255,255,0.4);font-size:0.82rem;">Scialog Fellow · student honors · publications</span>
+      <span class="arc-arrow">▼</span>
+    </button>
+    <div class="arc-body">
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/Porosoff.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Aug 2022 · Faculty Honor</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/2022/2022-08-15_scialog_nes_story.html" target="_blank">Prof. Porosoff Named Scialog Fellow for Negative Emissions Science</a>
+          <p class="feed-sum">Prof. Porosoff was named a Scialog: Negative Emissions Science Fellow, co-sponsored by the Alfred P. Sloan Foundation and RCSA, joining early-career scientists pursuing collaborative, high-risk research in greenhouse gas removal.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/levi.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">May 2022 · Student Award</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/2022/2022-05-16_hajimschool_ug_award.html" target="_blank">Levi Sunday-Lefkowitz Wins Donald M. Barnard Prize</a>
+          <p class="feed-sum">Congratulations to Levi Sunday-Lefkowitz on winning the Donald M. Barnard Prize.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/getz.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Sep 2022 · Student Feature</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/2022/2022-09-26-getz.html" target="_blank">Outstanding Student: Danielle Getz</a>
+          <p class="feed-sum">Danielle Getz, chemical engineering major and Grand Challenges Scholar, worked in the Porosoff lab on climate solutions and led STEM outreach through the Society of Women Engineers.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/fall2022ta.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Dec 2022 · Student Award</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/2022/2022-12-05_fall-ta-award.html" target="_blank">Danielle Getz and Quinn Yu Win Fall 2022 TA Awards</a>
+          <p class="feed-sum">Seniors Danielle Getz and Quinn Yu received the Undergraduate Teaching Assistant Award for outstanding service as TAs in Chemical Engineering courses during Fall 2022.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2021 -->
+    <button class="arc-toggle">
+      <span class="arc-yr">2021</span>
+      <span style="color:rgba(255,255,255,0.4);font-size:0.82rem;">Sykes Award · CHE 150 · XPRIZE · publications</span>
+      <span class="arc-arrow">▼</span>
+    </button>
+    <div class="arc-body">
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/news/2021-09-24_porosoff_class_043.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Nov 2021 · Teaching</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/archive/2021/2021-11-01-sykes-award-illuminates-next-level-of-sustainable-energy-class.html" target="_blank">Sykes Award Illuminates Next Level of Sustainable Energy Class</a>
+          <p class="feed-sum">Students in CHE 150: Introduction to Sustainable Energy designed and built solar hot water heaters under a revamped curriculum supported by the $15,000 Sykes Engineering Award, adding new labs and team projects.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/xprise.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Oct 2021 · Competition</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/archive/2021/2021-10-01-xprise.html" target="_blank">XPRIZE Carbon Removal Competition</a>
+          <p class="feed-sum">Over 30 Hajim School students, led by PhD candidate Jane Agwara and mentored by Prof. Porosoff, entered the XPRIZE Carbon Removal Competition to develop a device that extracts CO₂ from the atmosphere and converts it into useful materials.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2019–2020 -->
+    <button class="arc-toggle">
+      <span class="arc-yr">2019–2020</span>
+      <span style="color:rgba(255,255,255,0.4);font-size:0.82rem;">Seawater-to-fuel · TV feature · undergraduate research · first papers</span>
+      <span class="arc-arrow">▼</span>
+    </button>
+    <div class="arc-body">
+      <div class="feed-item">
+        <img src="https://www.rochester.edu/newscenter/wp-content/uploads/2020/07/fea-usns-joshua-humphreys-refuels-uss-boxer.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Jul 2020 · Publication &amp; Press</div>
+          <a class="feed-title" href="https://www.rochester.edu/newscenter/chemical-catalyst-helps-convert-seawater-into-fuel-industrial-scale-444112/" target="_blank">This Low-Cost Catalyst Helps Turn Seawater into Fuel at Scale</a>
+          <p class="feed-sum">The group's K-Mo₂C paper in Energy &amp; Environmental Science earned wide press coverage. The catalyst efficiently converts CO₂ to CO at industrial scale — a key step in the Navy's seawater-to-fuel program. WROC Channel 8 visited the lab to cover the story.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.hajim.rochester.edu/che/assets/images/news/porosofflab.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">2019 · Undergraduate Research</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/archive/2019/2019_07_porosoffresearch.html" target="_blank">Putting Theory into Practice in the Quest to Convert CO₂</a>
+          <p class="feed-sum">Eve Marealle and Aime Laurent Twizerimana (Xerox Engineering Research Fellows) worked on converting CO₂ to ethylene and propylene. Madeline Vonglis (Eisenberg Summer Intern) investigated molybdenum carbide catalysts for synthetic jet fuel.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <img src="https://www.rochester.edu/newscenter/wp-content/uploads/2019/07/fea-2019-summer-research.jpg" alt="" class="feed-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="feed-ph" style="display:none"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Jul 2019 · Press</div>
+          <a class="feed-title" href="https://www.rochester.edu/newscenter/summer-in-rochester-means-research-390542/" target="_blank">Summer in Rochester Means Research — University of Rochester NewsCenter</a>
+          <p class="feed-sum">University of Rochester feature on summer undergraduate research in the Porosoff lab, highlighting three students working on CO₂ conversion projects.</p>
+        </div>
+      </div>
+      <div class="feed-item">
+        <span class="feed-ph"></span>
+        <div class="feed-content">
+          <div class="feed-meta">Feb 2019 · First Publication</div>
+          <a class="feed-title" href="https://pubs.acs.org/doi/abs/10.1021/acscatal.8b05060" target="_blank">Group's First Publication: Development of Tandem Catalysts for CO₂ Hydrogenation to Olefins (ACS Catalysis)</a>
+          <p class="feed-sum">Congratulations to Zhiqiang Ma and Prof. Porosoff on the group's inaugural publication — the beginning of the group's record of 20+ peer-reviewed papers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2018 -->
+    <button class="arc-toggle">
+      <span class="arc-yr">2018</span>
+      <span style="color:rgba(255,255,255,0.4);font-size:0.82rem;">University Research Award · group founded</span>
+      <span class="arc-arrow">▼</span>
+    </button>
+    <div class="arc-body">
+      <div class="feed-item">
+        <span class="feed-ph"></span>
+        <div class="feed-content">
+          <div class="feed-meta">May 2018 · Award</div>
+          <a class="feed-title" href="https://www.hajim.rochester.edu/che/news-events/news/archive/2018/2018-05-20_porosoff-award.html" target="_blank">Prof. Porosoff Wins Award to Develop Reverse Water-Gas Shift Catalysts</a>
+          <p class="feed-sum">Prof. Porosoff received a $60,000 University Research Award to develop nano-sized RWGS catalysts — the foundation of the group's program converting CO₂ into plastics, chemicals, and fuels.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end archive -->
+
+</div>
+</section>
+</div>
+
+<footer class="site-footer">
+  <div class="ft-brand">Porosoff Research Group</div>
+  <div class="ft-copy">Department of Chemical &amp; Sustainability Engineering · University of Rochester · Rochester, NY 14627</div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // Wire up archive accordions (separate from main.js .archive-toggle class)
+  document.querySelectorAll('.arc-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = btn.nextElementSibling;
+      btn.classList.toggle('open');
+      if (body) body.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

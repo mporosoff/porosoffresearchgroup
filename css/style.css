@@ -456,4 +456,7 @@ border-radius: 2px; transition: all 0.3s;
   .r-grid[style*="repeat(4"] {
     grid-template-columns: 1fr !important;
   }
+  .index-research-grid {
+    grid-template-columns: 1fr !important;
+  }
 }

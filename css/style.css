@@ -451,3 +451,9 @@ border-radius: 2px; transition: all 0.3s;
   .pub-item { grid-template-columns: 1fr; gap: 0.2rem; }
   .pub-yr { font-size: 0.8rem; font-family: var(--font-mono); }
 }
+
+@media (max-width: 768px) {
+  .r-grid[style*="repeat(4"] {
+    grid-template-columns: 1fr !important;
+  }
+}

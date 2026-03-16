@@ -296,7 +296,7 @@ border-radius: 2px; transition: all 0.3s;
 
 .grp-lbl { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin: 2.5rem 0 1.1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border-light); display: block; }
 
-.ppl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px,1fr)); gap: 1.1rem; }
+.ppl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 1.1rem; }
 .ppl-card { padding: 1.3rem; background: var(--cream); border: 1px solid var(--border-light); transition: border-color 0.2s, box-shadow 0.2s; }
 .ppl-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(200,169,81,0.08); }
 .ppl-photo { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: top; margin-bottom: 0.9rem; display: block; }

@@ -305,6 +305,14 @@ border-radius: 2px; transition: all 0.3s;
 .ppl-role { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
 .ppl-bio  { font-size: 0.77rem; color: var(--muted); line-height: 1.6; }
 
+/* Horizontal grad student cards */
+.grad-grid { display: flex; flex-direction: column; gap: 1.1rem; }
+.grad-card { display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; padding: 1.1rem; background: var(--cream); border: 1px solid var(--border-light); align-items: start; transition: border-color 0.2s, box-shadow 0.2s; }
+.grad-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(200,169,81,0.08); }
+.grad-photo { width: 120px; height: 145px; object-fit: cover; object-position: top; display: block; border-bottom: 3px solid var(--accent); }
+.grad-av { width: 120px; height: 145px; border-radius: 0; font-size: 2rem; border-bottom: 3px solid var(--accent); }
+.grad-info { display: flex; flex-direction: column; }
+
 .alum-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 0.8rem; margin-top: 1.1rem; }
 .alum-item { padding: 0.8rem 1rem; background: var(--cream); border-left: 3px solid var(--border); transition: border-color 0.2s; }
 .alum-item:hover { border-color: var(--accent); }
@@ -439,6 +447,8 @@ border-radius: 2px; transition: all 0.3s;
   section { padding: 3.5rem 0; }
 
   .ppl-grid { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); }
+  .grad-card { grid-template-columns: 1fr; }
+  .grad-photo, .grad-av { width: 100%; height: 180px; }
   .alum-grid { grid-template-columns: 1fr; }
 
   .site-footer { flex-direction: column; align-items: flex-start; }
@@ -456,11 +466,7 @@ border-radius: 2px; transition: all 0.3s;
   .r-grid[style*="repeat(4"] {
     grid-template-columns: 1fr !important;
   }
-.index-research-grid {
-  grid-template-columns: repeat(4, 1fr);
-}
-@media (max-width: 768px) {
   .index-research-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }

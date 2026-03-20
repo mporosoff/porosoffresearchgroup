@@ -309,7 +309,7 @@ border-radius: 2px; transition: all 0.3s;
 .grad-grid { display: flex; flex-direction: column; gap: 1.1rem; }
 .grad-card { display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; padding: 1.1rem; background: var(--cream); border: 1px solid var(--border-light); align-items: start; transition: border-color 0.2s, box-shadow 0.2s; }
 .grad-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(200,169,81,0.08); }
-.grad-photo { width: 120px; height: 145px; object-fit: cover; object-position: top; display: block; border-bottom: 3px solid var(--accent); }
+.grad-photo { width: 120px; height: 145px; object-fit: contain; object-position: center top; display: block; border-bottom: 3px solid var(--accent); background: var(--cream); }
 .grad-av { width: 120px; height: 145px; border-radius: 0; font-size: 2rem; border-bottom: 3px solid var(--accent); }
 .grad-info { display: flex; flex-direction: column; }
 

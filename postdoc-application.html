@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postdoc Application — Porosoff Research Group</title>
+  <meta name="description" content="Apply for the Postdoctoral Researcher position in AI-driven catalyst discovery at the University of Rochester.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://porosoffresearchgroup.com/postdoc-application.html">
+  <meta property="og:title" content="Postdoc Application — Porosoff Research Group">
+  <meta property="og:description" content="Apply for the Postdoctoral Researcher position in AI-driven catalyst discovery at the University of Rochester.">
+  <meta property="og:image" content="https://porosoffresearchgroup.com/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Postdoc Application — Porosoff Research Group">
+  <meta name="twitter:description" content="Apply for the Postdoctoral Researcher position in AI-driven catalyst discovery at the University of Rochester.">
+  <meta name="twitter:image" content="https://porosoffresearchgroup.com/images/og-image.jpg">
+
+  <style>
+    /* ---- Page-specific styles (scoped to .postdoc-page) ---- */
+    .postdoc-page .info-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .postdoc-page .info-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: var(--white);
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+    }
+    .postdoc-page .info-card p,
+    .postdoc-page .info-card li {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+    .postdoc-page .info-card ul { padding-left: 1.25rem; margin-top: 0.5rem; }
+    .postdoc-page .info-card li { margin-bottom: 0.4rem; }
+    .postdoc-page .info-card .meta {
+      margin-top: 1rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+    }
+    .postdoc-page .deadline-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Form card on cream background */
+    .postdoc-page .form-card {
+      background: var(--cream);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .postdoc-page .form-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--navy);
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+    }
+    .postdoc-page .field { margin-bottom: 1.25rem; }
+    .postdoc-page .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .postdoc-page .field input[type="text"],
+    .postdoc-page .field input[type="email"],
+    .postdoc-page .field textarea {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .postdoc-page .field input:focus,
+    .postdoc-page .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,169,81,0.18);
+    }
+    .postdoc-page .field textarea { resize: vertical; min-height: 100px; }
+
+    .postdoc-page .file-field {
+      position: relative;
+      border: 1px dashed rgba(10,22,40,0.25);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--white);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .postdoc-page .file-field:hover,
+    .postdoc-page .file-field.dragover {
+      border-color: var(--accent);
+      background: #fffdf5;
+    }
+    .postdoc-page .file-field input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    }
+    .postdoc-page .file-field .file-label {
+      font-size: 0.9rem; color: var(--muted);
+    }
+    .postdoc-page .file-field .file-label strong { color: var(--navy); }
+    .postdoc-page .file-name {
+      font-size: 0.82rem;
+      color: var(--mid);
+      font-weight: 600;
+      margin-top: 0.45rem;
+    }
+
+    .postdoc-page .submit-btn {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--white);
+      border: 1px solid var(--navy);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.85rem 2.25rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      margin-top: 0.5rem;
+    }
+    .postdoc-page .submit-btn:hover { background: var(--accent); color: var(--navy); border-color: var(--accent); }
+    .postdoc-page .submit-btn:disabled { opacity: 0.6; cursor: wait; }
+
+    .postdoc-page .confirmation {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .postdoc-page .confirmation h2 {
+      font-family: var(--font-display);
+      color: var(--navy);
+      font-weight: 400;
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .postdoc-page .confirmation p { color: var(--muted); font-size: 0.95rem; }
+
+    .postdoc-page .form-section-wrap {
+      background: var(--cream);
+      padding: 4rem 0 5rem;
+    }
+  </style>
+</head>
+<body class="postdoc-page">
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-brand">Porosoff Research Group</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="news.html">News</a></li>
+    <li><a href="people.html">People</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="publications.html">Publications</a></li>
+    <li><a href="podcat.html">PodCAT</a></li>
+    <li><a href="teaching.html">Teaching &amp; Outreach</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</nav>
+<nav class="nav-drawer">
+  <a href="index.html">Home</a><a href="news.html">News</a><a href="people.html">People</a>
+  <a href="research.html">Research</a><a href="publications.html">Publications</a>
+  <a href="podcat.html">PodCAT</a><a href="teaching.html">Teaching &amp; Outreach</a><a href="contact.html">Contact</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- Intro / position details on navy -->
+  <section style="background:var(--navy); padding-top:5rem; padding-bottom:4rem;">
+    <div class="container">
+      <span class="sec-label sec-label-w">Open Position</span>
+      <h1 class="sec-title sec-title-w">Postdoctoral Researcher in <em>AI-Driven Catalyst Discovery</em></h1>
+      <p style="color:rgba(255,255,255,0.75); max-width:640px; margin-top:0.5rem; font-size:1rem;">
+        ARPA-E CATALYST Project — CO<sub>2</sub> conversion via LLM-guided closed-loop experimentation.
+      </p>
+
+      <div style="max-width:720px; margin-top:2.5rem;">
+        <div class="info-card">
+          <h2>About the Position</h2>
+          <p>We are seeking a Postdoctoral Researcher to work at the intersection of experimental heterogeneous catalysis and AI/ML as part of our ARPA-E&ndash;funded CATALYST program. You will develop and execute closed-loop workflows using large language models to accelerate the discovery of catalysts for CO<sub>2</sub>-to-methanol and CO<sub>2</sub>-to-ethanol conversion.</p>
+        </div>
+
+        <div class="info-card">
+          <h2>Qualifications</h2>
+          <ul>
+            <li>PhD in Chemical Engineering, Chemistry, Materials Science, or a related field (required)</li>
+            <li>Hands-on experience in heterogeneous catalysis &mdash; synthesis, characterization, and/or reactor testing</li>
+            <li>Familiarity with Python and data-driven methods (ML/AI experience a plus; willing to train strong experimentalists)</li>
+            <li>Strong written and oral communication skills</li>
+          </ul>
+          <p class="meta"><strong style="color:var(--white);">Location:</strong> Rochester, NY &nbsp;&middot;&nbsp; <strong style="color:var(--white);">Compensation:</strong> Competitive salary &amp; benefits</p>
+          <div class="deadline-badge">Priority review: May 15, 2026 &mdash; rolling thereafter</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Application form on cream -->
+  <section class="form-section-wrap">
+    <div class="container">
+
+      <div class="form-card" id="form-section">
+        <h2>Apply</h2>
+        <form id="app-form" action="https://formspree.io/f/mbdpepkn" method="POST" enctype="multipart/form-data">
+          <div class="field">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="field">
+            <label for="institution">Current Institution / Affiliation</label>
+            <input type="text" id="institution" name="institution">
+          </div>
+          <div class="field">
+            <label>CV / Resume (PDF) *</label>
+            <div class="file-field" id="cv-drop">
+              <input type="file" name="cv" id="cv" accept=".pdf" required>
+              <div class="file-label"><strong>Click or drag</strong> to upload your CV (PDF, max 10 MB)</div>
+              <div class="file-name" id="cv-name"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Cover Letter (PDF) *</label>
+            <div class="file-field" id="cl-drop">
+              <input type="file" name="cover_letter" id="cover_letter" accept=".pdf" required>
+              <div class="file-label"><strong>Click or drag</strong> to upload your cover letter (PDF, max 10 MB)</div>
+              <div class="file-name" id="cl-name"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Anything else you'd like us to know?</label>
+            <textarea id="message" name="message" rows="3"></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Application</button>
+        </form>
+      </div>
+
+      <div class="form-card confirmation" id="confirmation">
+        <h2>Application Received</h2>
+        <p>Thank you for your interest. We will review your materials and follow up if there is a potential fit.</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="ft-brand">Porosoff Research Group</div>
+  <div class="ft-copy">Department of Chemical &amp; Sustainability Engineering &middot; University of Rochester &middot; Rochester, NY 14627</div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // Show file names on selection
+  document.getElementById('cv').addEventListener('change', function() {
+    document.getElementById('cv-name').textContent = this.files[0]?.name || '';
+  });
+  document.getElementById('cover_letter').addEventListener('change', function() {
+    document.getElementById('cl-name').textContent = this.files[0]?.name || '';
+  });
+
+  // Drag-over styling
+  ['cv-drop','cl-drop'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover'); });
+    el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+    el.addEventListener('drop', () => el.classList.remove('dragover'));
+  });
+
+  // Handle form submission via fetch for a smooth UX
+  document.getElementById('app-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.submit-btn');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+    try {
+      const resp = await fetch(this.action, { method: 'POST', body: new FormData(this) });
+      if (resp.ok) {
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('confirmation').style.display = 'block';
+      } else {
+        alert('Something went wrong. Please try again or email marc.porosoff@rochester.edu directly.');
+        btn.textContent = 'Submit Application';
+        btn.disabled = false;
+      }
+    } catch {
+      alert('Network error. Please try again.');
+      btn.textContent = 'Submit Application';
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

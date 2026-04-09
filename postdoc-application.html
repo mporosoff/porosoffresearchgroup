@@ -319,7 +319,11 @@
     btn.textContent = 'Submitting…';
     btn.disabled = true;
     try {
-      const resp = await fetch(this.action, { method: 'POST', body: new FormData(this) });
+      const resp = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
       if (resp.ok) {
         document.getElementById('form-section').style.display = 'none';
         document.getElementById('confirmation').style.display = 'block';

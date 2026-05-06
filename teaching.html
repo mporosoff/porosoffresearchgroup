@@ -239,7 +239,119 @@
       </div>
     </a>
 
-    <!-- Placeholder card for future tools -->
+    <!-- Tool 02: XRD Toolkit -->
+    <a href="https://github.com/The-Porosoff-Group/XRD-toolkit" target="_blank" class="tool-card" style="text-decoration:none;color:inherit;display:block;">
+      <div class="tool-card-preview">
+        <svg width="100%" height="180" viewBox="0 0 300 180">
+          <!-- XRD diffractogram -->
+          <text font-family="monospace" font-size="7" fill="rgba(100,180,255,0.5)" x="10" y="14">XRD PATTERN</text>
+          <!-- Baseline -->
+          <line x1="20" y1="148" x2="285" y2="148" stroke="rgba(100,180,255,0.2)" stroke-width="0.75"/>
+          <!-- Diffraction peaks -->
+          <path d="M20,148 L40,148 L42,144 L44,148 L60,148 L68,140 L70,120 L72,140 L74,148
+                   L90,148 L96,138 L99,100 L102,138 L108,148
+                   L124,148 L128,144 L130,148
+                   L140,148 L146,130 L149,78 L152,130 L158,148
+                   L172,148 L175,142 L177,148
+                   L188,148 L192,136 L195,92 L198,136 L204,148
+                   L218,148 L222,145 L224,148
+                   L235,148 L239,140 L242,115 L245,140 L250,148
+                   L285,148"
+            fill="none" stroke="rgba(79,195,247,0.8)" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- Tick marks below (phase markers) -->
+          <line x1="70" y1="152" x2="70" y2="158" stroke="rgba(200,169,81,0.7)" stroke-width="1.2"/>
+          <line x1="99" y1="152" x2="99" y2="158" stroke="rgba(200,169,81,0.7)" stroke-width="1.2"/>
+          <line x1="149" y1="152" x2="149" y2="158" stroke="rgba(200,169,81,0.7)" stroke-width="1.2"/>
+          <line x1="195" y1="152" x2="195" y2="158" stroke="rgba(200,169,81,0.7)" stroke-width="1.2"/>
+          <line x1="242" y1="152" x2="242" y2="158" stroke="rgba(200,169,81,0.7)" stroke-width="1.2"/>
+          <text font-family="monospace" font-size="6" fill="rgba(200,169,81,0.6)" x="60" y="168">WC phase ticks</text>
+          <!-- Rietveld fit overlay (dashed) -->
+          <path d="M20,148 L40,148 L42,143 L44,148 L60,148 L68,141 L70,121 L72,141 L74,148
+                   L90,148 L96,139 L99,101 L102,139 L108,148
+                   L140,148 L146,131 L149,79 L152,131 L158,148
+                   L188,148 L192,137 L195,93 L198,137 L204,148
+                   L235,148 L239,141 L242,116 L245,141 L250,148
+                   L285,148"
+            fill="none" stroke="rgba(171,71,188,0.55)" stroke-width="1" stroke-dasharray="3 2" stroke-linejoin="round"/>
+          <!-- Axis labels -->
+          <text font-family="monospace" font-size="6" fill="rgba(100,180,255,0.4)" text-anchor="middle" x="152" y="176">2θ (degrees)</text>
+          <!-- Legend -->
+          <line x1="170" y1="22" x2="185" y2="22" stroke="rgba(79,195,247,0.8)" stroke-width="1.5"/>
+          <text font-family="monospace" font-size="6" fill="rgba(79,195,247,0.6)" x="188" y="26">observed</text>
+          <line x1="170" y1="34" x2="185" y2="34" stroke="rgba(171,71,188,0.55)" stroke-width="1" stroke-dasharray="3 2"/>
+          <text font-family="monospace" font-size="6" fill="rgba(171,71,188,0.6)" x="188" y="38">Rietveld fit</text>
+          <line x1="170" y1="45" x2="185" y2="45" stroke="rgba(200,169,81,0.7)" stroke-width="1.2"/>
+          <text font-family="monospace" font-size="6" fill="rgba(200,169,81,0.6)" x="188" y="49">phase ticks</text>
+        </svg>
+      </div>
+      <div class="tool-card-body">
+        <h3>XRD Analysis Toolkit</h3>
+        <div>
+          <span class="tool-tag">XRD</span>
+          <span class="tool-tag">Rietveld</span>
+          <span class="tool-tag">GSAS-II</span>
+        </div>
+        <p>A local desktop web app for importing CIF files, previewing XRD tick patterns, and running GSAS-II Rietveld refinements from a browser-based GUI. Features Materials Project phase search, per-phase crystallite size and microstrain controls, and batch processing. Includes a built-in WC/W₂C preset.</p>
+        <div class="tool-card-footer">
+          <span style="font-size:0.85rem;font-weight:500;color:var(--accent);">View on GitHub →</span>
+          <span class="tool-meta">Python · Open Source</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Tool 03: Mass Transfer in a Catalyst Particle -->
+    <a href="mt-widget.html" target="_blank" class="tool-card" style="text-decoration:none;color:inherit;display:block;">
+      <div class="tool-card-preview">
+        <svg width="100%" height="180" viewBox="0 0 300 180">
+          <!-- Particle cross-section with boundary layer -->
+          <circle cx="100" cy="92" r="52" fill="rgba(255,112,67,0.10)" stroke="rgba(255,112,67,0.45)" stroke-width="1" stroke-dasharray="4 3"/>
+          <circle cx="100" cy="92" r="38" fill="rgba(79,195,247,0.18)" stroke="rgba(79,195,247,0.7)" stroke-width="1.5"/>
+          <!-- Concentration gradient inside particle (rings) -->
+          <circle cx="100" cy="92" r="26" fill="rgba(79,195,247,0.10)" stroke="rgba(79,195,247,0.25)" stroke-width="0.75"/>
+          <circle cx="100" cy="92" r="14" fill="rgba(79,195,247,0.05)" stroke="rgba(79,195,247,0.15)" stroke-width="0.75"/>
+          <!-- Labels -->
+          <text font-family="monospace" font-size="7" fill="rgba(79,195,247,0.75)" text-anchor="middle" x="100" y="88">φ</text>
+          <text font-family="monospace" font-size="6" fill="rgba(79,195,247,0.6)" text-anchor="middle" x="100" y="99">η</text>
+          <text font-family="monospace" font-size="6" fill="rgba(255,112,67,0.7)" x="143" y="62">δ</text>
+          <!-- Flow arrows (bulk) -->
+          <line x1="6" y1="52" x2="54" y2="52" stroke="rgba(102,187,106,0.5)" stroke-width="1.2"/>
+          <polygon points="54,52 47,48.5 47,55.5" fill="rgba(102,187,106,0.55)"/>
+          <line x1="6" y1="132" x2="54" y2="132" stroke="rgba(102,187,106,0.5)" stroke-width="1.2"/>
+          <polygon points="54,132 47,128.5 47,135.5" fill="rgba(102,187,106,0.55)"/>
+          <text font-family="monospace" font-size="6" fill="rgba(102,187,106,0.65)" x="8" y="45">U →</text>
+          <!-- Concentration profile plot (right side) -->
+          <line x1="165" y1="155" x2="290" y2="155" stroke="rgba(100,180,255,0.3)" stroke-width="1"/>
+          <line x1="165" y1="20" x2="165" y2="155" stroke="rgba(100,180,255,0.3)" stroke-width="1"/>
+          <text font-family="monospace" font-size="6" fill="rgba(100,180,255,0.45)" x="167" y="16">C profile</text>
+          <!-- Bulk flat -->
+          <line x1="168" y1="38" x2="200" y2="38" stroke="rgba(102,187,106,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- BL drop -->
+          <line x1="200" y1="38" x2="222" y2="72" stroke="rgba(255,112,67,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Interior sinh profile -->
+          <path d="M222,72 Q238,95 252,140 Q260,152 285,152" fill="none" stroke="rgba(79,195,247,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Region labels -->
+          <text font-family="monospace" font-size="5.5" fill="rgba(102,187,106,0.6)" text-anchor="middle" x="184" y="28">bulk</text>
+          <text font-family="monospace" font-size="5.5" fill="rgba(255,112,67,0.6)" text-anchor="middle" x="211" y="28">BL</text>
+          <text font-family="monospace" font-size="5.5" fill="rgba(79,195,247,0.6)" text-anchor="middle" x="254" y="28">interior</text>
+          <text font-family="monospace" font-size="6" fill="rgba(100,180,255,0.4)" x="167" y="170">r = R+δ → center</text>
+        </svg>
+      </div>
+      <div class="tool-card-body">
+        <h3>Mass Transfer in a Catalyst Particle</h3>
+        <div>
+          <span class="tool-tag">Mass Transfer</span>
+          <span class="tool-tag">Diffusion</span>
+          <span class="tool-tag">Interactive</span>
+        </div>
+        <p>Visualize external (boundary layer) and internal (Thiele modulus / effectiveness factor) mass transfer limitations for a first-order reaction in a spherical catalyst particle. Adjust operating conditions and see concentration profiles, η(φ) curves, and Mears/Weisz–Prater diagnostics update in real time. Built for CHE 461.</p>
+        <div class="tool-card-footer">
+          <span style="font-size:0.85rem;font-weight:500;color:var(--accent);">Open tool →</span>
+          <span class="tool-meta">CHE 461 · 2026</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Coming Soon -->
     <div class="tool-card" style="opacity:0.5;">
       <div class="tool-card-preview">
         <span>COMING SOON</span>

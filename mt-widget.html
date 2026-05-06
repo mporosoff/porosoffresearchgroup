@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mass Transfer in a Catalyst Particle — CHE 461</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+:root {
+  --bg:      #0f1117;
+  --panel:   #181b24;
+  --border:  #262a36;
+  --text:    #e8e6e1;
+  --muted:   #8a8780;
+  --accent:  #4fc3f7;   /* main blue */
+  --green:   #66bb6a;   /* bulk */
+  --orange:  #ff7043;   /* warning / boundary layer */
+  --purple:  #ab47bc;
+  --yellow:  #ffd54f;
+  --empty:   #2a2e3a;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  padding: 8px 12px;
+  min-height: 100vh;
+}
+.header { max-width: 1300px; margin: 0 auto 8px }
+.header h1 {
+  font-size: 18px; font-weight: 700; letter-spacing: -.02em;
+  background: linear-gradient(135deg, var(--accent), var(--green));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header p {
+  font-size: 11px; color: var(--muted);
+  margin-top: 2px; font-family: 'IBM Plex Mono', monospace;
+}
+.layout {
+  max-width: 1300px; margin: 0 auto;
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.panel {
+  background: var(--panel);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+.col-left { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px }
+.col-main { flex: 1; min-width: 0 }
+.brow      { width: 100%; display: flex; gap: 14px; flex-wrap: wrap }
+.brow .panel { flex: 1; min-width: 220px }
+.stitle {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--muted); margin-bottom: 14px;
+}
+/* ── Sliders ─────────────────────────────────────────────── */
+.sg { margin-bottom: 13px }
+.sh { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px }
+.sl { font-size: 13px; font-weight: 500 }
+.sv {
+  font-size: 11px; padding: 2px 7px;
+  border-radius: 4px; background: var(--empty);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.sr {
+  display: flex; justify-content: space-between;
+  margin-top: 2px; font-size: 9px; color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+input[type=range] {
+  width: 100%; height: 6px;
+  -webkit-appearance: none; appearance: none;
+  background: var(--empty); border-radius: 3px;
+  outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff;
+  border: 2px solid var(--accent); cursor: pointer;
+  margin-top: -6px; box-shadow: 0 0 6px rgba(79,195,247,.4);
+}
+input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent); cursor: pointer;
+}
+/* ── Equation box ────────────────────────────────────────── */
+.eq {
+  margin-top: 10px; padding: 10px 12px;
+  background: rgba(79,195,247,.06);
+  border-radius: 8px; border: 1px solid rgba(79,195,247,.14);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px; color: var(--muted); line-height: 1.85;
+}
+.eq .hl { color: var(--accent) }
+.eq .hg { color: var(--green) }
+.eq .ho { color: var(--orange) }
+/* ── SVG ─────────────────────────────────────────────────── */
+svg.plot { width: 100%; height: auto; display: block }
+/* ── Diagnostics ─────────────────────────────────────────── */
+.dr {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 7px; font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.dk { color: var(--muted) }
+.dv { display: flex; align-items: center; gap: 6px; font-weight: 500 }
+.badge { font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: 700 }
+.bok   { background: rgba(102,187,106,.18); color: var(--green) }
+.bwarn { background: rgba(255,112,67,.18); color: var(--orange) }
+.dsec {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; margin: 9px 0 7px;
+}
+/* ── Equation reference ──────────────────────────────────── */
+.keq {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px; color: var(--muted); line-height: 2.1;
+}
+.keq .lb { color: var(--text); font-size: 10px; font-weight: 600 }
+.keq .ref { color: var(--accent); font-size: 9px; opacity: .7 }
+/* ── Collapsible ─────────────────────────────────────────── */
+details { margin-top: 12px }
+details summary {
+  cursor: pointer; font-size: 12px; font-weight: 600; color: var(--accent);
+  padding: 8px 0 0; border-top: 1px solid var(--border);
+  user-select: none; list-style: none; display: flex; align-items: center; gap: 6px;
+}
+details summary::before { content: '▶'; font-size: 9px; transition: transform .2s }
+details[open] summary::before { transform: rotate(90deg) }
+.cb {
+  margin-top: 8px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--muted); line-height: 2;
+}
+@media (max-width: 900px) {
+  .layout { flex-direction: column }
+  .col-left { width: 100% }
+  .brow { flex-direction: column }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Mass Transfer in a Catalyst Particle</h1>
+  <p>External (boundary layer) + Internal (Thiele · effectiveness factor)  &ensp;|&ensp;  1st-order A → products  &ensp;|&ensp;  CHE 461</p>
+</div>
+
+<div class="layout">
+  <!-- ════════════ LEFT COLUMN: SLIDERS ════════════ -->
+  <div class="col-left">
+    <div class="panel">
+      <div class="stitle">Operating</div>
+      <div id="op-sliders"></div>
+    </div>
+    <div class="panel">
+      <div class="stitle">Particle &amp; Diffusion</div>
+      <div id="part-sliders"></div>
+    </div>
+    <div class="panel">
+      <div class="stitle">Reaction</div>
+      <div id="rxn-sliders"></div>
+    </div>
+  </div>
+
+  <!-- ════════════ MAIN COLUMN ════════════ -->
+  <div class="col-main">
+
+    <!-- TOP: Particle picture + η(φ) curve, side-by-side -->
+    <div class="panel">
+      <svg id="svg-top" class="plot" viewBox="0 0 700 320"></svg>
+      <div class="eq">
+        <span class="hg">Bulk gas (C<sub>b</sub>)</span>
+        flows past the particle. Reactant must <span class="ho">diffuse across the boundary layer</span>
+        (thickness <span class="ho">δ = d<sub>p</sub>/Sh</span>) to reach the surface concentration <span class="hl">C<sub>s</sub></span>,
+        then <span class="hl">diffuse and react inside</span> the particle. The Thiele modulus
+        <span class="hl">φ</span> compares reaction rate to internal diffusion rate;
+        the effectiveness factor <span class="hl">η</span> is the fraction of the catalyst that is actually used.
+      </div>
+    </div>
+
+    <!-- BOTTOM: Concentration profile, bulk → BL → particle interior -->
+    <div class="panel" style="margin-top:14px">
+      <svg id="svg-cprof" class="plot" viewBox="0 0 700 320"></svg>
+      <div class="eq">
+        Inside the particle (Fogler Eq 15-27):&nbsp;
+        <span class="hl">C(r)/C<sub>s</sub> = (R/r)·sinh(φ·r/R)/sinh(φ)</span><br>
+        Across the BL (stagnant film, Fogler Eq 14-28):&nbsp;
+        <span class="ho">N<sub>A</sub> = k<sub>c</sub>(C<sub>b</sub> − C<sub>s</sub>)</span> &nbsp;→&nbsp;
+        linear drop from <span class="hg">C<sub>b</sub></span> to <span class="hl">C<sub>s</sub></span>.
+        Steady state matches surface flux:&nbsp;
+        <span style="color:var(--text)">k<sub>c</sub>(C<sub>b</sub> − C<sub>s</sub>) = η·k(T)·R·C<sub>s</sub>/3</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ BOTTOM ROW ════════════ -->
+  <div class="brow">
+    <div class="panel">
+      <div class="stitle">Diagnostics</div>
+      <div id="diag"></div>
+    </div>
+    <div class="panel">
+      <div class="stitle">Key Equations (Fogler)</div>
+      <div class="keq" id="kref">
+        <div><span class="lb">Frössling</span> &nbsp;Sh = 2 + 0.6·Re<sup>½</sup>·Sc<sup>⅓</sup> <span class="ref">14-41</span></div>
+        <div><span class="lb">k<sub>c</sub></span> &nbsp;= Sh·D<sub>AB</sub>/d<sub>p</sub> &nbsp; <span class="lb">δ</span> = d<sub>p</sub>/Sh</div>
+        <div><span class="lb">Thiele φ</span> &nbsp;= (d<sub>p</sub>/2)·√(k/D<sub>e</sub>) <span class="ref">15-23</span></div>
+        <div><span class="lb">η</span> &nbsp;= (3/φ²)(φ·coth φ − 1) <span class="ref">15-32</span></div>
+        <div><span class="lb">C(r)/C<sub>s</sub></span> &nbsp;= (R/r)·sinh(φr/R)/sinh(φ) <span class="ref">15-27</span></div>
+        <div><span class="lb">C<sub>s</sub>/C<sub>b</sub></span> &nbsp;= 1 / (1 + η·k·R / (3·k<sub>c</sub>))</div>
+        <div><span class="lb" style="color:var(--green)">Ω</span> &nbsp;= η · C<sub>s</sub>/C<sub>b</sub> &nbsp; <em>(overall, → η as k<sub>c</sub>→∞)</em></div>
+        <div><span class="lb" style="color:var(--green)">Mears</span> &nbsp;η·k·(1−ε)·R / k<sub>c</sub> &lt; 0.15 <span class="ref">15-62</span></div>
+        <div><span class="lb" style="color:var(--green)">Weisz–Prater</span> &nbsp;η·φ² &lt; 1 <span class="ref">15-37</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="stitle">Computed Properties</div>
+      <div id="fprops" class="keq"></div>
+      <details>
+        <summary>Temperature scaling (Fogler-style)</summary>
+        <div class="cb">
+          D<sub>AB</sub>(T,P) = D<sub>AB,0</sub> · (T/T<sub>0</sub>)<sup>1.75</sup> · (P<sub>0</sub>/P) &nbsp;<em>(Fuller)</em><br>
+          D<sub>e</sub>(T) = D<sub>e,0</sub> · (T/T<sub>0</sub>)<sup>1.75</sup><br>
+          μ(T) = μ<sub>0</sub> · (T/T<sub>0</sub>)<sup>0.67</sup> &nbsp;<em>(Sutherland-like)</em><br>
+          ρ<sub>f</sub>(T,P) = P·M̄ / (R<sub>g</sub>·T)<br>
+          k(T) = k<sub>ref</sub> · exp(−E<sub>a</sub>/R<sub>g</sub>·(1/T − 1/T<sub>ref</sub>))<br>
+          T<sub>0</sub> = T<sub>ref</sub> = 573 K  &nbsp; P<sub>0</sub> = 2 bar &nbsp; M̄ = 12.5 g/mol &nbsp; A<sub>c</sub> = 1×10⁻⁵ m²
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════════════════
+const Rg = 8.314;          // J/(mol·K)  gas constant
+const T0 = 573;            // K          reference temperature
+const P0 = 2;              // bar        reference pressure
+const Mav = 0.0125;        // kg/mol     average molar mass (gas)
+const Ac  = 1e-5;          // m²         tube cross-section (~3.6 mm ID)
+const eps = 0.40;          //            bed voidage
+const DAB0 = 5e-5;         // m²/s       gas diffusivity at T0,P0
+const mu0  = 1.5e-5;       // Pa·s       gas viscosity at T0
+const Ea   = 70;           // kJ/mol     fixed activation energy
+
+// ════════════════════════════════════════════════════════════
+// STATE — values controlled by sliders
+// ════════════════════════════════════════════════════════════
+const S = {
+  T:    600,    // K           operating temperature
+  P:    2,      // bar         operating pressure
+  U:    0.5,    // m/s         superficial velocity
+  dp:   1.0,    // mm          particle diameter
+  De:   5e-6,   // m²/s        effective intra-particle diffusivity
+  Cb:   10,     // mol/m³      bulk reactant concentration
+  kref: 50,     // s⁻¹         rate constant at T_ref = 573 K
+};
+
+// ════════════════════════════════════════════════════════════
+// PHYSICS
+// ════════════════════════════════════════════════════════════
+
+// Effectiveness factor for sphere, 1st-order  (Fogler 15-32)
+function effectivenessFactor(phi) {
+  if (phi < 0.01)  return 1;                       // small Thiele → η→1
+  if (phi > 100)   return 3 / phi;                 // large Thiele asymptote
+  return Math.max(0, Math.min(1, (3/(phi*phi)) * (phi/Math.tanh(phi) - 1)));
+}
+
+// Rate constant k(T) via Arrhenius, scaled around T_ref
+function kFn(T) {
+  return S.kref * Math.exp(-Ea*1000/Rg * (1/T - 1/T0));
+}
+
+// All MT quantities for the current state
+function calcMT() {
+  const T = S.T, P = S.P, U = S.U;
+  const dp = S.dp * 1e-3;        // m
+  const Rp = dp / 2;             // particle radius, m
+
+  // Fluid / diffusion property scaling (Fogler-style)
+  const DAB   = DAB0 * Math.pow(T/T0, 1.75) * (P0/P);    // Fuller
+  const De    = S.De * Math.pow(T/T0, 1.75);             // pellet diff. similar T-dep.
+  const mu    = mu0  * Math.pow(T/T0, 0.67);
+  const rho_f = P * 1e5 * Mav / (Rg * T);                // ideal gas
+
+  // Dimensionless groups (single-particle Frössling)
+  const Re = rho_f * U * dp / mu;
+  const Sc = mu / (rho_f * DAB);
+  const Sh = 2 + 0.6 * Math.sqrt(Re) * Math.pow(Sc, 1/3);
+
+  // External MT coefficient and BL thickness
+  const kc = Sh * DAB / dp;       // m/s
+  const delta = dp / Sh;          // m   (film theory, capped at dp/2 visually)
+
+  // Internal: Thiele + effectiveness
+  const k   = kFn(T);                          // s⁻¹  (volumetric, 1st-order)
+  const phi = Rp * Math.sqrt(k / De);
+  const eta = effectivenessFactor(phi);
+
+  // C_s / C_b from steady-state matching:
+  //   k_c (C_b − C_s) = η · k · V_p / A_p · C_s = η · k · R/3 · C_s
+  // → C_s/C_b = 1 / (1 + η·k·R / (3·k_c))
+  const ratio_CsCb = 1 / (1 + eta * k * Rp / (3 * kc));
+  const Cs = S.Cb * ratio_CsCb;
+
+  // Overall effectiveness factor Ω: includes external MT.
+  //   Ω = (actual rate) / (rate at C_b) = η · (C_s/C_b)
+  // When external MT is fast (k_c → ∞):  C_s → C_b  ⇒  Ω → η
+  const Omega = eta * ratio_CsCb;
+
+  // Diagnostic criteria
+  // Mears: M = η·k·(1−ε)·R / k_c   (simplified for 1st order, n=1)
+  const Mears = eta * k * (1 - eps) * Rp / kc;
+  // Weisz-Prater: η·φ²
+  const WP = eta * phi * phi;
+
+  // Surface area per unit bed volume (used in Mears check, info display)
+  const ac = 6 * (1 - eps) / dp;
+
+  return {
+    dp, Rp, DAB, De, mu, rho_f, Re, Sc, Sh, kc, delta, ac,
+    k, phi, eta, Omega, Cs, Cb: S.Cb, ratio_CsCb,
+    Mears, WP
+  };
+}
+
+// Internal concentration profile C(r)/C_s for 1st-order sphere (Fogler 15-27)
+function Cinternal(r_over_R, phi) {
+  if (phi < 0.02) return 1.0;
+  if (r_over_R < 5e-4) return phi / Math.sinh(phi);    // limit at center
+  return Math.sinh(phi*r_over_R) / (r_over_R * Math.sinh(phi));
+}
+
+// ════════════════════════════════════════════════════════════
+// SVG HELPERS
+// ════════════════════════════════════════════════════════════
+function fmtN(v) {
+  if (!isFinite(v)) return '—';
+  const a = Math.abs(v);
+  if (a === 0) return '0';
+  if (a >= 10000 || a < 0.01) return v.toExponential(2).replace('+','');
+  if (a >= 100)  return v.toFixed(0);
+  if (a >= 10)   return v.toFixed(1);
+  if (a >= 1)    return v.toFixed(2);
+  return v.toFixed(3);
+}
+
+// SVG subscript helper — SVG <text> doesn't honour HTML <sub>, so use <tspan>.
+//   sub('C','b') → 'C<tspan dy="3" font-size="0.72em">b</tspan><tspan dy="-3">​</tspan>'
+// The trailing zero-width tspan resets the baseline so following text isn't lowered.
+function sub(main, subscript) {
+  return `${main}<tspan baseline-shift="sub" font-size="0.72em">${subscript}</tspan>`;
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER: Top panel (particle picture + η(φ) curve)
+// ════════════════════════════════════════════════════════════
+function renderTop(mt) {
+  const PW = 700, PH = 320;
+  let s = '';
+
+  // ─────────────── LEFT: Particle + Boundary Layer ───────────────
+  // KEY VISUAL DECISION (v3): use a LINEAR px-per-mm scale so absolute physical
+  //   sizes are honoured.  Both the particle and the BL grow as d_p grows.
+  //   Since δ = d_p/Sh and Sh ∝ √d_p at moderate Re, δ scales ≈ √d_p — so a
+  //   bigger particle clearly has a thicker (in absolute mm) boundary layer.
+  //   At very small d_p the particle is clamped to a minimum visible size; the
+  //   BL still scales with the same px-per-mm so the *ratio* matches physics.
+  const cx = 160, cy = 162;
+  const PX_PER_MM = 30;                                       // visual scale
+  const Rv_phys = (S.dp * 0.5) * PX_PER_MM;                   // physical radius in px
+  const Rv = Math.max(8, Math.min(75, Rv_phys));              // floor & ceiling
+  const dBL_mm = mt.delta * 1000;
+  let dv = dBL_mm * PX_PER_MM;                                // BL thickness in px (true scale)
+  // Hard visual cap so a giant BL doesn't overflow the panel
+  const maxRbl = Math.min(cy - 12, PH - cy - 32);
+  dv = Math.min(dv, maxRbl - Rv);
+  if (dv < 0) dv = 0;
+  const Rbl = Rv + dv;
+
+  s += `<text x="${cx}" y="14" text-anchor="middle"
+         fill="#8a8780" font-size="10" font-weight="600"
+         font-family="IBM Plex Mono" letter-spacing=".07em">PARTICLE + BOUNDARY LAYER</text>`;
+
+  // ─── Multi-stop concentration gradient INSIDE particle ──────────────────
+  // Sample C(r)/C_s on a fine grid and map each sample to a gradient stop.
+  // Result: the visible color drop tracks the actual sinh profile, so high-φ
+  //   cases look almost dark in the interior (clearly under-utilised).
+  const N = 8;
+  let stops = '';
+  for (let i = 0; i <= N; i++) {
+    const u = i / N;                       // r/R: 0 = center, 1 = surface
+    const rel = Cinternal(u, mt.phi);      // C(r)/C_s, ∈ [0, 1]
+    const op = (0.05 + 0.85 * rel).toFixed(3);
+    stops += `<stop offset="${(u*100).toFixed(1)}%" stop-color="#4fc3f7" stop-opacity="${op}"/>`;
+  }
+  s += `<defs>
+    <radialGradient id="g_part" cx="50%" cy="50%" r="50%">${stops}</radialGradient>
+    <radialGradient id="g_bl" cx="50%" cy="50%" r="50%">
+      <stop offset="${Math.max(0,(Rv/Rbl*100)).toFixed(0)}%" stop-color="#ff7043" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#ff7043" stop-opacity="0.32"/>
+    </radialGradient>
+  </defs>`;
+
+  // Bulk fluid streamlines (green)
+  const flowYs = [cy - Rbl - 20, cy - Rbl - 38, cy + Rbl + 20, cy + Rbl + 38];
+  flowYs.forEach(y => {
+    if (y < 22 || y > PH - 18) return;
+    s += `<line x1="6" y1="${y}" x2="${cx + Rv + 70}" y2="${y}"
+           stroke="#66bb6a" stroke-width="1.2" stroke-opacity="0.45"/>`;
+    const xA = cx + Rv + 70;
+    s += `<polygon points="${xA},${y} ${xA-7},${y-3.5} ${xA-7},${y+3.5}"
+           fill="#66bb6a" fill-opacity="0.55"/>`;
+  });
+  s += `<text x="10" y="${flowYs[0] - 6}" fill="#66bb6a" font-size="10"
+         font-family="IBM Plex Mono">U = ${S.U.toFixed(2)} m/s →</text>`;
+  s += `<text x="10" y="32" fill="#66bb6a" font-size="9"
+         font-family="IBM Plex Mono" fill-opacity="0.75">bulk: ${sub('C','b')} = ${fmtN(S.Cb)} mol/m³</text>`;
+
+  // Boundary layer ring (orange) — only draw if visually distinguishable
+  if (dv > 1) {
+    s += `<circle cx="${cx}" cy="${cy}" r="${Rbl.toFixed(1)}"
+           fill="url(#g_bl)" stroke="#ff7043" stroke-width="1"
+           stroke-opacity="${dv > 4 ? 0.55 : 0.25}" stroke-dasharray="5 3"/>`;
+  }
+  // Particle (blue) with multi-stop interior gradient
+  s += `<circle cx="${cx}" cy="${cy}" r="${Rv.toFixed(1)}"
+         fill="url(#g_part)" stroke="#4fc3f7" stroke-width="2"/>`;
+
+  // δ annotation (above particle, vertical bracket)
+  const yPart = cy - Rv, yBL = cy - Rbl;
+  if (dv > 4) {
+    s += `<line x1="${cx}" y1="${yPart.toFixed(1)}" x2="${cx}" y2="${yBL.toFixed(1)}"
+           stroke="#ff7043" stroke-width="1.2"/>`;
+    s += `<line x1="${cx-5}" y1="${yPart.toFixed(1)}" x2="${cx+5}" y2="${yPart.toFixed(1)}"
+           stroke="#ff7043" stroke-width="1.2"/>`;
+    s += `<line x1="${cx-5}" y1="${yBL.toFixed(1)}"   x2="${cx+5}" y2="${yBL.toFixed(1)}"
+           stroke="#ff7043" stroke-width="1.2"/>`;
+    s += `<text x="${cx+9}" y="${((yPart+yBL)/2 + 4).toFixed(1)}"
+           fill="#ff7043" font-size="10" font-family="IBM Plex Mono">δ</text>`;
+  }
+
+  // Diffusion arrow through BL (NE direction) — only when BL is visible
+  if (dv > 5) {
+    const ang = -0.7, cosA = Math.cos(ang), sinA = Math.sin(ang);
+    const x1 = cx + Rbl*cosA, y1 = cy + Rbl*sinA;
+    const x2 = cx + Rv *cosA, y2 = cy + Rv *sinA;
+    s += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}"
+           x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"
+           stroke="#ff7043" stroke-width="1.4" stroke-dasharray="3 2"/>`;
+    const dx=x2-x1, dy=y2-y1, dl=Math.sqrt(dx*dx+dy*dy);
+    const nx=dx/dl, ny=dy/dl, px=-ny, py=nx;
+    const ax=x2-nx*8, ay=y2-ny*8;
+    s += `<polygon points="${x2.toFixed(1)},${y2.toFixed(1)} ${(ax+px*4).toFixed(1)},${(ay+py*4).toFixed(1)} ${(ax-px*4).toFixed(1)},${(ay-py*4).toFixed(1)}"
+           fill="#ff7043"/>`;
+  }
+
+  // dp brace below sphere
+  const yBot = cy + Rv + 10;
+  s += `<line x1="${(cx-Rv).toFixed(1)}" y1="${yBot.toFixed(1)}" x2="${(cx+Rv).toFixed(1)}" y2="${yBot.toFixed(1)}"
+         stroke="#8a8780" stroke-width="0.8"/>`;
+  [cx-Rv, cx+Rv].forEach(x =>
+    s += `<line x1="${x.toFixed(1)}" y1="${(yBot-4).toFixed(1)}" x2="${x.toFixed(1)}" y2="${(yBot+4).toFixed(1)}"
+           stroke="#8a8780" stroke-width="0.8"/>`);
+  s += `<text x="${cx}" y="${(yBot+13).toFixed(1)}" text-anchor="middle"
+         fill="#8a8780" font-size="9" font-family="IBM Plex Mono">${sub('d','p')} = ${S.dp.toFixed(2)} mm</text>`;
+
+  // φ, η, C_s/C_b labels — placed beside particle if particle is small,
+  // inside particle if large enough.
+  const labelInside = Rv >= 32;
+  if (labelInside) {
+    s += `<text x="${cx}" y="${cy-6}" text-anchor="middle"
+           fill="#fff" font-size="13" font-family="IBM Plex Mono" font-weight="600">φ = ${mt.phi < 10 ? mt.phi.toFixed(2) : mt.phi.toFixed(1)}</text>`;
+    s += `<text x="${cx}" y="${cy+10}" text-anchor="middle"
+           fill="#fff" font-size="11" font-family="IBM Plex Mono">η = ${mt.eta.toFixed(3)}</text>`;
+    s += `<text x="${cx}" y="${cy+25}" text-anchor="middle"
+           fill="#cfd0c8" font-size="9" font-family="IBM Plex Mono">${sub('C','s')}/${sub('C','b')} = ${mt.ratio_CsCb.toFixed(3)}</text>`;
+  } else {
+    // Side label panel
+    const lx = cx + Rv + 14;
+    s += `<text x="${lx}" y="${cy-8}" fill="#4fc3f7" font-size="11" font-family="IBM Plex Mono">φ = ${mt.phi < 10 ? mt.phi.toFixed(2) : mt.phi.toFixed(1)}</text>`;
+    s += `<text x="${lx}" y="${cy+6}" fill="#4fc3f7" font-size="11" font-family="IBM Plex Mono">η = ${mt.eta.toFixed(3)}</text>`;
+    s += `<text x="${lx}" y="${cy+20}" fill="#cfd0c8" font-size="9" font-family="IBM Plex Mono">${sub('C','s')}/${sub('C','b')} = ${mt.ratio_CsCb.toFixed(3)}</text>`;
+  }
+
+  // Re/Sh/kc summary at bottom — with proper subscripts
+  const yInfo = PH - 14;
+  s += `<text x="${cx}" y="${yInfo}" text-anchor="middle"
+         fill="#8a8780" font-size="10" font-family="IBM Plex Mono">Re = ${fmtN(mt.Re)} · Sh = ${mt.Sh.toFixed(1)} · ${sub('k','c')} = ${fmtN(mt.kc)} m/s</text>`;
+
+  // ─────────────── RIGHT: η(φ) curve with Ω marker (x: 350–700) ─────────
+  const eX0 = 408, eX1 = 685, eY0 = 36, eY1 = 270;
+  const phiMax = Math.max(8, mt.phi * 1.7, 4);
+  const ePx = p => eX0 + p/phiMax * (eX1-eX0);
+  const ePy = e => eY1 - e * (eY1-eY0);
+
+  s += `<text x="${(eX0+eX1)/2}" y="14" text-anchor="middle"
+         fill="#8a8780" font-size="10" font-weight="600"
+         font-family="IBM Plex Mono" letter-spacing=".07em">EFFECTIVENESS  η(φ)  &amp;  OVERALL  Ω</text>`;
+  // axes
+  s += `<line x1="${eX0}" y1="${eY0}" x2="${eX0}" y2="${eY1}" stroke="#262a36" stroke-width="1.5"/>`;
+  s += `<line x1="${eX0}" y1="${eY1}" x2="${eX1}" y2="${eY1}" stroke="#262a36" stroke-width="1.5"/>`;
+  // gridlines / y ticks
+  [0.25, 0.5, 0.75, 1.0].forEach(e => {
+    const y = ePy(e).toFixed(1);
+    s += `<line x1="${eX0}" y1="${y}" x2="${eX1}" y2="${y}"
+           stroke="rgba(255,255,255,.045)" stroke-width="1"/>`;
+    s += `<text x="${eX0-6}" y="${(+y+4).toFixed(1)}" text-anchor="end"
+           fill="#8a8780" font-size="9" font-family="IBM Plex Mono">${e.toFixed(2)}</text>`;
+  });
+  [0, phiMax*.25, phiMax*.5, phiMax*.75, phiMax].forEach(p => {
+    const x = ePx(p).toFixed(1);
+    s += `<line x1="${x}" y1="${eY1}" x2="${x}" y2="${eY1+3}" stroke="#8a8780" stroke-width="1"/>`;
+    s += `<text x="${x}" y="${eY1+13}" text-anchor="middle"
+           fill="#8a8780" font-size="9" font-family="IBM Plex Mono">${p<1?p.toFixed(1):p.toFixed(0)}</text>`;
+  });
+  // axis labels
+  s += `<text x="${(eX0+eX1)/2}" y="${eY1+25}" text-anchor="middle"
+         fill="#8a8780" font-size="10" font-family="IBM Plex Mono">Thiele modulus  φ</text>`;
+  s += `<text x="${eX0-30}" y="${(eY0+eY1)/2}" text-anchor="middle"
+         fill="#8a8780" font-size="10" font-family="IBM Plex Mono"
+         transform="rotate(-90 ${eX0-30} ${(eY0+eY1)/2})">η, Ω</text>`;
+
+  // η(φ) curve — internal effectiveness only
+  let etaPath = '';
+  for (let i = 0; i <= 120; i++) {
+    const p = phiMax * i/120;
+    const e = effectivenessFactor(p);
+    const x = ePx(p).toFixed(1), y = ePy(e).toFixed(1);
+    etaPath += i===0 ? `M${x},${y} ` : `L${x},${y} `;
+  }
+  s += `<path d="${etaPath}" fill="none" stroke="#4fc3f7" stroke-width="2" stroke-linecap="round"/>`;
+
+  // Reaction-limited / diffusion-limited region labels
+  s += `<text x="${ePx(phiMax*0.07).toFixed(1)}" y="${ePy(0.05).toFixed(1)}"
+         fill="#66bb6a" font-size="9" font-family="IBM Plex Mono" fill-opacity="0.7">↑ reaction-limited</text>`;
+  s += `<text x="${ePx(phiMax*0.55).toFixed(1)}" y="${ePy(0.92).toFixed(1)}"
+         fill="#ff7043" font-size="9" font-family="IBM Plex Mono" fill-opacity="0.7">diffusion-limited →</text>`;
+
+  // Operating point — η (internal only) on the curve
+  const mEx = ePx(mt.phi);
+  const mEyEta = ePy(mt.eta);
+  const mEyOmg = ePy(mt.Omega);
+
+  // Vertical phi line
+  s += `<line x1="${mEx.toFixed(1)}" y1="${eY0}" x2="${mEx.toFixed(1)}" y2="${eY1}"
+         stroke="#ffd54f" stroke-width="0.8" stroke-dasharray="4 3" stroke-opacity="0.45"/>`;
+
+  // Horizontal η dashed line
+  s += `<line x1="${eX0}" y1="${mEyEta.toFixed(1)}" x2="${mEx.toFixed(1)}" y2="${mEyEta.toFixed(1)}"
+         stroke="#4fc3f7" stroke-width="0.8" stroke-dasharray="4 3" stroke-opacity="0.45"/>`;
+
+  // Connector from Ω to η — visualizes external MT loss
+  if (Math.abs(mt.eta - mt.Omega) > 0.005) {
+    s += `<line x1="${mEx.toFixed(1)}" y1="${mEyEta.toFixed(1)}" x2="${mEx.toFixed(1)}" y2="${mEyOmg.toFixed(1)}"
+           stroke="#ff7043" stroke-width="2" stroke-linecap="round"/>`;
+    // Bracket marks
+    s += `<line x1="${(mEx-4).toFixed(1)}" y1="${mEyEta.toFixed(1)}" x2="${(mEx+4).toFixed(1)}" y2="${mEyEta.toFixed(1)}" stroke="#ff7043" stroke-width="1.5"/>`;
+    s += `<line x1="${(mEx-4).toFixed(1)}" y1="${mEyOmg.toFixed(1)}" x2="${(mEx+4).toFixed(1)}" y2="${mEyOmg.toFixed(1)}" stroke="#ff7043" stroke-width="1.5"/>`;
+    // Label "external MT" between them
+    const yMid = (mEyEta + mEyOmg)/2;
+    const labelOnRight = mEx < eX0 + (eX1-eX0)*0.55;
+    const lx = labelOnRight ? mEx + 8 : mEx - 8;
+    const la = labelOnRight ? 'start' : 'end';
+    s += `<text x="${lx.toFixed(1)}" y="${(yMid+3).toFixed(1)}" text-anchor="${la}"
+           fill="#ff7043" font-size="9" font-family="IBM Plex Mono">ext. MT loss</text>`;
+  }
+
+  // Horizontal Ω dashed line
+  s += `<line x1="${eX0}" y1="${mEyOmg.toFixed(1)}" x2="${mEx.toFixed(1)}" y2="${mEyOmg.toFixed(1)}"
+         stroke="#66bb6a" stroke-width="0.8" stroke-dasharray="4 3" stroke-opacity="0.45"/>`;
+
+  // η marker — blue (internal effectiveness)
+  s += `<circle cx="${mEx.toFixed(1)}" cy="${mEyEta.toFixed(1)}" r="5" fill="#4fc3f7" stroke="#fff" stroke-width="1"/>`;
+  // Ω marker — green (overall effectiveness)
+  s += `<circle cx="${mEx.toFixed(1)}" cy="${mEyOmg.toFixed(1)}" r="5" fill="#66bb6a" stroke="#fff" stroke-width="1"/>`;
+
+  // Smart label placement
+  const lblOnRight = mEx < eX0 + (eX1-eX0)*0.65;
+  const lblX = lblOnRight ? mEx + 10 : mEx - 10;
+  const lblA = lblOnRight ? 'start' : 'end';
+  s += `<text x="${lblX.toFixed(1)}" y="${(mEyEta - 7).toFixed(1)}" text-anchor="${lblA}"
+         fill="#4fc3f7" font-size="10" font-family="IBM Plex Mono">η = ${mt.eta.toFixed(3)}</text>`;
+  s += `<text x="${lblX.toFixed(1)}" y="${(mEyOmg + 13).toFixed(1)}" text-anchor="${lblA}"
+         fill="#66bb6a" font-size="10" font-family="IBM Plex Mono">Ω = ${mt.Omega.toFixed(3)}</text>`;
+
+  // Legend in bottom right of η plot
+  const lgY = eY1 - 6;
+  s += `<g font-family="IBM Plex Mono" font-size="9">`;
+  s += `<circle cx="${eX1-138}" cy="${lgY-22}" r="3.5" fill="#4fc3f7"/>`;
+  s += `<text x="${eX1-130}" y="${lgY-19}" fill="#4fc3f7">η  internal only</text>`;
+  s += `<circle cx="${eX1-138}" cy="${lgY-8}" r="3.5" fill="#66bb6a"/>`;
+  s += `<text x="${eX1-130}" y="${lgY-5}" fill="#66bb6a">Ω  internal + external</text>`;
+  s += `</g>`;
+
+  document.getElementById('svg-top').innerHTML = s;
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER: Bottom panel — concentration profile from BULK (left) → CENTER (right)
+// X-axis layout (left → right):
+//   [bulk strip]  →  [boundary layer δ]  →  [particle interior R]
+// Y-axis: concentration (mol/m³)
+// ════════════════════════════════════════════════════════════
+function renderCprofile(mt) {
+  const PW = 700, PH = 320;
+  const ML = 70, MR = 30, MT_ = 36, MB = 50;
+  const gW = PW - ML - MR, gH = PH - MT_ - MB;
+
+  // Physical extents in mm
+  const Rmm = mt.dp/2 * 1000;
+  const dmm = mt.delta * 1000;
+  const dmm_show = Math.min(dmm, Rmm * 2.5);    // visual cap so plot stays readable
+  const bulkExtra = 0.35 * (Rmm + dmm_show);    // bulk strip on left
+
+  // Total horizontal extent in plot coords (we'll use abstract distance "x" in mm,
+  // with x = 0 at the LEFT edge (bulk far field), increasing rightward).
+  // x = 0           → bulk far field
+  // x = bulkExtra   → BL outer edge (= R + δ in physical r)
+  // x = bulkExtra + dmm_show → particle surface (= R)
+  // x = bulkExtra + dmm_show + Rmm → particle center (= 0)
+  const xTotal = bulkExtra + dmm_show + Rmm;
+  const xPx = x => ML + x/xTotal * gW;
+
+  // Y-axis
+  const yMax = S.Cb * 1.10;
+  const yPx = c => MT_ + gH - c/yMax * gH;
+
+  // Boundary x-coords (in mm coords, then converted)
+  const xBLEdge_mm  = bulkExtra;                   // left boundary of BL (bulk side)
+  const xSurface_mm = bulkExtra + dmm_show;        // left → surface; right of BL
+  const xCenter_mm  = bulkExtra + dmm_show + Rmm;  // far right
+  const xBLEdge_px  = xPx(xBLEdge_mm);
+  const xSurface_px = xPx(xSurface_mm);
+  const xCenter_px  = xPx(xCenter_mm);
+
+  let s = '';
+
+  s += `<text x="${ML + gW/2}" y="16" text-anchor="middle"
+         fill="#8a8780" font-size="11" font-weight="600"
+         font-family="IBM Plex Mono" letter-spacing=".07em">CONCENTRATION:  BULK → BOUNDARY LAYER → PARTICLE INTERIOR</text>`;
+
+  // ── Background region shading (bulk, BL, particle) ─────────────────
+  s += `<rect x="${ML}" y="${MT_}" width="${(xBLEdge_px - ML).toFixed(1)}" height="${gH}"
+         fill="rgba(102,187,106,0.06)"/>`;
+  s += `<rect x="${xBLEdge_px.toFixed(1)}" y="${MT_}" width="${(xSurface_px - xBLEdge_px).toFixed(1)}" height="${gH}"
+         fill="rgba(255,112,67,0.07)"/>`;
+  s += `<rect x="${xSurface_px.toFixed(1)}" y="${MT_}" width="${(xCenter_px - xSurface_px).toFixed(1)}" height="${gH}"
+         fill="rgba(79,195,247,0.06)"/>`;
+
+  // ── Region boundary lines + labels at top ──────────────────────────
+  s += `<line x1="${xBLEdge_px.toFixed(1)}" y1="${MT_}" x2="${xBLEdge_px.toFixed(1)}" y2="${MT_+gH}"
+         stroke="#ff7043" stroke-width="1.2" stroke-dasharray="4 3" stroke-opacity="0.55"/>`;
+  s += `<line x1="${xSurface_px.toFixed(1)}" y1="${MT_}" x2="${xSurface_px.toFixed(1)}" y2="${MT_+gH}"
+         stroke="#4fc3f7" stroke-width="1.5" stroke-dasharray="4 3" stroke-opacity="0.7"/>`;
+
+  s += `<text x="${((ML + xBLEdge_px)/2).toFixed(1)}" y="${MT_+13}" text-anchor="middle"
+         fill="#66bb6a" font-size="10" font-family="IBM Plex Mono" font-weight="600" fill-opacity="0.85">BULK</text>`;
+  s += `<text x="${((xBLEdge_px + xSurface_px)/2).toFixed(1)}" y="${MT_+13}" text-anchor="middle"
+         fill="#ff7043" font-size="10" font-family="IBM Plex Mono" font-weight="600" fill-opacity="0.85">BOUNDARY LAYER</text>`;
+  s += `<text x="${((xSurface_px + xCenter_px)/2).toFixed(1)}" y="${MT_+13}" text-anchor="middle"
+         fill="#4fc3f7" font-size="10" font-family="IBM Plex Mono" font-weight="600" fill-opacity="0.85">INSIDE PARTICLE</text>`;
+
+  // ── Axes + ticks ────────────────────────────────────────────────────
+  s += `<line x1="${ML}" y1="${MT_}" x2="${ML}" y2="${MT_+gH}" stroke="#262a36" stroke-width="1.5"/>`;
+  s += `<line x1="${ML}" y1="${MT_+gH}" x2="${ML+gW}" y2="${MT_+gH}" stroke="#262a36" stroke-width="1.5"/>`;
+
+  // Y ticks
+  [0, yMax*0.25, yMax*0.5, yMax*0.75, S.Cb].forEach(c => {
+    const y = yPx(c).toFixed(1);
+    s += `<line x1="${ML-3}" y1="${y}" x2="${ML+gW}" y2="${y}"
+           stroke="rgba(255,255,255,.04)" stroke-width="1"/>`;
+    s += `<text x="${ML-7}" y="${(+y+4).toFixed(1)}" text-anchor="end"
+           fill="#8a8780" font-size="9" font-family="IBM Plex Mono">${fmtN(c)}</text>`;
+  });
+  // X ticks — show key landmarks (left → right): bulk, BL edge, surface, center
+  const tickPositions = [
+    { x_mm: 0,                                label: '← bulk' },
+    { x_mm: xBLEdge_mm,                       label: 'r = R+δ' },
+    { x_mm: xSurface_mm,                      label: 'r = R' },
+    { x_mm: xSurface_mm + Rmm/2,              label: 'r = R/2' },
+    { x_mm: xCenter_mm,                       label: 'r = 0' },
+  ];
+  tickPositions.forEach(t => {
+    const x = xPx(t.x_mm).toFixed(1);
+    s += `<line x1="${x}" y1="${MT_+gH}" x2="${x}" y2="${MT_+gH+3}"
+           stroke="#8a8780" stroke-width="1"/>`;
+    s += `<text x="${x}" y="${MT_+gH+14}" text-anchor="middle"
+           fill="#8a8780" font-size="9" font-family="IBM Plex Mono">${t.label}</text>`;
+  });
+  // Axis labels
+  s += `<text x="${ML+gW/2}" y="${PH-3}" text-anchor="middle"
+         fill="#8a8780" font-size="11" font-family="IBM Plex Sans">approaching the particle  →   (bulk left, particle center right)</text>`;
+  s += `<text x="18" y="${(MT_+gH/2).toFixed(0)}" text-anchor="middle"
+         fill="#8a8780" font-size="11" font-family="IBM Plex Sans"
+         transform="rotate(-90 18 ${(MT_+gH/2).toFixed(0)})">concentration  C  (mol/m³)</text>`;
+
+  // ── C_b reference line ─────────────────────────────────────────────
+  const yCb = yPx(S.Cb);
+  s += `<line x1="${ML}" y1="${yCb.toFixed(1)}" x2="${(ML+gW).toFixed(1)}" y2="${yCb.toFixed(1)}"
+         stroke="#66bb6a" stroke-width="1" stroke-dasharray="6 4" stroke-opacity="0.5"/>`;
+  s += `<text x="${(ML+gW-4).toFixed(1)}" y="${(yCb-4).toFixed(1)}" text-anchor="end"
+         fill="#66bb6a" font-size="9" font-family="IBM Plex Mono" fill-opacity="0.85">${sub('C','b')} = ${fmtN(S.Cb)}</text>`;
+
+  // ── Profile curve pieces ───────────────────────────────────────────
+  // Bulk: flat at C_b from x=0 (left edge) → x = bulkExtra (BL outer edge)
+  s += `<line x1="${ML}" y1="${yCb.toFixed(1)}" x2="${xBLEdge_px.toFixed(1)}" y2="${yCb.toFixed(1)}"
+         stroke="#66bb6a" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  // Boundary layer: linear from (BL outer edge, C_b) → (surface, C_s).
+  const yCs = yPx(mt.Cs);
+  s += `<line x1="${xBLEdge_px.toFixed(1)}" y1="${yCb.toFixed(1)}"
+         x2="${xSurface_px.toFixed(1)}" y2="${yCs.toFixed(1)}"
+         stroke="#ff7043" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  // Inside particle: x increases from surface (left of interior) → center (right)
+  // Plot x = xSurface_mm + (R - r), where r decreases from R (surface) to 0 (center)
+  let pathInside = '';
+  let fillInside = `M${xSurface_px.toFixed(1)},${(MT_+gH).toFixed(1)} `;
+  const N = 100;
+  for (let i = 0; i <= N; i++) {
+    // We want to plot from surface (r = R, u = 1) at left → center (r = 0, u = 0) at right
+    // So loop with r decreasing: u = 1 → 0
+    const u = 1 - i/N;                          // r/R, from 1 → 0 as i goes 0 → N
+    const x_in_mm = xSurface_mm + (1 - u) * Rmm; // 0 at surface, +Rmm at center
+    const Crel = Cinternal(u, mt.phi);
+    const c = mt.Cs * Crel;
+    const xpx = xPx(x_in_mm).toFixed(1);
+    const ypx = yPx(c).toFixed(1);
+    pathInside += i===0 ? `M${xpx},${ypx} ` : `L${xpx},${ypx} `;
+    fillInside += `L${xpx},${ypx} `;
+  }
+  fillInside += `L${xCenter_px.toFixed(1)},${(MT_+gH).toFixed(1)} Z`;
+  s += `<path d="${fillInside}" fill="rgba(79,195,247,0.18)"/>`;
+  s += `<path d="${pathInside}" fill="none" stroke="#4fc3f7" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  // ── Annotations ────────────────────────────────────────────────────
+  // C_s marker at the surface boundary
+  s += `<circle cx="${xSurface_px.toFixed(1)}" cy="${yCs.toFixed(1)}" r="4" fill="#4fc3f7"/>`;
+  s += `<text x="${(xSurface_px - 7).toFixed(1)}" y="${(yCs - 6).toFixed(1)}" text-anchor="end"
+         fill="#4fc3f7" font-size="10" font-family="IBM Plex Mono">${sub('C','s')} = ${fmtN(mt.Cs)}</text>`;
+
+  // C(0) marker at far right
+  const C0_val = mt.Cs * Cinternal(5e-4, mt.phi);
+  const yC0 = yPx(C0_val);
+  s += `<circle cx="${xCenter_px.toFixed(1)}" cy="${yC0.toFixed(1)}" r="3.5" fill="#4fc3f7" fill-opacity="0.85"/>`;
+  s += `<text x="${(xCenter_px - 7).toFixed(1)}" y="${(yC0 - 5).toFixed(1)}" text-anchor="end"
+         fill="#4fc3f7" font-size="9" font-family="IBM Plex Mono" fill-opacity="0.85">C(0) = ${fmtN(C0_val)}</text>`;
+
+  // ΔC_ext drop label across BL
+  if (Math.abs(S.Cb - mt.Cs) / S.Cb > 0.02) {
+    const xMid = (xBLEdge_px + xSurface_px)/2;
+    const yMid = (yCb + yCs)/2 - 8;
+    s += `<text x="${xMid.toFixed(1)}" y="${yMid.toFixed(1)}" text-anchor="middle"
+           fill="#ff7043" font-size="9" font-family="IBM Plex Mono">Δ${sub('C','ext')} = ${fmtN(S.Cb - mt.Cs)}</text>`;
+  }
+
+  // δ width annotation at bottom of BL band
+  if (xSurface_px - xBLEdge_px > 25) {
+    const yArr = MT_ + gH - 4;
+    s += `<line x1="${xBLEdge_px.toFixed(1)}" y1="${yArr.toFixed(1)}" x2="${xSurface_px.toFixed(1)}" y2="${yArr.toFixed(1)}"
+           stroke="#ff7043" stroke-width="0.8"/>`;
+    s += `<text x="${((xBLEdge_px + xSurface_px)/2).toFixed(1)}" y="${(yArr-4).toFixed(1)}" text-anchor="middle"
+           fill="#ff7043" font-size="9" font-family="IBM Plex Mono">δ = ${fmtN(dmm)} mm${dmm > dmm_show*0.99 && dmm > Rmm*2 ? ' (capped)' : ''}</text>`;
+  }
+
+  document.getElementById('svg-cprof').innerHTML = s;
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER: Diagnostics + computed properties tables
+// ════════════════════════════════════════════════════════════
+function renderDiag(mt) {
+  const dRow = (k, v, ok) => {
+    const b = ok === undefined ? '' :
+      ok ? '<span class="badge bok">PASS</span>' : '<span class="badge bwarn">FAIL</span>';
+    return `<div class="dr"><span class="dk">${k}</span><span class="dv">${v}${b}</span></div>`;
+  };
+  let h = '';
+  h += `<div class="dsec" style="color:var(--accent)">Internal MT</div>`;
+  h += dRow('φ (Thiele)', fmtN(mt.phi));
+  h += dRow('η (internal eff.)', mt.eta.toFixed(3));
+  h += dRow('C(0)/C<sub>s</sub>', Cinternal(5e-4, mt.phi).toFixed(3));
+  h += `<div class="dsec" style="color:var(--orange)">External MT</div>`;
+  h += dRow('Re', fmtN(mt.Re));
+  h += dRow('Sc', fmtN(mt.Sc));
+  h += dRow('Sh', mt.Sh.toFixed(2));
+  h += dRow('k<sub>c</sub> (m/s)', fmtN(mt.kc));
+  h += dRow('δ (mm)', fmtN(mt.delta * 1000));
+  h += dRow('C<sub>s</sub>/C<sub>b</sub>', mt.ratio_CsCb.toFixed(3));
+  h += `<div class="dsec" style="color:var(--green)">Overall</div>`;
+  h += dRow('Ω = η · C<sub>s</sub>/C<sub>b</sub>', mt.Omega.toFixed(3));
+  h += dRow('Ω / η  (= C<sub>s</sub>/C<sub>b</sub>)', mt.ratio_CsCb.toFixed(3));
+  h += `<div class="dsec" style="color:var(--green)">Criteria</div>`;
+  h += dRow('Mears (&lt;0.15)', fmtN(mt.Mears), mt.Mears < 0.15);
+  h += dRow('Weisz–Prater (&lt;1)', fmtN(mt.WP), mt.WP < 1);
+  document.getElementById('diag').innerHTML = h;
+
+  // Computed fluid/diffusion properties
+  let fp = '';
+  fp += `<div><span class="lb">k(T)</span> = ${fmtN(mt.k)} s⁻¹</div>`;
+  fp += `<div><span class="lb">D_AB</span> = ${fmtN(mt.DAB)} m²/s</div>`;
+  fp += `<div><span class="lb">D_e</span> = ${fmtN(mt.De)} m²/s</div>`;
+  fp += `<div><span class="lb">μ</span> = ${fmtN(mt.mu)} Pa·s</div>`;
+  fp += `<div><span class="lb">ρ_f</span> = ${fmtN(mt.rho_f)} kg/m³</div>`;
+  fp += `<div><span class="lb">a_c</span> = ${fmtN(mt.ac)} m⁻¹</div>`;
+  document.getElementById('fprops').innerHTML = fp;
+}
+
+// ════════════════════════════════════════════════════════════
+// MAIN UPDATE
+// ════════════════════════════════════════════════════════════
+function update() {
+  const mt = calcMT();
+  renderTop(mt);
+  renderCprofile(mt);
+  renderDiag(mt);
+}
+
+// ════════════════════════════════════════════════════════════
+// SLIDER WIRING
+// ════════════════════════════════════════════════════════════
+function makeSlider(id, label, min, max, step, value, unit) {
+  return `
+    <div class="sg">
+      <div class="sh">
+        <span class="sl">${label}</span>
+        <span class="sv" id="v-${id}">${value}${unit ? ' '+unit : ''}</span>
+      </div>
+      <input type="range" id="sl-${id}" min="${min}" max="${max}" step="${step}" value="${value}">
+      <div class="sr"><span>${min}${unit?' '+unit:''}</span><span>${max}${unit?' '+unit:''}</span></div>
+    </div>`;
+}
+// Log-scale slider helper: slider is 0–100, mapped to [min, max] logarithmically
+function makeLogSlider(id, label, min, max, value, unit, fmt) {
+  const slv = (Math.log10(value) - Math.log10(min)) / (Math.log10(max) - Math.log10(min)) * 100;
+  return `
+    <div class="sg">
+      <div class="sh">
+        <span class="sl">${label}</span>
+        <span class="sv" id="v-${id}">${fmt(value)}${unit?' '+unit:''}</span>
+      </div>
+      <input type="range" id="sl-${id}" min="0" max="100" step="0.5" value="${slv.toFixed(1)}">
+      <div class="sr"><span>${fmt(min)}${unit?' '+unit:''}</span><span>${fmt(max)}${unit?' '+unit:''}</span></div>
+    </div>`;
+}
+function logFromSlider(slv, min, max) {
+  return Math.pow(10, Math.log10(min) + slv/100 * (Math.log10(max) - Math.log10(min)));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Operating sliders.  C_b is fixed (see S.Cb constant above) — varying it just
+  // rescales the plot vertically without changing any of the MT physics.
+  document.getElementById('op-sliders').innerHTML =
+    makeSlider('T', 'Temperature',         400, 800, 1,    600,  'K') +
+    makeSlider('P', 'Pressure',            0.5, 10,  0.1,  2,    'bar');
+
+  // Particle / Diffusion sliders
+  document.getElementById('part-sliders').innerHTML =
+    makeSlider('U',  'Superficial velocity U', 0.01, 20,  0.01, 0.5, 'm/s') +
+    makeSlider('dp', 'Particle d<sub>p</sub>', 0.1,  5,   0.05, 1.0, 'mm') +
+    makeLogSlider('De', 'Effective diffusivity D<sub>e</sub>',
+                  1e-8, 1e-4, 5e-6, 'm²/s', v => v.toExponential(1));
+
+  // Reaction sliders
+  document.getElementById('rxn-sliders').innerHTML =
+    makeLogSlider('kref', 'Rate const at T_ref=573K  k<sub>ref</sub>',
+                  0.1, 5000, 50, 's⁻¹', v => v < 10 ? v.toFixed(1) : v.toFixed(0));
+
+  function hookLinear(id, key, fmt) {
+    const el = document.getElementById('sl-' + id);
+    el.addEventListener('input', () => {
+      S[key] = +el.value;
+      document.getElementById('v-' + id).textContent = fmt(S[key]);
+      update();
+    });
+  }
+  function hookLog(id, key, min, max, fmt) {
+    const el = document.getElementById('sl-' + id);
+    el.addEventListener('input', () => {
+      S[key] = logFromSlider(+el.value, min, max);
+      document.getElementById('v-' + id).textContent = fmt(S[key]);
+      update();
+    });
+  }
+
+  hookLinear('T',  'T',  v => v + ' K');
+  hookLinear('P',  'P',  v => v.toFixed(1) + ' bar');
+  hookLinear('U',  'U',  v => v.toFixed(2) + ' m/s');
+  hookLinear('dp', 'dp', v => v.toFixed(2) + ' mm');
+  hookLog('De',   'De',   1e-8, 1e-4, v => v.toExponential(1) + ' m²/s');
+  hookLog('kref', 'kref', 0.1, 5000, v => (v<10?v.toFixed(1):v.toFixed(0)) + ' s⁻¹');
+
+  update();
+});
+</script>
+</body>
+</html>

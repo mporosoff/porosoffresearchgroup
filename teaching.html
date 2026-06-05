@@ -351,6 +351,69 @@
       </div>
     </a>
 
+    <!-- Tool 04: ALD Temperature Dependence Dashboard -->
+    <a href="ald-widget.html" target="_blank" class="tool-card" style="text-decoration:none;color:inherit;display:block;">
+      <div class="tool-card-preview">
+        <svg width="100%" height="180" viewBox="0 0 300 180">
+          <!-- Left: surface with adsorbed layers -->
+          <text font-family="monospace" font-size="7" fill="rgba(100,180,255,0.5)" x="10" y="14">ALD SURFACE</text>
+          <!-- Surface base -->
+          <rect x="10" y="148" width="130" height="8" rx="1" fill="rgba(55,65,81,0.9)" stroke="rgba(100,180,255,0.3)" stroke-width="0.75"/>
+          <!-- Surface sites / OH* layer -->
+          <rect x="10" y="130" width="130" height="14" rx="1" fill="rgba(59,130,246,0.25)" stroke="rgba(59,130,246,0.5)" stroke-width="0.75"/>
+          <text font-family="monospace" font-size="6" fill="rgba(59,130,246,0.8)" x="13" y="141">OH*  OH*  OH*  OH*  OH*</text>
+          <!-- O-Al(CH3)2* layer -->
+          <rect x="10" y="108" width="130" height="18" rx="1" fill="rgba(220,38,38,0.20)" stroke="rgba(220,38,38,0.5)" stroke-width="0.75"/>
+          <text font-family="monospace" font-size="6" fill="rgba(220,38,38,0.9)" x="13" y="121">O-Al(CH₃)₂*   O-Al(CH₃)₂*</text>
+          <!-- O-Al(OH)2* layer -->
+          <rect x="10" y="84" width="130" height="20" rx="1" fill="rgba(124,58,237,0.20)" stroke="rgba(124,58,237,0.5)" stroke-width="0.75"/>
+          <text font-family="monospace" font-size="6" fill="rgba(124,58,237,0.9)" x="13" y="94">O-Al(OH)₂*</text>
+          <text font-family="monospace" font-size="5.5" fill="rgba(124,58,237,0.7)" x="13" y="102">(product layer)</text>
+          <!-- Gas molecules flowing -->
+          <circle cx="95" cy="48" r="5" fill="rgba(59,130,246,0.6)" stroke="rgba(29,78,216,0.8)" stroke-width="0.75"/>
+          <circle cx="75" cy="58" r="5" fill="rgba(59,130,246,0.6)" stroke="rgba(29,78,216,0.8)" stroke-width="0.75"/>
+          <circle cx="55" cy="44" r="5" fill="rgba(220,38,38,0.7)" stroke="rgba(127,29,29,0.8)" stroke-width="0.75"/>
+          <text font-family="monospace" font-size="5.5" fill="rgba(59,130,246,0.7)" x="98" y="52">H₂O</text>
+          <text font-family="monospace" font-size="5.5" fill="rgba(220,38,38,0.7)" x="58" y="42">TMA</text>
+          <text font-family="monospace" font-size="6" fill="rgba(100,180,255,0.35)" x="10" y="73">gas flow →</text>
+          <!-- Divider -->
+          <line x1="148" y1="10" x2="148" y2="170" stroke="rgba(100,180,255,0.15)" stroke-width="0.75"/>
+          <!-- Right: rate vs T curve -->
+          <text font-family="monospace" font-size="7" fill="rgba(100,180,255,0.5)" x="155" y="14">RATE vs T</text>
+          <line x1="158" y1="155" x2="292" y2="155" stroke="rgba(100,180,255,0.3)" stroke-width="1"/>
+          <line x1="158" y1="20" x2="158" y2="155" stroke="rgba(100,180,255,0.3)" stroke-width="1"/>
+          <!-- Rate curve: rises, peaks, drops (Arrhenius + coverage effect) -->
+          <path d="M160,152 Q170,148 180,130 Q195,100 210,70 Q220,52 228,45 Q238,40 248,48 Q262,62 275,100 Q283,125 290,148"
+            fill="none" stroke="rgba(30,99,209,0.85)" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Coverage curve overlay -->
+          <path d="M160,28 Q175,30 195,38 Q215,50 240,90 Q260,120 290,148"
+            fill="none" stroke="rgba(124,58,237,0.65)" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <!-- Vline at operating T -->
+          <line x1="228" y1="20" x2="228" y2="155" stroke="#374151" stroke-width="1" stroke-dasharray="3 3"/>
+          <!-- Axis labels -->
+          <text font-family="monospace" font-size="6" fill="rgba(100,180,255,0.4)" text-anchor="middle" x="225" y="170">T (°C)</text>
+          <!-- Legend -->
+          <line x1="160" y1="165" x2="172" y2="165" stroke="rgba(30,99,209,0.85)" stroke-width="1.5"/>
+          <text font-family="monospace" font-size="5.5" fill="rgba(30,99,209,0.8)" x="174" y="168">−r₂</text>
+          <line x1="197" y1="165" x2="209" y2="165" stroke="rgba(124,58,237,0.65)" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <text font-family="monospace" font-size="5.5" fill="rgba(124,58,237,0.7)" x="211" y="168">θ_A</text>
+        </svg>
+      </div>
+      <div class="tool-card-body">
+        <h3>ALD Temperature Dependence Dashboard</h3>
+        <div>
+          <span class="tool-tag">ALD</span>
+          <span class="tool-tag">Kinetics</span>
+          <span class="tool-tag">Interactive</span>
+        </div>
+        <p>Explore how temperature governs trimethylaluminum (TMA) ALD kinetics. Adjust rate constants, energetics, partial pressures, and reactor volume to see how O-Al(CH₃)₂* surface coverage, reaction rate, and heat removal respond — with a live molecular animation of each ALD cycle step.</p>
+        <div class="tool-card-footer">
+          <span style="font-size:0.85rem;font-weight:500;color:var(--accent);">Open tool →</span>
+          <span class="tool-meta" title="Courtney Palmeri, BS '26">C. Palmeri '26</span>
+        </div>
+      </div>
+    </a>
+
     <!-- Coming Soon -->
     <div class="tool-card" style="opacity:0.5;">
       <div class="tool-card-preview">

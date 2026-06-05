@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Understanding the Temperature Dependence of TMA → O-Al(OH)₂* ALD</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  :root{
+    --panel-bg:#16263a;
+    --panel-bg-2:#1e3251;
+    --panel-border:#2a4870;
+    --slider-track:#0d1b2d;
+    --accent:#3a8dff;
+    --text-light:#e6eef9;
+    --muted:#9fb4d1;
+    --section-title:#7bb2ff;
+    --right-bg:#f3f4f6;
+    --card-bg:#ffffff;
+    --card-border:#e5e7eb;
+    --ink:#1f2937;
+    --blue:#1e63d1;
+    --red:#d63232;
+    --purple:#6a2bc0;
+    --orange:#ea580c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:var(--right-bg);color:var(--ink);height:100%;overflow:hidden;}
+
+  .app{display:grid;grid-template-columns:300px 1fr;height:100vh;}
+  .left{
+    background:var(--panel-bg);color:var(--text-light);
+    padding:14px 14px 18px 14px;border-right:1px solid #0c1726;
+    overflow-y:auto;height:100vh;
+  }
+  .right{padding:10px 14px 14px 14px;overflow-y:auto;overflow-x:hidden;height:100vh;}
+
+  .left h1{
+    font-size:18px;margin:6px 4px 14px 4px;font-weight:600;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .left .gear{opacity:.7;font-size:14px;}
+  .group{
+    background:var(--panel-bg-2);border:1px solid var(--panel-border);
+    border-radius:8px;padding:9px 10px 10px 10px;margin-bottom:10px;
+  }
+  .group h2{
+    font-size:12.5px;color:var(--section-title);font-weight:600;
+    margin:0 0 8px 0;letter-spacing:.2px;
+  }
+  .group h2 .hint{color:var(--muted);font-weight:400;font-size:11px;margin-left:4px;}
+  .group h2 .info{color:var(--muted);font-size:10px;margin-left:4px;}
+
+  .ctrl{margin-bottom:7px;}
+  .ctrl .label{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:11.5px;color:#cfddef;margin-bottom:2px;
+  }
+  .ctrl .label .name{color:#dde8f7;}
+  .ctrl .label .name .sub{color:var(--muted);font-size:10.5px;}
+  .ctrl .row{display:flex;align-items:center;gap:6px;}
+  .ctrl input[type=range]{
+    flex:1;-webkit-appearance:none;appearance:none;
+    height:2px;background:var(--slider-track);border-radius:2px;outline:none;
+  }
+  .ctrl input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:6px;height:12px;border-radius:2px;
+    background:#fff;border:1px solid var(--accent);cursor:pointer;
+  }
+  .ctrl input[type=range]::-moz-range-thumb{
+    width:6px;height:12px;border-radius:2px;
+    background:#fff;border:1px solid var(--accent);cursor:pointer;
+  }
+
+  .ctrl .valbox{
+    width:54px;background:#0e1c2f;border:1px solid #2a4063;
+    color:#e8f0ff;font-size:11.5px;text-align:center;
+    border-radius:4px;padding:3px 4px;font-family:monospace;
+  }
+  .ctrl .unit{font-size:10.5px;color:var(--muted);width:34px;text-align:left;}
+  .ctrl .scale{
+    display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);
+    margin-top:1px;padding:0 1px;
+  }
+
+  .outputs{
+    background:#0c1828;border:1px solid var(--panel-border);
+    border-radius:8px;padding:10px 11px;margin-top:6px;
+  }
+  .outputs .otitle{font-size:11px;color:#bcd0ee;margin-bottom:6px;}
+  .outputs .row{
+    display:grid;grid-template-columns:1.25fr .9fr .55fr;
+    font-size:11.5px;padding:3px 0;
+    border-bottom:1px dotted #243a59;align-items:center;
+  }
+  .outputs .row:last-child{border-bottom:none;}
+  .outputs .row .k{color:#cfddef;}
+  .outputs .row .k em{color:#9fb4d1;font-style:normal;font-size:10.5px;}
+  .outputs .row .v{color:#fff;font-family:monospace;text-align:right;}
+  .outputs .row .u{color:var(--muted);font-size:10px;text-align:left;padding-left:6px;}
+  .outputs .row.emph .v{color:#ffd45e;font-weight:600;}
+
+  .title{
+    text-align:center;font-size:18px;font-weight:700;color:#0f172a;
+    margin:4px 0 10px 0;
+  }
+  .card{
+    background:var(--card-bg);border:1px solid var(--card-border);
+    border-radius:8px;padding:10px 14px;margin-bottom:10px;
+    box-shadow:0 1px 2px rgba(0,0,0,.03);
+  }
+  .card h3{
+    font-size:13.5px;font-weight:600;color:#0f172a;margin:0 0 6px 0;font-style:italic;
+  }
+  .card h3 small{color:#6b7280;font-style:italic;font-weight:400;font-size:11.5px;margin-left:4px;}
+  .card h3 .num{font-style:normal;color:#0f172a;}
+
+  .mol-wrap{display:flex;flex-direction:column;gap:6px;}
+  #molCanvas{width:100%;height:260px;display:block;background:#fafafa;border-radius:4px;}
+  .step-tabs{
+    display:flex;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap;
+  }
+  .step-tabs button{
+    border:1px solid #cbd5e1;background:#fff;padding:6px 14px;
+    font-size:12px;cursor:pointer;border-radius:4px;color:#374151;font-weight:500;
+  }
+  .step-tabs button.active{background:#1e63d1;border-color:#1e63d1;color:#fff;}
+  .step-tabs button.disabled{opacity:.4;cursor:not-allowed;background:#f3f4f6;}
+
+  .mol-controls{
+    display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;
+    background:#fafafa;border:1px solid #e5e7eb;border-radius:6px;
+    padding:6px 10px;
+  }
+  .mol-controls button{
+    border:none;border-radius:4px;padding:6px 12px;font-size:12px;font-weight:600;
+    cursor:pointer;color:#fff;display:inline-flex;align-items:center;gap:5px;
+  }
+  .btn-play{background:#2563eb;}
+  .btn-pause{background:#f59e0b;}
+  .btn-reset{background:#6b7280;}
+  .layer-info{font-size:11px;color:#6b7280;font-style:italic;margin-left:6px;}
+
+  .step-info{
+    font-size:11.5px;color:#374151;text-align:center;padding:4px 8px;
+    background:#f3f4f6;border-radius:4px;font-style:italic;
+  }
+  .mol-legend{
+    display:flex;flex-wrap:wrap;gap:18px;justify-content:center;
+    font-size:11.5px;color:#374151;padding:2px 0 4px 0;
+  }
+  .mol-legend .item{display:flex;align-items:center;gap:6px;}
+  .legend-dot{width:14px;height:14px;border-radius:50%;display:inline-block;border:1px solid #6b7280;}
+
+  .chart-box{position:relative;height:170px;}
+  .energy-box{position:relative;height:200px;}
+
+  .mech-section{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e5e7eb;}
+  .mech-section h4{font-size:12.5px;font-weight:700;color:#0f172a;margin:0 0 8px 0;font-style:italic;}
+  .mech-step{font-size:13px;margin:5px 0;line-height:1.5;}
+  .mech-step .lbl{display:inline-block;width:22px;font-style:italic;}
+  .mech-step.s1{color:var(--red);}
+  .mech-step.s2{color:var(--purple);}
+  .mech-step .note{color:#6b7280;font-style:italic;font-size:11px;margin-left:4px;}
+
+  .eq-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr 1fr 1fr 1fr;
+    gap:14px;align-items:start;
+  }
+  .eq-grid h4{font-size:12.5px;font-weight:700;color:#0f172a;margin:0 0 6px 0;font-style:italic;}
+  .eq-grid h4 small{font-style:italic;color:#6b7280;font-weight:400;font-size:11px;margin-left:3px;}
+  .eq-block{font-size:11.5px;line-height:1.5;color:#1f2937;}
+  .eq-block .label{font-style:italic;color:#374151;display:block;margin-top:6px;margin-bottom:2px;}
+  .eq-block .note{color:#6b7280;font-style:italic;font-size:10.5px;margin-left:4px;}
+  .eq-block .const{color:#374151;font-size:11px;margin-top:6px;}
+
+  @media (max-width:1300px){.eq-grid{grid-template-columns:1fr 1fr 1fr;}}
+
+  .left::-webkit-scrollbar{width:8px;}
+  .left::-webkit-scrollbar-track{background:#0c1726;}
+  .left::-webkit-scrollbar-thumb{background:#2a4870;border-radius:4px;}
+  .right::-webkit-scrollbar{width:10px;}
+  .right::-webkit-scrollbar-track{background:#e5e7eb;}
+  .right::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:5px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="left">
+    <h1>Model Parameters <span class="gear">⚙</span></h1>
+
+    <div class="group">
+      <h2>1. Rate Constant <span class="hint">(ref at 300 K)</span> <span class="info">ⓘ</span></h2>
+      <div class="ctrl">
+        <div class="label"><span class="name">k<sub>2,ref</sub> <span class="sub">(hydrolysis, RDS)</span></span></div>
+        <div class="row">
+          <input type="range" id="k2_ref" min="-2" max="3" step="0.01" value="0">
+          <div class="valbox" id="k2_ref_v">1.00</div>
+          <div class="unit">1/s</div>
+        </div>
+        <div class="scale"><span>1e-2</span><span>1</span><span>1e2</span><span>1e3</span></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>2. Equilibrium Constant <span class="hint">(ref at 300 K)</span> <span class="info">ⓘ</span></h2>
+      <div class="ctrl">
+        <div class="label"><span class="name">K<sub>1,ref</sub> <span class="sub">(TMA adsorption equilibrium)</span></span></div>
+        <div class="row">
+          <input type="range" id="K1_ref" min="-2" max="10" step="0.01" value="1">
+          <div class="valbox" id="K1_ref_v">10.0</div>
+          <div class="unit"></div>
+        </div>
+        <div class="scale"><span>1e-2</span><span>1</span><span>1e4</span><span>1e7</span><span>1e10</span></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>3. Partial Pressures <span class="hint">(atm)</span> <span class="info">ⓘ</span></h2>
+      <div class="ctrl">
+        <div class="label"><span class="name">P<sub>H₂O</sub></span></div>
+        <div class="row">
+          <input type="range" id="P_H2O" min="0" max="5" step="0.005" value="0.2">
+          <div class="valbox" id="P_H2O_v">0.200</div>
+        </div>
+        <div class="scale"><span>0</span><span>1.25</span><span>2.5</span><span>3.75</span><span>5.0</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="label"><span class="name">P<sub>TMA</sub></span></div>
+        <div class="row">
+          <input type="range" id="P_TMA" min="0" max="5" step="0.005" value="0.1">
+          <div class="valbox" id="P_TMA_v">0.100</div>
+        </div>
+        <div class="scale"><span>0</span><span>1.25</span><span>2.5</span><span>3.75</span><span>5.0</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="label"><span class="name">P<sub>CH₄</sub> <span class="sub">(avoid 0)</span></span></div>
+        <div class="row">
+          <input type="range" id="P_CH4" min="0.01" max="5" step="0.005" value="0.05">
+          <div class="valbox" id="P_CH4_v">0.050</div>
+        </div>
+        <div class="scale"><span>0.01</span><span>1.25</span><span>2.5</span><span>3.75</span><span>5.0</span></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>4. Energetics <span class="hint">(kJ/mol)</span></h2>
+      <div class="ctrl">
+        <div class="label"><span class="name">E<sub>a</sub> <span class="sub">(hydrolysis, RDS)</span></span></div>
+        <div class="row">
+          <input type="range" id="Ea" min="0" max="500" step="1" value="100">
+          <div class="valbox" id="Ea_v">100</div>
+        </div>
+        <div class="scale"><span>0</span><span>125</span><span>250</span><span>375</span><span>500</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="label"><span class="name">ΔH<sub>ads</sub> <span class="sub">(TMA adsorption, ≤ 0)</span></span></div>
+        <div class="row">
+          <input type="range" id="dHads" min="-500" max="0" step="1" value="-80">
+          <div class="valbox" id="dHads_v">-80</div>
+        </div>
+        <div class="scale"><span>-500</span><span>-375</span><span>-250</span><span>-125</span><span>0</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="label"><span class="name">ΔH<sub>3</sub> <span class="sub">(hydrolysis, ≤ 0)</span></span></div>
+        <div class="row">
+          <input type="range" id="dH3" min="-500" max="0" step="1" value="-120">
+          <div class="valbox" id="dH3_v">-120</div>
+        </div>
+        <div class="scale"><span>-500</span><span>-375</span><span>-250</span><span>-125</span><span>0</span></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>5. Process Conditions <span class="info">ⓘ</span></h2>
+      <div class="ctrl">
+        <div class="label"><span class="name">Temperature</span></div>
+        <div class="row">
+          <input type="range" id="Tc" min="50" max="350" step="1" value="200">
+          <div class="valbox" id="Tc_v">200</div>
+          <div class="unit">°C</div>
+        </div>
+        <div class="scale"><span>50</span><span>125</span><span>200</span><span>275</span><span>350</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="label"><span class="name">Reactor Volume (V)</span></div>
+        <div class="row">
+          <input type="range" id="V" min="0" max="50" step="0.05" value="5">
+          <div class="valbox" id="V_v">5.00</div>
+          <div class="unit">m³</div>
+        </div>
+        <div class="scale"><span>0</span><span>12.5</span><span>25</span><span>37.5</span><span>50</span></div>
+      </div>
+    </div>
+
+    <div class="outputs" id="outputs">
+      <div class="otitle" id="outTitle">Calculated at 200 °C (473 K)</div>
+      <div class="row"><div class="k">θ<sub>A</sub> <em>(O-Al(CH₃)₂* coverage)</em></div><div class="v" id="o_thA">0.231</div><div class="u"></div></div>
+      <div class="row emph"><div class="k">−r<sub>2</sub> <em>(RDS)</em></div><div class="v" id="o_r2">2.34e-03</div><div class="u">mol/m²·s</div></div>
+      <div class="row"><div class="k">Heat Removal, Q</div><div class="v" id="o_Q">2.81e+02</div><div class="u">W</div></div>
+    </div>
+  </aside>
+
+  <main class="right">
+    <div class="title">Understanding the Temperature Dependence of TMA → O-Al(OH)₂* ALD</div>
+    <div style="text-align:center;font-size:11px;color:#9ca3af;margin-top:-4px;margin-bottom:6px;font-style:italic;">
+      Developed by <strong style="color:#bcd0ee;font-style:normal;">Courtney Palmeri</strong> (BS '26) &nbsp;·&nbsp; Porosoff Research Group &nbsp;·&nbsp; University of Rochester
+    </div>
+
+    <section class="card">
+      <h3><span class="num">1.</span> Molecular-Level Visualization of One ALD Cycle</h3>
+      <div class="mol-wrap">
+        <div class="step-tabs">
+          <button data-step="1" class="active">Step 1: H₂O adsorption → OH*</button>
+          <button data-step="2">Step 2: TMA + OH* → O-Al(CH₃)₂* + CH₄</button>
+          <button data-step="3">Step 3: O-Al(CH₃)₂* + 2H₂O → O-Al(OH)₂* + 2CH₄</button>
+        </div>
+
+        <canvas id="molCanvas" width="1200" height="260"></canvas>
+
+        <div class="mol-controls">
+          <button class="btn-play"  id="btnPlay">▶ Play</button>
+          <button class="btn-pause" id="btnPause">⏸ Pause</button>
+          <button class="btn-reset" id="btnReset">↻ Reset</button>
+          <span class="layer-info" id="layerInfo">Layers: 0 (bare)</span>
+        </div>
+
+        <div class="step-info" id="stepInfo">Water vapor (H₂O) flows in from the left, adsorbs onto bare surface sites, and dissociates to form OH* groups. Adsorption rate scales with |ΔH<sub>ads</sub>|.</div>
+        <div class="mol-legend">
+          <div class="item"><span class="legend-dot" style="background:#e5e7eb;border-color:#6b7280;"></span>Surface Site (*)</div>
+          <div class="item"><span class="legend-dot" style="background:#3b82f6;border-color:#1d4ed8;"></span>OH*</div>
+          <div class="item"><span class="legend-dot" style="background:#dc2626;border-color:#7f1d1d;"></span>O-Al(CH₃)₂*</div>
+          <div class="item"><span class="legend-dot" style="background:#7c3aed;border-color:#4c1d95;"></span>O-Al(OH)₂*</div>
+          <div class="item"><span class="legend-dot" style="background:#9ca3af;border-color:#4b5563;"></span>CH₄ / H₂O / TMA (gas)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3><span class="num">2.</span> Rate vs Temperature</h3>
+      <div class="chart-box"><canvas id="ratesChart"></canvas></div>
+    </section>
+
+    <section class="card">
+      <h3><span class="num">3.</span> O-Al(CH₃)₂* Coverage θ<sub>A</sub> vs Temperature <small>(ALD effectiveness)</small></h3>
+      <div class="chart-box"><canvas id="coverageChart"></canvas></div>
+    </section>
+
+    <section class="card">
+      <h3><span class="num">4.</span> Energy Diagram <small>(per reaction pathway)</small></h3>
+      <div class="energy-box"><canvas id="energyChart"></canvas></div>
+    </section>
+
+    <section class="card">
+      <h3><span class="num">5.</span> Heat Removal Q vs Temperature <small>(rate of energy released)</small></h3>
+      <div class="chart-box"><canvas id="qChart"></canvas></div>
+    </section>
+
+    <section class="card">
+      <div class="mech-section">
+        <h4><span class="num">6.</span> Reaction Mechanism <small>(simplified: θ<sub>*</sub> = 0 after Step 1)</small></h4>
+        <div class="mech-step s1">
+          <span class="lbl">(1)</span> $\text{OH*} + \text{Al(CH}_3)_3(g) \;\rightleftharpoons\; \text{O-Al(CH}_3)_2\text{*} + \text{CH}_4(g)$
+          <span class="note">(reversible, equilibrium $K_1$)</span>
+        </div>
+        <div class="mech-step s2">
+          <span class="lbl">(2)</span> $\text{O-Al(CH}_3)_2\text{*} + 2\text{H}_2\text{O}(g) \;\rightarrow\; \text{O-Al(OH)}_2\text{*} + 2\text{CH}_4(g)$
+          <span class="note">(irreversible, rate-determining)</span>
+        </div>
+      </div>
+
+      <div class="eq-grid">
+        <div>
+          <h4><span class="num">7.</span> Governing Equations</h4>
+          <div class="eq-block">
+            <span class="label">Surface Site Balance</span>
+            $\theta_{OH} + \theta_A = 1$
+            <span class="label">Step 1 Equilibrium ($K_1$)</span>
+            $K_1 = \dfrac{\theta_A\, P_{CH_4}}{\theta_{OH}\, P_{TMA}}$
+            <div style="margin-top:4px;">$\theta_A = \dfrac{K_1\, P_{TMA}}{P_{CH_4} + K_1\, P_{TMA}}$</div>
+          </div>
+        </div>
+
+        <div>
+          <h4>Rate Law</h4>
+          <div class="eq-block">
+            $-r_2 = k_2(T)\,P_{H_2O}^{2}\;\dfrac{K_1\,P_{TMA}}{P_{CH_4} + K_1\,P_{TMA}}$
+            <div class="const" style="margin-top:8px;">Rate-determining step only</div>
+          </div>
+        </div>
+
+        <div>
+          <h4>Temperature Dependence</h4>
+          <div class="eq-block">
+            $k(T) = k_{ref}\,\exp\!\left(-\dfrac{E_a}{R}\left(\dfrac{1}{T}-\dfrac{1}{T_{ref}}\right)\right)$
+            <div style="margin-top:8px;">$K(T) = K_{ref}\,\exp\!\left(-\dfrac{\Delta H}{R}\left(\dfrac{1}{T}-\dfrac{1}{T_{ref}}\right)\right)$</div>
+            <div class="const">$R = 8.314\;$J/mol·K, &nbsp; $T_{ref}=300\;$K</div>
+          </div>
+        </div>
+
+        <div>
+          <h4>Coverage</h4>
+          <div class="eq-block">
+            $\theta_A \to 1$ ⇒ TMA-saturated surface
+            <div class="const" style="margin-top:6px;">$\theta_A \to 0$ ⇒ OH-terminated</div>
+            <div class="const">$\theta_A$ peaks where $K_1\,P_{TMA} \gg P_{CH_4}$</div>
+          </div>
+        </div>
+
+        <div>
+          <h4>Energy Balance <small>(isothermal)</small></h4>
+          <div class="eq-block">
+            $Q = -V\,\Delta H_3\,(-r_2)$
+            <div class="const" style="margin-top:6px;">Heat capacities (25 °C):</div>
+            <div class="const">$C_{p,TMA} = 155.6$ J/mol·K</div>
+            <div class="const">$C_{p,H_2O} = 4.184$ J/g·°C</div>
+            <div class="const">$C_{p,subs} = 2.32$ J/kg·K</div>
+            <div class="const" style="margin-top:6px;">$\Delta H<0\;\Rightarrow$ Exothermic</div>
+            <div class="const">$Q>0\;\Rightarrow$ Heat Removed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   PHYSICS
+   ============================================================ */
+const R_GAS = 8.314;
+const T_REF = 300;
+
+function getParams(){
+  const k2_ref = Math.pow(10, parseFloat(document.getElementById('k2_ref').value));
+  const K1_ref = Math.pow(10, parseFloat(document.getElementById('K1_ref').value));
+  const P_H2O  = parseFloat(document.getElementById('P_H2O').value);
+  const P_TMA  = parseFloat(document.getElementById('P_TMA').value);
+  const P_CH4  = Math.max(0.01, parseFloat(document.getElementById('P_CH4').value));
+  const Ea     = parseFloat(document.getElementById('Ea').value)*1000;
+  const dHads  = parseFloat(document.getElementById('dHads').value)*1000;
+  const dH3    = parseFloat(document.getElementById('dH3').value)*1000;
+  const Tc     = parseFloat(document.getElementById('Tc').value);
+  const V      = parseFloat(document.getElementById('V').value);
+  return {k2_ref,K1_ref,P_H2O,P_TMA,P_CH4,Ea,dHads,dH3,Tc,V};
+}
+function clampExp(x){
+  if (x > 50)  return Math.exp(50);
+  if (x < -50) return Math.exp(-50);
+  return Math.exp(x);
+}
+function arrh(k_ref, Ea, T){ return k_ref * clampExp(-Ea/R_GAS * (1/T - 1/T_REF)); }
+function vantHoff(K_ref, dH, T){ return K_ref * clampExp(-dH/R_GAS * (1/T - 1/T_REF)); }
+
+function evalAt(p, Tc){
+  const T = Tc + 273.15;
+  const K1 = vantHoff(p.K1_ref, p.dHads, T);
+  const k2 = arrh(p.k2_ref, p.Ea, T);
+  const num = K1 * p.P_TMA;
+  const den = p.P_CH4 + K1 * p.P_TMA;
+  const thA = num / den;
+  const thOH = 1 - thA;
+  const r2 = k2 * p.P_H2O * p.P_H2O * thA;
+  const Q  = -p.dH3 * r2 * p.V;
+  return {T, K1, k2, thA, thOH, r2, Q};
+}
+
+function logTickFormat(v){
+  const a = Math.abs(v);
+  if (a === 0) return '0';
+  if (a >= 1000 || a < 0.001) {
+    return Number(v).toExponential(0).replace('e+','e').replace('e-0','e-').replace('e0','e');
+  }
+  if (a >= 1) return v.toFixed(0);
+  if (a >= 0.01) return v.toFixed(2);
+  return v.toFixed(3);
+}
+
+function setupSlider(id, fmt){
+  const el = document.getElementById(id);
+  const out = document.getElementById(id+'_v');
+  el.addEventListener('input', ()=>{
+    out.textContent = fmt(parseFloat(el.value));
+    update();
+  });
+}
+const fmtLog = v => {
+  const x = Math.pow(10,v);
+  if (x>=1e6) return x.toExponential(0).replace('e+','e').replace('e-0','e-');
+  if (x>=100) return x.toFixed(0);
+  if (x>=1)   return x.toFixed(2);
+  return x.toFixed(3);
+};
+const fmtLin3 = v => parseFloat(v).toFixed(3);
+const fmtLin2 = v => parseFloat(v).toFixed(2);
+const fmtInt  = v => Math.round(parseFloat(v)).toString();
+
+setupSlider('k2_ref', fmtLog);
+setupSlider('K1_ref', fmtLog);
+setupSlider('P_H2O',  fmtLin3);
+setupSlider('P_TMA',  fmtLin3);
+setupSlider('P_CH4',  fmtLin3);
+setupSlider('Ea',     fmtInt);
+setupSlider('dHads',  fmtInt);
+setupSlider('dH3',    fmtInt);
+setupSlider('Tc',     fmtInt);
+setupSlider('V',      fmtLin2);
+
+/* ============================================================
+   CHARTS
+   ============================================================ */
+const TGRID = [];
+for (let T=50; T<=350; T+=2) TGRID.push(T);
+
+const vLinePlugin = {
+  id:'vLine',
+  afterDraw(chart, args, opts){
+    if (!opts || opts.x==null) return;
+    const xS = chart.scales.x, yS = chart.scales.y;
+    const xPix = xS.getPixelForValue(opts.x);
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle = '#374151';
+    ctx.lineWidth = 1.2;
+    ctx.moveTo(xPix, yS.top);
+    ctx.lineTo(xPix, yS.bottom);
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+Chart.register(vLinePlugin);
+
+const Y_RATES    = { min: 1e-2, max: 1e10 };
+const Y_COVERAGE = { min: 0,    max: 1    };
+const Y_Q        = { min: 1e-2, max: 1e10 };
+const Y_ENERGY   = { min: -600, max: 600  };
+
+const ratesChart = new Chart(document.getElementById('ratesChart').getContext('2d'), {
+  type:'line',
+  data:{ datasets:[
+    { label:'−r₂ (RDS)',
+      data:[], borderColor:'#1e63d1', backgroundColor:'#1e63d1',
+      borderWidth:2, tension:.3, pointRadius:0, pointHoverRadius:5 }
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:false,
+    interaction:{mode:'nearest',intersect:false,axis:'x'},
+    plugins:{
+      legend:{position:'top',labels:{boxWidth:14,font:{size:11}}},
+      vLine:{x:200},
+      tooltip:{
+        callbacks:{
+          title:(items)=>`T = ${items[0].parsed.x.toFixed(0)} °C`,
+          label:(ctx)=>`−r₂ = ${ctx.parsed.y.toExponential(2)} mol/m²·s`
+        }
+      }
+    },
+    scales:{
+      x:{type:'linear',min:50,max:350,
+         title:{display:true,text:'Temperature (°C)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10}},grid:{color:'#eef2f7'}},
+      y:{type:'logarithmic',
+         min:Y_RATES.min, max:Y_RATES.max,
+         title:{display:true,text:'Rate (mol/m²·s)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10},callback:logTickFormat},
+         grid:{color:'#eef2f7'}}
+    }
+  }
+});
+
+const coverageChart = new Chart(document.getElementById('coverageChart').getContext('2d'), {
+  type:'line',
+  data:{ datasets:[
+    { label:'θ_A',
+      data:[], borderColor:'#7c3aed', backgroundColor:'#7c3aed',
+      borderWidth:2, tension:.3, pointRadius:0, pointHoverRadius:5 }
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:false,
+    interaction:{mode:'nearest',intersect:false,axis:'x'},
+    plugins:{
+      legend:{display:false},
+      vLine:{x:200},
+      tooltip:{
+        callbacks:{
+          title:(items)=>`T = ${items[0].parsed.x.toFixed(0)} °C`,
+          label:(ctx)=>`θ_A = ${ctx.parsed.y.toFixed(3)} (dimensionless)`
+        }
+      }
+    },
+    scales:{
+      x:{type:'linear',min:50,max:350,
+         title:{display:true,text:'Temperature (°C)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10}},grid:{color:'#eef2f7'}},
+      y:{type:'linear',
+         min:Y_COVERAGE.min, max:Y_COVERAGE.max,
+         title:{display:true,text:'θ_A (–)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10}},grid:{color:'#eef2f7'}}
+    }
+  }
+});
+
+const energyChart = new Chart(document.getElementById('energyChart').getContext('2d'), {
+  type:'line',
+  data:{ datasets:[
+    { label:'Energy', data:[], borderColor:'#111827',
+      borderWidth:2, tension:.25, pointRadius:0, fill:false}
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{display:false}, tooltip:{enabled:false}},
+    scales:{
+      x:{type:'linear',min:0,max:10,display:true,
+        title:{display:true,text:'Reaction Coordinate',font:{size:11,style:'italic'}},
+        ticks:{display:false},grid:{display:false}},
+      y:{type:'linear',
+         min:Y_ENERGY.min, max:Y_ENERGY.max,
+         title:{display:true,text:'Relative Energy (kJ/mol)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10},callback:logTickFormat},
+         grid:{color:'#eef2f7'}}
+    }
+  }
+});
+
+const qChart = new Chart(document.getElementById('qChart').getContext('2d'), {
+  type:'line',
+  data:{ datasets:[
+    { label:'Q (heat removal)',
+      data:[], borderColor:'#ea580c', backgroundColor:'#ea580c',
+      borderWidth:2, tension:.3, pointRadius:0, pointHoverRadius:5 }
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:false,
+    interaction:{mode:'nearest',intersect:false,axis:'x'},
+    plugins:{
+      legend:{display:false},
+      vLine:{x:200},
+      tooltip:{
+        callbacks:{
+          title:(items)=>`T = ${items[0].parsed.x.toFixed(0)} °C`,
+          label:(ctx)=>`Q = ${ctx.parsed.y.toExponential(2)} W (J/s)`
+        }
+      }
+    },
+    scales:{
+      x:{type:'linear',min:50,max:350,
+         title:{display:true,text:'Temperature (°C)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10}},grid:{color:'#eef2f7'}},
+      y:{type:'logarithmic',
+         min:Y_Q.min, max:Y_Q.max,
+         title:{display:true,text:'Heat Removal |Q| (W)',font:{size:11,style:'italic'}},
+         ticks:{font:{size:10},callback:logTickFormat},
+         grid:{color:'#eef2f7'}}
+    }
+  }
+});
+
+const energyAnnPlugin = {
+  id:'energyAnn',
+  afterDatasetsDraw(chart){
+    if (chart.canvas.id !== 'energyChart') return;
+    const opts = chart.$annotations;
+    if (!opts) return;
+    const ctx = chart.ctx;
+    const xS = chart.scales.x, yS = chart.scales.y;
+    ctx.save();
+    ctx.font = '11px Segoe UI';
+
+    ctx.fillStyle = '#111827';
+    ctx.textAlign = 'center';
+    ctx.fillText('Al(CH₃)₃ (gas)', xS.getPixelForValue(1), yS.getPixelForValue(0)-8);
+    ctx.fillText('O-Al(CH₃)₂*', xS.getPixelForValue(3.5), yS.getPixelForValue(opts.E_int)+16);
+    ctx.fillText('O-Al(OH)₂*',  xS.getPixelForValue(8.7), yS.getPixelForValue(opts.E_fin)+16);
+
+    const x1 = xS.getPixelForValue(2.5);
+    const y0 = yS.getPixelForValue(0);
+    const y1 = yS.getPixelForValue(opts.E_int);
+    ctx.strokeStyle = '#1e63d1'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x1,y0); ctx.lineTo(x1,y1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1,y0); ctx.lineTo(x1-4,y0+6); ctx.lineTo(x1+4,y0+6); ctx.closePath(); ctx.fillStyle='#1e63d1'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x1-4,y1-6); ctx.lineTo(x1+4,y1-6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#1e63d1'; ctx.textAlign='left';
+    ctx.fillText(`ΔH_ads = ${opts.dHads.toFixed(0)} kJ/mol`, x1+6, (y0+y1)/2);
+
+    const xE = xS.getPixelForValue(5.4);
+    const yTop  = yS.getPixelForValue(opts.E_top);
+    const yInt  = yS.getPixelForValue(opts.E_int);
+    ctx.strokeStyle='#d63232'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(xE,yInt); ctx.lineTo(xE,yTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xE,yTop); ctx.lineTo(xE-4,yTop+6); ctx.lineTo(xE+4,yTop+6); ctx.closePath(); ctx.fillStyle='#d63232'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(xE,yInt); ctx.lineTo(xE-4,yInt-6); ctx.lineTo(xE+4,yInt-6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#d63232';
+    ctx.fillText(`E_a = ${opts.Ea.toFixed(0)}`, xE+6, (yTop+yInt)/2 - 4);
+    ctx.fillText('kJ/mol', xE+6, (yTop+yInt)/2 + 10);
+
+    ctx.restore();
+  }
+};
+Chart.register(energyAnnPlugin);
+
+/* ============================================================
+   MAIN UPDATE
+   ============================================================ */
+function update(){
+  const p = getParams();
+  const cur = evalAt(p, p.Tc);
+
+  document.getElementById('outTitle').textContent =
+    `Calculated at ${p.Tc.toFixed(0)} °C (${(p.Tc+273.15).toFixed(0)} K)`;
+  document.getElementById('o_thA').textContent  = cur.thA.toFixed(3);
+  document.getElementById('o_r2').textContent   = cur.r2.toExponential(2);
+  document.getElementById('o_Q').textContent    = cur.Q.toExponential(2);
+
+  ratesChart.data.datasets[0].data = TGRID.map(T => ({x:T, y:Math.max(1e-30, evalAt(p,T).r2)}));
+  ratesChart.options.plugins.vLine.x = p.Tc;
+  ratesChart.update('none');
+
+  coverageChart.data.datasets[0].data = TGRID.map(T => ({x:T, y:evalAt(p,T).thA}));
+  coverageChart.options.plugins.vLine.x = p.Tc;
+  coverageChart.update('none');
+
+  const dHads_kJ = p.dHads/1000;
+  const Ea_kJ    = p.Ea/1000;
+  const dH3_kJ   = p.dH3/1000;
+  const E_gas = 0;
+  const E_int = dHads_kJ;
+  const E_top = dHads_kJ + Ea_kJ;
+  const E_fin = dH3_kJ;
+  const seg = [
+    {x:0.0, y:E_gas}, {x:1.6, y:E_gas},
+    {x:2.0, y:E_int}, {x:4.5, y:E_int},
+    {x:5.4, y:E_top}, {x:5.9, y:E_top},
+    {x:7.5, y:E_fin}, {x:10.0,y:E_fin}
+  ];
+  energyChart.data.datasets[0].data = seg;
+  energyChart.$annotations = { E_gas, E_int, E_top, E_fin, dHads: dHads_kJ, Ea: Ea_kJ };
+  energyChart.update('none');
+
+  qChart.data.datasets[0].data = TGRID.map(T => ({x:T, y:Math.max(1e-30, Math.abs(evalAt(p,T).Q))}));
+  qChart.options.plugins.vLine.x = p.Tc;
+  qChart.update('none');
+
+  mol.dHads_kJ = dHads_kJ;
+  mol.r2 = cur.r2;
+  mol.P_TMA = p.P_TMA;
+  mol.P_H2O = p.P_H2O;
+}
+
+/* ============================================================
+   MOLECULAR ANIMATION
+   ============================================================ */
+const mol = {
+  canvas: document.getElementById('molCanvas'),
+  ctx: null,
+  step: 1,
+  layers: [],
+  activeLayer: null,
+  gas: [],
+  byproducts: [],
+  dHads_kJ: -80,
+  r2: 1,
+  P_TMA: 0.1,
+  P_H2O: 0.2,
+  lastSpawn: 0,
+  playing: true
+};
+mol.ctx = mol.canvas.getContext('2d');
+
+const N_SITES = 14;
+const SURF_Y = 235;
+const LAYER_DY = 32;
+
+function fitCanvas(){
+  const c = mol.canvas;
+  const w = c.parentElement.clientWidth;
+  c.width = Math.max(800, w);
+  c.height = 260;
+}
+window.addEventListener('resize', fitCanvas);
+fitCanvas();
+
+function setupSites(){
+  mol.sites = [];
+  const W = mol.canvas.width;
+  const margin = 30;
+  const span = W - 2*margin;
+  for (let i=0;i<N_SITES;i++){
+    const x = margin + (i+0.5) * (span/N_SITES);
+    mol.sites.push({x});
+  }
+}
+setupSites();
+
+function layerCenterY(layerIdx){ return SURF_Y - layerIdx * LAYER_DY; }
+
+function fullReset(){
+  setupSites();
+  mol.layers = [];
+  mol.activeLayer = null;
+  mol.gas = [];
+  mol.byproducts = [];
+  updateLayerInfo();
+}
+
+function topLayerIdx(){ return mol.layers.length - 1; }
+function topLayer(){ return mol.layers[topLayerIdx()]; }
+
+function topLayerType(){
+  const t = topLayer();
+  if (!t) return null;
+  const counts = {};
+  t.forEach(s=>{ if (s.type) counts[s.type] = (counts[s.type]||0)+1; });
+  let best=null, bestN=-1;
+  for (const k in counts){ if (counts[k]>bestN){best=k; bestN=counts[k];} }
+  return best;
+}
+
+function topLayerHasAtLeastOne(type){
+  const t = topLayer(); if (!t) return false;
+  return t.some(s => s.type===type);
+}
+
+function topLayerFullyFilled(type){
+  const t = topLayer(); if (!t) return false;
+  return t.every(s => s.type===type);
+}
+
+function makeEmptyLayer(){
+  return Array(N_SITES).fill(null).map(()=>({type:null, anim:0}));
+}
+
+/* === clean step transitions: clear all in-flight gas + byproducts === */
+function purgeGasPhase(){
+  mol.gas = [];
+  mol.byproducts = [];
+  mol.lastSpawn = 0;
+}
+
+function startStep1(){
+  if (mol.layers.length === 0){
+    mol.layers.push(makeEmptyLayer());
+  }
+  mol.activeLayer = { idx: 0, targetType: 'OH' };
+  updateLayerInfo();
+}
+
+function startStep2(){
+  const top = topLayer();
+  if (!top) return false;
+  const tType = topLayerType();
+  if (tType === 'OH' && topLayerFullyFilled('OH')){
+    mol.activeLayer = { idx: topLayerIdx(), targetType:'AlMe2', convertFrom:'OH' };
+    return true;
+  }
+  if (tType === 'AlOH2' && topLayerFullyFilled('AlOH2')){
+    mol.layers.push(makeEmptyLayer());
+    mol.activeLayer = { idx: topLayerIdx(), targetType:'AlMe2' };
+    return true;
+  }
+  return false;
+}
+
+function startStep3(){
+  if (!topLayerHasAtLeastOne('AlMe2')) return false;
+  mol.activeLayer = { idx: topLayerIdx(), targetType:'AlOH2', convertFrom:'AlMe2' };
+  return true;
+}
+
+function updateLayerInfo(){
+  let n = 0;
+  if (mol.layers.length > 0){
+    n = mol.layers.length;
+    const base = mol.layers[0];
+    const baseFilled = base && base.every(s=>s.type==='OH'||s.type==='AlMe2'||s.type==='AlOH2');
+    if (!baseFilled) n = 0;
+  }
+  let txt;
+  if (mol.layers.length === 0) txt = 'Layers: 0 (bare)';
+  else if (n === 0)            txt = 'Layers: 0 (depositing)';
+  else                         txt = `Layers: ${n}`;
+  document.getElementById('layerInfo').textContent = txt;
+
+  const btns = document.querySelectorAll('.step-tabs button');
+  btns.forEach(b=>{
+    const stepN = parseInt(b.dataset.step,10);
+    let allowed = true;
+    if (stepN === 2){
+      const top = topLayer();
+      if (!top) allowed = false;
+      else {
+        const t = topLayerType();
+        allowed = (t==='OH' && topLayerFullyFilled('OH')) ||
+                  (t==='AlOH2' && topLayerFullyFilled('AlOH2'));
+      }
+    }
+    if (stepN === 3){
+      allowed = topLayerHasAtLeastOne('AlMe2');
+    }
+    b.classList.toggle('disabled', !allowed);
+  });
+}
+
+function spawnGas(kind){
+  mol.gas.push({
+    x: -20,
+    y: 40 + Math.random()*100,
+    targetIdx: null,
+    kind,
+    vx: 1.0 + Math.random()*0.6,
+    vy: 0,
+    state: 'flow'
+  });
+}
+
+function spawnByproduct(x, y){
+  mol.byproducts.push({
+    x: x + (Math.random()-0.5)*8,
+    y: y - 8,
+    vx: 0.8 + Math.random()*1.0,
+    vy: -0.5 - Math.random()*0.5,
+    life: 1.0
+  });
+}
+
+function drawSurface(ctx){
+  const W = mol.canvas.width;
+  const grd = ctx.createLinearGradient(0,SURF_Y,0,SURF_Y+25);
+  grd.addColorStop(0,'#374151'); grd.addColorStop(1,'#1f2937');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, SURF_Y, W, 25);
+  mol.sites.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x, SURF_Y+8, 7, 0, Math.PI*2);
+    ctx.fillStyle = '#d1d5db';
+    ctx.fill();
+    ctx.strokeStyle = '#4b5563';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+}
+
+function drawOH(ctx, cx, cy, alpha=1){
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx,cy-14); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy-18, 5, 0, Math.PI*2);
+  ctx.fillStyle='#3b82f6'; ctx.fill(); ctx.strokeStyle='#1d4ed8'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx+5, cy-24, 2.6, 0, Math.PI*2);
+  ctx.fillStyle='#ffffff'; ctx.fill(); ctx.strokeStyle='#9ca3af'; ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+function drawAlMe2(ctx, cx, cy, alpha=1){
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx,cy-12); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy-15, 4, 0, Math.PI*2);
+  ctx.fillStyle='#3b82f6'; ctx.fill(); ctx.strokeStyle='#1d4ed8'; ctx.stroke();
+  ctx.strokeStyle='#7f1d1d'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx,cy-19); ctx.lineTo(cx,cy-26); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy-30, 6.5, 0, Math.PI*2);
+  ctx.fillStyle='#dc2626'; ctx.fill(); ctx.strokeStyle='#7f1d1d'; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 8px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('Al', cx, cy-28);
+  drawMethyl(ctx, cx-9, cy-36);
+  drawMethyl(ctx, cx+9, cy-36);
+  ctx.globalAlpha = 1;
+}
+function drawAlOH2(ctx, cx, cy, alpha=1){
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx,cy-12); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy-15, 4, 0, Math.PI*2);
+  ctx.fillStyle='#3b82f6'; ctx.fill(); ctx.strokeStyle='#1d4ed8'; ctx.stroke();
+  ctx.strokeStyle='#4c1d95'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx,cy-19); ctx.lineTo(cx,cy-26); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy-30, 6.5, 0, Math.PI*2);
+  ctx.fillStyle='#7c3aed'; ctx.fill(); ctx.strokeStyle='#4c1d95'; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 8px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('Al', cx, cy-28);
+  drawSmallOH(ctx, cx-9, cy-40);
+  drawSmallOH(ctx, cx+9, cy-40);
+  ctx.globalAlpha = 1;
+}
+function drawMethyl(ctx, cx, cy){
+  ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI*2);
+  ctx.fillStyle='#1f2937'; ctx.fill();
+  ctx.fillStyle='#9ca3af';
+  ctx.beginPath(); ctx.arc(cx-3, cy-3, 2, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+3, cy-3, 2, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,   cy-5, 2, 0, Math.PI*2); ctx.fill();
+}
+function drawSmallOH(ctx, cx, cy){
+  ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI*2);
+  ctx.fillStyle='#3b82f6'; ctx.fill(); ctx.strokeStyle='#1d4ed8'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx+4, cy-3, 2, 0, Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#9ca3af'; ctx.stroke();
+}
+
+function drawGasH2O(ctx, cx, cy){
+  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI*2);
+  ctx.fillStyle='#3b82f6'; ctx.fill(); ctx.strokeStyle='#1d4ed8'; ctx.lineWidth=1; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx-4, cy-4, 2.2, 0, Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#9ca3af'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx+4, cy-4, 2.2, 0, Math.PI*2);
+  ctx.fill(); ctx.stroke();
+}
+function drawGasTMA(ctx, cx, cy){
+  ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI*2);
+  ctx.fillStyle='#dc2626'; ctx.fill(); ctx.strokeStyle='#7f1d1d'; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 8px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('Al', cx, cy+3);
+  drawMethyl(ctx, cx-9, cy-7);
+  drawMethyl(ctx, cx+9, cy-7);
+  drawMethyl(ctx, cx,   cy+10);
+}
+function drawGasCH4(ctx, cx, cy){
+  ctx.fillStyle='#9ca3af';
+  ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-5, cy-3, 2.5, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+5, cy-3, 2.5, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy-6, 2.5, 0, Math.PI*2); ctx.fill();
+}
+
+function findTargetSite(){
+  if (!mol.activeLayer) return -1;
+  const layer = mol.layers[mol.activeLayer.idx];
+  const cf = mol.activeLayer.convertFrom;
+
+  const candidates = [];
+  for (let i=0;i<N_SITES;i++){
+    const s = layer[i];
+    if (cf){
+      if (s.type === cf) candidates.push(i);
+    } else {
+      if (!s.type) candidates.push(i);
+    }
+  }
+  if (candidates.length===0) return -1;
+  return candidates[Math.floor(Math.random()*candidates.length)];
+}
+
+function activeLayerComplete(){
+  if (!mol.activeLayer) return false;
+  const layer = mol.layers[mol.activeLayer.idx];
+  return layer.every(s => s.type === mol.activeLayer.targetType);
+}
+
+/* expected gas kind for the current step */
+function expectedGasKind(){
+  if (mol.step === 1) return 'H2O';
+  if (mol.step === 2) return 'TMA';
+  if (mol.step === 3) return 'H2O';
+  return null;
+}
+
+function stepTick(now){
+  if (!mol.playing) return;
+
+  let pressure, baseInterval, kind;
+  if (mol.step === 1){
+    pressure = mol.P_H2O; baseInterval = 250; kind = 'H2O';
+  } else if (mol.step === 2){
+    pressure = mol.P_TMA; baseInterval = 380; kind = 'TMA';
+  } else {
+    pressure = mol.P_H2O; baseInterval = 380; kind = 'H2O';
+  }
+  let intervalScale = 1;
+  const pNorm = Math.max(0.005, Math.min(1, pressure/2.5));
+  intervalScale = 1/pNorm;
+  if (mol.step === 1){
+    const dhMag = Math.min(1, Math.abs(mol.dHads_kJ)/250);
+    intervalScale *= 1/Math.max(0.25, dhMag);
+  }
+  const spawnEvery = Math.min(3000, baseInterval * intervalScale);
+
+  if (pressure > 0.001 && (now - mol.lastSpawn > spawnEvery)){
+    mol.lastSpawn = now;
+    spawnGas(kind);
+  }
+
+  const expectedKind = expectedGasKind();
+
+  for (let i=mol.gas.length-1;i>=0;i--){
+    const g = mol.gas[i];
+    if (g.state==='flow'){
+      g.x += g.vx;
+      g.y += Math.sin(g.x*0.05 + i)*0.3;
+      /* Only the gas matching the current step is allowed to bind.
+         Stale gas from a prior step (defensive guard) just flows across. */
+      if (g.kind === expectedKind &&
+          g.targetIdx == null && mol.activeLayer && !activeLayerComplete()){
+        const idx = findTargetSite();
+        if (idx >= 0){
+          const tx = mol.sites[idx].x;
+          if (Math.abs(g.x - tx) < 30 && g.x > 30){
+            g.targetIdx = idx;
+            g.state = 'descend';
+          }
+        }
+      }
+      if (g.x > mol.canvas.width + 20){ mol.gas.splice(i,1); continue; }
+    } else if (g.state==='descend'){
+      if (!mol.activeLayer || g.kind !== expectedKind){
+        g.targetIdx = null;
+        g.state = 'flow';
+        continue;
+      }
+      const layer = mol.layers[mol.activeLayer.idx];
+      const cf = mol.activeLayer.convertFrom;
+      const valid = (g.targetIdx != null) && (
+        cf ? (layer[g.targetIdx].type === cf)
+           : (!layer[g.targetIdx].type)
+      );
+      if (!valid){
+        g.targetIdx = null;
+        g.state = 'flow';
+        continue;
+      }
+      const tx = mol.sites[g.targetIdx].x;
+      const ty = layerCenterY(mol.activeLayer.idx) - 35;
+      const dx = tx - g.x;
+      const dy = ty - g.y;
+      const d = Math.hypot(dx,dy);
+      if (d < 4){
+        const newType = mol.activeLayer.targetType;
+        layer[g.targetIdx].type = newType;
+        layer[g.targetIdx].anim = 0;
+        const baseY = layerCenterY(mol.activeLayer.idx);
+        if (mol.step === 2){
+          spawnByproduct(tx, baseY-30);
+        } else if (mol.step === 3){
+          spawnByproduct(tx-6, baseY-30);
+          spawnByproduct(tx+6, baseY-30);
+        }
+        mol.gas.splice(i,1);
+        if (activeLayerComplete()){
+          mol.activeLayer = null;
+          updateLayerInfo();
+        } else {
+          updateLayerInfo();
+        }
+      } else {
+        g.x += dx/d * 1.6;
+        g.y += dy/d * 1.6;
+      }
+    }
+  }
+
+  mol.layers.forEach(layer=>{
+    layer.forEach(s=>{
+      if (s.type && s.anim<1) s.anim = Math.min(1, s.anim+0.06);
+    });
+  });
+
+  for (let i=mol.byproducts.length-1;i>=0;i--){
+    const b = mol.byproducts[i];
+    b.x += b.vx; b.y += b.vy; b.life -= 0.008;
+    if (b.life <= 0 || b.y < -10 || b.x > mol.canvas.width + 20){
+      mol.byproducts.splice(i,1);
+    }
+  }
+}
+
+function drawMol(){
+  const ctx = mol.ctx;
+  const W = mol.canvas.width;
+  const H = mol.canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  ctx.fillStyle='#9ca3af'; ctx.font='10px Segoe UI'; ctx.textAlign='left';
+  ctx.fillText('Gas flow →', 8, 18);
+
+  drawSurface(ctx);
+
+  for (let li=0; li<mol.layers.length; li++){
+    const layer = mol.layers[li];
+    const cy = layerCenterY(li);
+    for (let i=0;i<N_SITES;i++){
+      const cx = mol.sites[i].x;
+      const s = layer[i];
+      if (!s.type) continue;
+      const a = s.anim;
+      if (s.type==='OH')    drawOH(ctx, cx, cy, a);
+      if (s.type==='AlMe2') drawAlMe2(ctx, cx, cy, a);
+      if (s.type==='AlOH2') drawAlOH2(ctx, cx, cy, a);
+    }
+  }
+
+  mol.gas.forEach(g=>{
+    if (g.kind==='H2O') drawGasH2O(ctx, g.x, g.y);
+    else if (g.kind==='TMA') drawGasTMA(ctx, g.x, g.y);
+  });
+
+  mol.byproducts.forEach(b=>{
+    ctx.globalAlpha = Math.max(0,b.life);
+    drawGasCH4(ctx, b.x, b.y);
+  });
+  ctx.globalAlpha = 1;
+}
+
+function loop(ts){
+  stepTick(ts);
+  drawMol();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+function setStepInfo(){
+  const info = document.getElementById('stepInfo');
+  if (mol.step===1) info.innerHTML = 'Water vapor (H₂O) flows in from the left, adsorbs onto bare surface sites, and dissociates to form OH* groups. Adsorption rate scales with |ΔH<sub>ads</sub>|.';
+  if (mol.step===2) info.innerHTML = 'Gas-phase TMA flows in from the left, binds to OH* sites, and releases CH₄ as it transforms the surface into O-Al(CH₃)₂*.';
+  if (mol.step===3) info.innerHTML = 'Water vapor flows in from the left and reacts with bound O-Al(CH₃)₂* groups, releasing CH₄ and forming O-Al(OH)₂* (rate-limiting step).';
+}
+
+document.querySelectorAll('.step-tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if (btn.classList.contains('disabled')) return;
+    const newStep = parseInt(btn.dataset.step,10);
+
+    /* Always purge in-flight gas + byproducts when switching steps,
+       so no leftover TMA can react in Step 3 (and no leftover H2O in Step 2). */
+    purgeGasPhase();
+
+    if (newStep === 1){
+      fullReset();
+      mol.step = 1;
+      startStep1();
+    } else if (newStep === 2){
+      const ok = startStep2();
+      if (!ok) return;
+      mol.step = 2;
+    } else if (newStep === 3){
+      const ok = startStep3();
+      if (!ok) return;
+      mol.step = 3;
+    }
+
+    document.querySelectorAll('.step-tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    mol.playing = true;
+    setStepInfo();
+    updateLayerInfo();
+  });
+});
+
+document.getElementById('btnPlay').addEventListener('click', ()=>{ mol.playing = true; });
+document.getElementById('btnPause').addEventListener('click',()=>{ mol.playing = false; });
+document.getElementById('btnReset').addEventListener('click',()=>{
+  fullReset();
+  purgeGasPhase();
+  mol.step = 1;
+  startStep1();
+  mol.playing = true;
+  document.querySelectorAll('.step-tabs button').forEach((b,i)=>{
+    b.classList.toggle('active', i===0);
+  });
+  setStepInfo();
+  updateLayerInfo();
+});
+
+fullReset();
+mol.step = 1;
+startStep1();
+setStepInfo();
+updateLayerInfo();
+update();
+</script>
+
+</body>
+</html>

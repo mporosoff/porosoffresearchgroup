@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Resources | Porosoff Research Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+  <style>
+    /* ── Gate ── */
+    #gate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy);
+    }
+    .gate-box {
+      background: #0d1e33;
+      border: 1px solid rgba(200,169,81,0.25);
+      border-radius: 14px;
+      padding: 3rem 3.5rem;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .gate-box .gate-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .gate-box h1 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #e8edf4;
+      margin: 0 0 0.35rem;
+      line-height: 1.2;
+    }
+    .gate-box h1 em { color: var(--gold); font-style: italic; }
+    .gate-box p {
+      color: rgba(160,185,215,0.75);
+      font-size: 0.88rem;
+      margin: 0 0 2rem;
+      line-height: 1.65;
+    }
+    .gate-box input[type="password"] {
+      width: 100%;
+      background: #0a1828;
+      border: 1px solid rgba(200,169,81,0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: #e8edf4;
+      letter-spacing: 0.1em;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 1rem;
+    }
+    .gate-box input[type="password"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,169,81,0.12);
+    }
+    .gate-box button {
+      width: 100%;
+      background: var(--accent);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .gate-box button:hover { background: var(--gold); }
+    .gate-box button:active { transform: scale(0.98); }
+    .gate-error {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+      color: #e57373;
+      display: none;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Intranet content (hidden until unlocked) ── */
+    #intranet { display: none; }
+
+    .intranet-nav {
+      background: var(--navy);
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(200,169,81,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .intranet-nav .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .intranet-nav .brand {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: #e8edf4;
+      text-decoration: none;
+    }
+    .intranet-nav .brand em { color: var(--gold); font-style: italic; }
+    .intranet-nav .lock-badge {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(200,169,81,0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+    }
+
+    .intranet-hero {
+      background: var(--navy);
+      padding: 3.5rem 2rem 3rem;
+      border-bottom: 1px solid rgba(200,169,81,0.12);
+    }
+    .intranet-hero .container { max-width: 1100px; margin: 0 auto; }
+
+    /* Resource grid */
+    .resource-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .resource-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .resource-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin: 0 0 1.75rem;
+    }
+    .resource-section h2 em { font-style: italic; }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .resource-card {
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.5rem;
+      background: #fff;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .resource-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .resource-card .rc-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .resource-card .rc-tag {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(200,169,81,0.1);
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+    .resource-card h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 0.4rem;
+      line-height: 1.3;
+    }
+    .resource-card p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .resource-card .rc-footer {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Placeholder card */
+    .resource-card.placeholder {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+      background: #f8f9fa;
+    }
+    .resource-card.placeholder h3 { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ PASSWORD GATE ══════════ -->
+<div id="gate">
+  <div class="gate-box">
+    <span class="gate-label">Porosoff Research Group</span>
+    <h1>Group <em>Resources</em></h1>
+    <p>Internal resources for group members. Enter the group password to continue.</p>
+    <input type="password" id="pwInput" placeholder="Password" autocomplete="off">
+    <button onclick="checkPassword()">Enter →</button>
+    <div class="gate-error" id="gateError">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- ══════════ INTRANET CONTENT ══════════ -->
+<div id="intranet">
+
+  <nav class="intranet-nav">
+    <div class="inner">
+      <a href="index.html" class="brand">Porosoff Research <em>Group</em></a>
+      <span class="lock-badge">🔒 Group Access</span>
+    </div>
+  </nav>
+
+  <div class="intranet-hero">
+    <div class="container">
+      <span class="sec-label">Internal</span>
+      <h1 class="sec-title" style="color:#e8edf4;">Group <em>Resources</em></h1>
+      <p style="color:rgba(160,185,215,0.8);max-width:580px;font-size:0.93rem;line-height:1.8;">
+        Manuals, protocols, and resources for Porosoff group members. Bookmark this page for easy access.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Instruments ── -->
+  <div class="resource-section">
+    <div class="resource-section-title">Instruments</div>
+    <h2>Instrument <em>Guides</em></h2>
+    <div class="resource-grid">
+
+      <a href="group/sri-gc-guide.html" target="_blank" class="resource-card">
+        <span class="rc-icon">🔬</span>
+        <span class="rc-tag">GC · Instrument</span>
+        <h3>SRI 8610C GC + PeakSimple</h3>
+        <p>Complete student guide covering startup, data acquisition, peak integration, and troubleshooting for the SRI gas chromatograph.</p>
+        <div class="rc-footer">Open guide →</div>
+      </a>
+
+      <div class="resource-card placeholder">
+        <span class="rc-icon">📋</span>
+        <span class="rc-tag">Coming Soon</span>
+        <h3>More Instrument Guides</h3>
+        <p>Additional instrument manuals and SOPs will be added here.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Onboarding ── -->
+  <div class="resource-section" style="padding-top:0;">
+    <div class="resource-section-title">Getting Started</div>
+    <h2>Onboarding &amp; <em>Policies</em></h2>
+    <div class="resource-grid">
+
+      <div class="resource-card placeholder">
+        <span class="rc-icon">📖</span>
+        <span class="rc-tag">Coming Soon</span>
+        <h3>Lab Onboarding Checklist</h3>
+        <p>New member checklist: safety training, building access, accounts, and first-week tasks.</p>
+      </div>
+
+      <div class="resource-card placeholder">
+        <span class="rc-icon">⚗️</span>
+        <span class="rc-tag">Coming Soon</span>
+        <h3>Lab Policies &amp; Procedures</h3>
+        <p>Group norms, lab safety policies, chemical inventory, and general operating procedures.</p>
+      </div>
+
+      <div class="resource-card placeholder">
+        <span class="rc-icon">💻</span>
+        <span class="rc-tag">Coming Soon</span>
+        <h3>Computing &amp; Data</h3>
+        <p>Data management guidelines, file naming conventions, cluster access, and computing resources.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end #intranet -->
+
+<script>
+  const PASS = 'porosoff';
+
+  function checkPassword() {
+    const val = document.getElementById('pwInput').value;
+    if (val === PASS) {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('intranet').style.display = 'block';
+      sessionStorage.setItem('grp_auth', '1');
+    } else {
+      const err = document.getElementById('gateError');
+      err.style.display = 'block';
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwInput').focus();
+      setTimeout(() => { err.style.display = 'none'; }, 3000);
+    }
+  }
+
+  // Allow Enter key
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  // Persist within the session (so refreshing doesn't kick you out)
+  if (sessionStorage.getItem('grp_auth') === '1') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('intranet').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

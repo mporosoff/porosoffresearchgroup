@@ -282,6 +282,33 @@
       Unlike most GCs (which use helium), this instrument uses <b>hydrogen as the carrier gas</b> — and the same H₂ also serves as the <b>TCD reference</b> gas and the <b>FID fuel</b>. The FID's air comes from the GC's <b>internal air compressor</b>. In practice one H₂ source runs almost everything, and the entire flow path carries hydrogen, so ventilation and leak-checking matter (see Safety). One consequence: a TCD is blind to whatever gas is its carrier, so <b>H₂ cannot be measured on the TCD here</b> — it is used in large excess and tracked by the mass-flow controllers or found by difference, not as a GC peak.</div>
       <div class="call warn"><span class="ic">&#9888;</span><b class="lbl">A note on water (H₂O)</b>
       Water is awkward on these columns and detectors and is often <b>not quantified</b> (it may be trapped, vented, or only seen qualitatively). Check with your PI how — or whether — your method reports H₂O before assuming a number is meaningful.</div>
+
+      <h3>The front panel — reading zones &amp; actuals</h3>
+      <p>The instrument's front panel is a <b>status display</b>: it shows the live value (the <b>ACTUAL</b>) of every heated zone, gas pressure and detector against its <b>SETPOINT</b>. You set the numbers themselves in PeakSimple (<span class="menu">Edit &gt; Overall</span> and the temperature/EPC dialogs); the panel is where you confirm the instrument actually reached them before a run.</p>
+      <figure>
+        <img class="shot" src="img/gc-front-panel.jpg" alt="SRI 8610C front panel showing the three control sections, digital readout, DISPLAY SELECT and START RUN buttons">
+        <figcaption><b>The whole panel.</b> Three labelled blocks — <b>Electronic Gas Pressure Controls</b>, <b>Detector Parameters</b>, and <b>Injector-Detector-Column Oven Temperatures</b>. At the right, the red <b>digital readout</b> shows the value of one selected zone; the <b>DISPLAY SELECT</b> button below it steps the readout through the zones, and <b>START RUN</b> begins a run. The silver plate marks this unit's <b>Multi-Gas #5</b> configuration.</figcaption>
+      </figure>
+      <p>Each column of four LEDs corresponds to one zone. Reading top to bottom: <b>LOCAL SETPOINT</b> and <b>TOTAL SETPOINT</b> (the target), <b>STATUS</b> (a green LED = that zone is on and stable; red/amber = heating, fault, or off), and <b>ACTUAL</b> (the live value). To read a number, press <b>DISPLAY SELECT</b> until the column you want is active — the red readout then shows that zone's value.</p>
+      <figure>
+        <img class="shot" src="img/gc-pressure-detector.jpg" alt="Close-up of the Electronic Gas Pressure Controls and Detector Parameters sections with Local Setpoint, Total Setpoint, Status and Actual rows">
+        <figcaption><b>Gas pressures &amp; detectors.</b> Under <b>Electronic Gas Pressure Controls</b>: <b>Carrier&nbsp;1–3</b>, <b>Hydrogen&nbsp;1–2</b>, <b>Air&nbsp;1–2</b> — this is where you confirm the H₂ <b>carrier EPC pressure</b>. Under <b>Detector Parameters</b>: TCD (Bead Volts / TCD&nbsp;Protect), FID (Flame&nbsp;Ignite), and ECD columns, each with their own On/Off and High/Low switches. The bottom row also holds the <b>Internal Air Compressor</b> (12&nbsp;PSI output — the FID's air) and the <b>Carrier Filter Bake-Out</b> switch.</figcaption>
+      </figure>
+      <figure>
+        <img class="shot" src="img/gc-temperatures.jpg" alt="Close-up of the Injector-Detector-Column Oven Temperatures section showing each heated zone column">
+        <figcaption><b>Temperature zones.</b> Left to right: <b>Trap&nbsp;1–2</b>, <b>Valve&nbsp;1–3</b>, <b>Methanizer</b>, <b>Desorber</b>, <b>Injector&nbsp;1–2</b>, <b>Detector / FID&nbsp;#1–#2</b>, <b>ECD&nbsp;Cell</b>, <b>TCD&nbsp;Cell</b>, <b>Column Oven&nbsp;1–2</b>, and <b>Oven Max</b>. These are the zones whose temperatures you fill into <a href="#settings">Your Lab's Settings</a> below — step <b>DISPLAY SELECT</b> to each one and read its value off the panel.</figcaption>
+      </figure>
+      <div class="call warn"><span class="ic">&#9888;</span><b class="lbl">Read, don't randomly change</b>
+      Use the panel to <b>verify</b> values and watch the STATUS LEDs go green before a run. Don't change setpoints on a whim — temperatures, EPC pressure and FID flows were set at install for this method. If a value looks wrong, confirm the intended number with your PI and change it in PeakSimple, then watch the panel ACTUAL catch up.</div>
+
+      <h3>Valve plumbing &amp; the relay map</h3>
+      <p>The gas-sampling and backflush valves are rotary valves whose <b>port plumbing</b> is shown on the configuration sheet taped to the GC. You rarely need the full schematic, but it's the reference for which column and detector each valve position connects.</p>
+      <figure>
+        <img class="shot" src="img/gc-valve-diagram.jpg" alt="Valve port schematics for the Multi-Gas #5 configuration and the 10-port backflush valve #3, in LOAD and INJECT positions">
+        <figcaption><b>This unit's valve schematics</b> (Multi-Gas&nbsp;#5): each rotary valve drawn in both <b>LOAD</b> and <b>INJECT</b> positions, showing the carrier paths through the <b>MolSieve&nbsp;5A</b>, <b>HayeSep&nbsp;D</b> and <b>Alumina</b> columns to the <b>TCD</b>, <b>methanizer</b> and <b>FID</b>. Valve&nbsp;#3 is the <b>10-port backflush</b> valve.</figcaption>
+      </figure>
+      <div class="call note"><span class="ic">&#8505;</span><b class="lbl">This lab's valve&nbsp;&rarr;&nbsp;relay map</b>
+      On this instrument the physical valves map to PeakSimple relay letters as <b>V1&nbsp;=&nbsp;relay&nbsp;G</b>, <b>V2&nbsp;=&nbsp;relay&nbsp;F</b>, <b>V3&nbsp;=&nbsp;relay&nbsp;E</b>. Relay&nbsp;<b>G</b> rotates the sample valve to INJECT; relay&nbsp;<b>F</b> is the second (column-switch / backflush) valve. Always confirm against the labels on the GC's <b>right-side panel</b> before editing the event table.</div>
     </section>
 <section id="settings">
       <h2><span class="secnum">2</span>Your Lab's Settings <span style="font-size:.5em;font-weight:600;color:#6b3fa0;align-self:center">fill in once, then print</span></h2>
@@ -297,7 +324,7 @@
           <tr><th>FID temperature</th><td><span class="val" contenteditable="true">__</span><span class="unit">°C — GC zone display</span></td></tr>
           <tr><th>Methanizer temperature</th><td><span class="val" contenteditable="true">__</span><span class="unit">°C — GC zone display (often ~380°C)</span></td></tr>
           <tr><th>FID H₂ &amp; air flows</th><td>H₂ <span class="val" contenteditable="true">__</span> · air <span class="val" contenteditable="true">__</span><span class="unit">(set at install)</span></td></tr>
-          <tr><th>Gas-sampling-valve relay letter(s)</th><td>Relay <span class="val" contenteditable="true">G</span> = sample inject; relay <span class="val" contenteditable="true">F</span> = 2nd valve <span class="unit">(from the method; confirm on GC side panel)</span></td></tr>
+          <tr><th>Gas-sampling-valve relay letter(s)</th><td>Relay <span class="val" contenteditable="true">G</span> = sample inject; relay <span class="val" contenteditable="true">F</span> = 2nd valve <span class="unit">(panel map: <b>V1=G</b>, <b>V2=F</b>, <b>V3=E</b> — confirm on GC side panel)</span></td></tr>
           <tr><th>Valve timing (min)</th><td>G inject <span class="val" contenteditable="true">0.05</span> · G off <span class="val" contenteditable="true">0.90</span> · F <span class="val" contenteditable="true">5.50</span>/<span class="val" contenteditable="true">10.50</span></td></tr>
           <tr><th>Total run time</th><td><span class="val" contenteditable="true">11</span> min (FID) · <span class="val" contenteditable="true">21</span> min (TCD &amp; methanizer)</td></tr>
           <tr><th>Board type &amp; COM/USB</th><td>Board <span class="val" contenteditable="true">302</span>, port <span class="val" contenteditable="true">__</span><span class="unit"> — see Edit&gt;Overall</span></td></tr>

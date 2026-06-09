@@ -313,21 +313,23 @@
       The fields below are click-to-edit. After filling them in, use <b>Ctrl/Cmd&nbsp;+&nbsp;P</b> to print this page (or the cheat sheet) so the values are captured on paper. (Typed values are not permanently saved into the file unless you re-save the page.)</div>
       <div class="settings">
         <table>
-          <tr><th>Carrier gas &amp; EPC pressure</th><td><span class="val" contenteditable="true">Hydrogen (H₂)</span> @ <span class="val" contenteditable="true">__</span><span class="unit">psi — read EPC on the GC display / Edit&gt;Overall</span></td></tr>
+          <tr><th>Carrier gas &amp; EPC pressure</th><td><span class="val" contenteditable="true">Hydrogen (H₂)</span> @ <span class="val" contenteditable="true">20</span><span class="unit">psi — <b>typical default, verify</b> on the GC display / Edit&gt;Overall</span></td></tr>
           <tr><th>Column oven program</th><td><b>Isothermal</b> (no ramp), <span class="val" contenteditable="true">75</span><span class="unit">°C, held 11 min — confirmed in PeakSimple Channel 1 temp control</span></td></tr>
-          <tr><th>Valve oven temperature</th><td><span class="val" contenteditable="true">__</span><span class="unit">°C — read from the GC zone display</span></td></tr>
-          <tr><th>TCD temperature</th><td><span class="val" contenteditable="true">__</span><span class="unit">°C — GC zone display</span></td></tr>
-          <tr><th>FID temperature</th><td><span class="val" contenteditable="true">__</span><span class="unit">°C — GC zone display</span></td></tr>
-          <tr><th>Methanizer temperature</th><td><span class="val" contenteditable="true">__</span><span class="unit">°C — GC zone display (often ~380°C)</span></td></tr>
-          <tr><th>FID H₂ &amp; air flows</th><td>H₂ <span class="val" contenteditable="true">__</span> · air <span class="val" contenteditable="true">__</span><span class="unit">(set at install)</span></td></tr>
+          <tr><th>Valve oven temperature</th><td><span class="val" contenteditable="true">80</span><span class="unit">°C — <b>typical default, verify</b> on the GC zone display</span></td></tr>
+          <tr><th>TCD temperature</th><td><span class="val" contenteditable="true">150</span><span class="unit">°C — <b>typical default, verify</b> on GC zone display</span></td></tr>
+          <tr><th>FID temperature</th><td><span class="val" contenteditable="true">250</span><span class="unit">°C — <b>typical default, verify</b> on GC zone display</span></td></tr>
+          <tr><th>Methanizer temperature</th><td><span class="val" contenteditable="true">380</span><span class="unit">°C — <b>typical default, verify</b> on GC zone display</span></td></tr>
+          <tr><th>FID H₂ &amp; air flows</th><td>H₂ <span class="val" contenteditable="true">25</span> · air <span class="val" contenteditable="true">250</span><span class="unit">mL/min — <b>typical default, verify</b> (set at install)</span></td></tr>
           <tr><th>Gas-sampling-valve relay letter(s)</th><td>Relay <span class="val" contenteditable="true">G</span> = sample inject; relay <span class="val" contenteditable="true">F</span> = 2nd valve <span class="unit">(panel map: <b>V1=G</b>, <b>V2=F</b>, <b>V3=E</b> — confirm on GC side panel)</span></td></tr>
           <tr><th>Valve timing (min)</th><td>G inject <span class="val" contenteditable="true">0.05</span> · G off <span class="val" contenteditable="true">0.90</span> · F <span class="val" contenteditable="true">5.50</span>/<span class="val" contenteditable="true">10.50</span></td></tr>
           <tr><th>Total run time</th><td><span class="val" contenteditable="true">11</span> min (FID) · <span class="val" contenteditable="true">21</span> min (TCD &amp; methanizer)</td></tr>
-          <tr><th>Board type &amp; COM/USB</th><td>Board <span class="val" contenteditable="true">302</span>, port <span class="val" contenteditable="true">__</span><span class="unit"> — see Edit&gt;Overall</span></td></tr>
+          <tr><th>Board type &amp; COM/USB</th><td>Board <span class="val" contenteditable="true">302</span>, port <span class="val" contenteditable="true">USB</span><span class="unit"> — USB connection (per PeakSimple title bar); see Edit&gt;Overall</span></td></tr>
           <tr><th>Control file name(s)</th><td><span class="val" contenteditable="true">DEFAULT.CON</span></td></tr>
           <tr><th>Where data is saved</th><td><span class="val" contenteditable="true">C:\PeakSimple\Data\…</span></td></tr>
         </table>
       </div>
+      <div class="call warn"><span class="ic">&#9888;</span><b class="lbl">Hardware values are typical defaults — verify before you trust them</b>
+      The detector and EPC numbers above (TCD, FID, methanizer, valve-oven temperatures; carrier pressure; FID flows) are pre-filled with <b>typical SRI 8610C Multi-Gas defaults</b>, <b>not</b> measured from this unit. Before relying on them, step <b>DISPLAY SELECT</b> through each zone on the front panel, confirm the live value, correct anything that differs, and re-save or print this page. The <b>oven program (75&nbsp;°C / 11&nbsp;min)</b>, <b>run times</b>, <b>valve relays &amp; timing</b>, <b>board 302</b> and <b>USB connection</b> are confirmed for this instrument.</div>
       <div class="call note"><span class="ic">&#8505;</span><b class="lbl">Where these values live</b>
       Temperatures, EPC pressure and FID flows are <b>hardware zone setpoints on the instrument</b>, not stored in the control file. Read them off the GC's <b>zone display / PeakSimple status bar</b> (each zone shows its live value) or the original SRI setup sheet from installation. The relays, run times and valve timing above come from the method itself.</div>
     </section>

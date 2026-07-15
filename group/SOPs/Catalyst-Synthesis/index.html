@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalyst Synthesis SOP Generator — Porosoff Research Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --navy:#0a1628; --deep:#12203a; --mid:#1e3460;
+  --accent:#c8a951; --gold:#e8c56d; --cream:#fdf8f0;
+  --text:#1a2535; --muted:#5a6a80; --white:#ffffff;
+  --border:rgba(200,169,81,0.25); --border-light:rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:2px;
+  --warn-bg:#fdf3e4; --warn-bd:#e0b25a; --warn-tx:#7a5410;
+  --danger-bg:#fbe9e7; --danger-bd:#c0574a; --danger-tx:#7c2418;
+  --ok-bg:#eef4ec; --ok-bd:#7d9b74; --ok-tx:#2f4d28;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased}
+.site-nav{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--font-display);color:var(--gold);font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-sub{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.container{max-width:1160px;margin:0 auto;padding:0 2rem}
+.hero{padding:2.6rem 0 1.6rem}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;display:block}
+h1.sec-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.2vw,2.4rem);font-weight:700;color:var(--navy);line-height:1.15}
+h1.sec-title em{font-style:italic;color:var(--accent)}
+.hero p{color:var(--muted);font-size:0.92rem;margin-top:0.6rem;max-width:62ch}
+/* tabs */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:1.6rem 0 1.8rem}
+.tab-btn{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.8rem 1.4rem;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* form */
+.card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.4rem}
+.card h3{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+label{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+label .hint{text-transform:none;letter-spacing:0;color:#8a97a8;font-size:0.66rem}
+input,select{font-family:var(--font-body);font-size:0.9rem;padding:9px 10px;border:1px solid #ccd2da;border-radius:var(--radius);background:var(--white);color:var(--text);width:100%}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+.toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toggle-group{display:inline-flex;border:1px solid #ccd2da;border-radius:var(--radius);overflow:hidden}
+.toggle-btn{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;background:var(--white);border:none;cursor:pointer;color:var(--muted)}
+.toggle-btn.active{background:var(--navy);color:var(--gold);font-weight:500}
+.metal-slot{border:1px solid var(--border);border-radius:var(--radius);padding:1rem;background:#fffdf8;margin-bottom:12px}
+.metal-slot .slot-title{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.mwline{font-family:var(--font-mono);font-size:0.74rem;color:var(--muted);margin-top:2px}
+.mwline strong{color:var(--navy)}
+.custom-panel{border-top:1px dashed var(--border);margin-top:10px;padding-top:10px;display:none}
+.box{border-radius:var(--radius);padding:10px 13px;font-size:0.84rem;line-height:1.5;margin:10px 0}
+.box-warn{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx)}
+.box-danger{background:var(--danger-bg);border:1px solid var(--danger-bd);color:var(--danger-tx)}
+.box-ok{background:var(--ok-bg);border:1px solid var(--ok-bd);color:var(--ok-tx)}
+.box-info{background:#eef2f7;border:1px solid #b9c6d8;color:#2c4568}
+.btn{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:11px 20px;border-radius:var(--radius);cursor:pointer;border:1px solid var(--navy)}
+.btn-primary{background:var(--navy);color:var(--gold)}
+.btn-primary:hover{background:var(--mid)}
+.btn-outline{background:var(--white);color:var(--navy)}
+.btn-outline:hover{background:var(--cream)}
+.btn-sm{padding:8px 12px;font-size:0.66rem}
+.btn:disabled{opacity:0.45;cursor:not-allowed}
+.export-bar{display:flex;gap:10px;align-items:center;margin:1.2rem 0;flex-wrap:wrap}
+.export-note{font-size:0.78rem;color:var(--muted)}
+/* SOP document */
+.sop-doc{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:2.2rem 2.4rem;display:none}
+.sop-doc .doc-eyebrow{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent)}
+.sop-doc h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--navy);margin:0.3rem 0 0.2rem}
+.sop-doc .doc-meta{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.sop-doc h4{font-family:var(--font-display);font-size:1.02rem;font-weight:700;color:var(--navy);margin:1.5rem 0 0.7rem;padding-bottom:0.35rem;border-bottom:1px solid var(--border)}
+.sop-doc h5{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin:1.1rem 0 0.6rem}
+.calc-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:0.6rem}
+.calc-table td{padding:5px 8px;border-bottom:1px solid var(--border-light);vertical-align:baseline}
+.calc-table td.k{color:var(--muted)}
+.calc-table td.frm{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted)}
+.calc-table td.v{font-family:var(--font-mono);font-size:0.8rem;color:var(--navy);text-align:right;white-space:nowrap}
+.hl{background:#f6efdd;border:1px solid var(--border);border-radius:var(--radius);padding:9px 13px;display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.hl .k{font-size:0.82rem;color:var(--text)}
+.hl .v{font-family:var(--font-mono);font-size:0.95rem;font-weight:500;color:var(--navy)}
+ol.steps{list-style:none;counter-reset:st;margin:0 0 0.6rem}
+ol.steps li{counter-increment:st;position:relative;padding-left:33px;margin-bottom:9px;font-size:0.87rem;line-height:1.6}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--cream);border:1px solid var(--border);font-family:var(--font-mono);font-size:0.66rem;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.sum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0.6rem 0 0.2rem}
+.sum-cell{background:var(--cream);border:1px solid var(--border-light);border-radius:var(--radius);padding:9px 11px}
+.sum-cell .k{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.sum-cell .v{font-size:0.9rem;font-weight:500;color:var(--navy);margin-top:2px;font-family:var(--font-mono)}
+.prog-table{width:100%;border-collapse:collapse;font-size:0.8rem;margin:0.4rem 0 0.8rem}
+.prog-table th{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+.prog-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);font-family:var(--font-mono);font-size:0.76rem}
+.onetime{border:1px solid var(--accent);border-radius:var(--radius);padding:1rem 1.2rem;margin:1.4rem 0;background:#fffdf8}
+.onetime-tag{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent)}
+footer{margin-top:3rem;padding:1.6rem 2rem;background:var(--navy);color:rgba(255,255,255,0.55);font-size:0.75rem;font-family:var(--font-mono);text-align:center}
+@media(max-width:760px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.site-nav{flex-direction:column;height:auto;padding:0.8rem 1rem;gap:4px}.sop-doc{padding:1.4rem 1.2rem}}
+/* print = PDF export */
+@media print{
+  body{background:#fff}
+  .site-nav,.hero,.tabs,.no-print,footer,.export-bar,.card{display:none !important}
+  .tab-panel{display:none !important}
+  .tab-panel.print-me{display:block !important}
+  .sop-doc{display:block !important;border:none;padding:0}
+  .container{max-width:100%;padding:0}
+  a{text-decoration:none;color:inherit}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-brand" href="https://porosoffresearchgroup.com/group.html" style="text-decoration:none">Porosoff Research Group</a>
+  <span class="nav-sub">Catalyst Synthesis &middot; SOP Generator</span>
+</nav>
+<div class="container">
+  <div class="hero">
+    <span class="sec-label">Department of Chemical &amp; Sustainability Engineering &middot; University of Rochester</span>
+    <h1 class="sec-title">Catalyst Synthesis <em>SOP Generator</em></h1>
+    <p>Generate traceable, lab-ready procedures for measuring a support's incipient wetness point, incipient wetness impregnation (mono- and bimetallic), and transition-metal carbide synthesis. All calculations export to Excel with live formulas; the SOP exports to PDF.</p>
+  </div>
+
+  <div class="tabs no-print">
+    <button class="tab-btn active" id="tab-iwi" onclick="switchTab('iwi')">Impregnation (IWI)</button>
+    <button class="tab-btn" id="tab-iwp" onclick="switchTab('iwp')">IWP Determination</button>
+    <button class="tab-btn" id="tab-carb" onclick="switchTab('carb')">Carbide Synthesis</button>
+  </div>
+  <!-- ══════════════ IWI TAB ══════════════ -->
+  <div class="tab-panel active" id="panel-iwi">
+    <div class="card no-print">
+      <h3>Catalyst definition</h3>
+      <div class="toggle-row">
+        <label style="margin:0">Catalyst type</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-mono" onclick="setCatType('mono')">Monometallic</button>
+          <button class="toggle-btn" id="btn-bi" onclick="setCatType('bi')">Bimetallic</button>
+          <button class="toggle-btn" id="btn-tri" onclick="setCatType('tri')">Trimetallic</button>
+        </div>
+        <span id="bi-strategy-wrap" style="display:none">
+          <span class="toggle-group" style="margin-left:14px">
+            <button class="toggle-btn active" id="btn-co" onclick="setStrategy('co')">Co-impregnation</button>
+            <button class="toggle-btn" id="btn-seq" onclick="setStrategy('seq')">Sequential</button>
+          </span>
+        </span>
+      </div>
+
+      <div id="slot1" class="metal-slot"></div>
+      <div id="slot2" class="metal-slot" style="display:none"></div>
+      <div id="slot3" class="metal-slot" style="display:none"></div>
+
+      <div id="compat-box"></div>
+
+      <div id="seq-opts" style="display:none">
+        <div class="grid3">
+          <div class="fg"><label for="seq-order">Impregnation order</label>
+            <select id="seq-order"></select>
+          </div>
+          <div class="fg"><label for="iwp2">IWP after cycle 1 (mL) <span class="hint">— optional; re-measure on calcined intermediate</span></label>
+            <input type="number" id="iwp2" min="0.01" step="0.01" placeholder="blank = reuse cycle-1 volume">
+          </div>
+          <div class="fg" id="iwp3-wrap" style="display:none"><label for="iwp3">IWP after cycle 2 (mL) <span class="hint">— optional; re-measure on calcined intermediate</span></label>
+            <input type="number" id="iwp3" min="0.01" step="0.01" placeholder="blank = reuse cycle-2 volume">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card no-print">
+      <h3>Support &amp; batch</h3>
+      <div class="grid2">
+        <div class="fg"><label for="support">Catalyst support</label>
+          <select id="support">
+            <option value="">— select support —</option>
+            <option value="SiO2">SiO₂ (silica, fumed)</option>
+            <option value="gAl2O3">γ-Al₂O₃</option>
+            <option value="aAl2O3">α-Al₂O₃</option>
+            <option value="TiO2">TiO₂ (titania, P25)</option>
+            <option value="CeO2">CeO₂ (ceria)</option>
+            <option value="ZrO2">ZrO₂ (zirconia)</option>
+            <option value="MgO">MgO (magnesia)</option>
+            <option value="ZSM5">ZSM-5 zeolite</option>
+            <option value="C">Activated carbon</option>
+            <option value="SiC">SiC (silicon carbide)</option>
+            <option value="La2O3">La₂O₃ (lanthana)</option>
+          </select>
+        </div>
+        <div class="fg"><label for="solvent">Solvent</label>
+          <select id="solvent">
+            <option value="water">Milli-Q water</option>
+            <option value="ethanol">Anhydrous ethanol (&ge;99.5%)</option>
+            <option value="acetone">Anhydrous acetone (&ge;99.5%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label style="margin:0">Specify batch size by</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-msup" onclick="setBatchMode('support')">Support mass</button>
+          <button class="toggle-btn" id="btn-mcat" onclick="setBatchMode('catalyst')">Final catalyst mass</button>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="fg" id="in-msup"><label for="mass-support">Support mass (g)</label>
+          <input type="number" id="mass-support" min="0.1" step="0.1" placeholder="e.g. 2.0"></div>
+        <div class="fg" id="in-mcat" style="display:none"><label for="mass-catalyst">Final catalyst mass (g)</label>
+          <input type="number" id="mass-catalyst" min="0.1" step="0.1" placeholder="e.g. 2.1"></div>
+        <div class="fg"><label for="iwp-vol">Measured IWP saturation volume (mL) <span class="hint">— Milli-Q water; synthesis uses 90%</span></label>
+          <input type="number" id="iwp-vol" min="0.01" step="0.01" placeholder="e.g. 0.92"></div>
+        <div class="fg"><label for="pv">Pore volume (mL/g) <span class="hint">— fallback if no IWP</span></label>
+          <input type="number" id="pv" min="0.01" step="0.01" placeholder="from support"></div>
+      </div>
+    </div>
+
+    <div class="card no-print">
+      <h3>Thermal treatment <span style="font-family:var(--font-body);font-weight:400;font-size:0.78rem;color:var(--muted)">— conditions are sample-dependent; defaults shown</span></h3>
+      <div class="grid4">
+        <div class="fg"><label for="dryT">Drying temp (&deg;C)</label><input type="number" id="dryT" value="60"></div>
+        <div class="fg"><label for="dryH">Drying time (h)</label><input type="number" id="dryH" value="12" step="0.5"></div>
+        <div class="fg"><label for="calT">Calcination temp (&deg;C)</label><input type="number" id="calT" value="550"></div>
+        <div class="fg"><label for="calH">Calcination hold (h)</label><input type="number" id="calH" value="6" step="0.5"></div>
+      </div>
+      <div class="grid4">
+        <div class="fg"><label for="calR">Calcination ramp (&deg;C/min)</label><input type="number" id="calR" value="2" step="0.1"></div>
+      </div>
+      <div class="box box-info" style="margin-bottom:0">Calcination is performed in <strong>static air</strong> (box/muffle furnace, no gas flow). Adjust temperature, hold, and ramp to the specific precursor and support.</div>
+    </div>
+
+    <div class="export-bar no-print">
+      <button class="btn btn-primary" id="btn-pdf-iwi" onclick="exportPDF('iwi')" disabled>Export SOP as PDF</button>
+      <button class="btn btn-outline" id="btn-xlsx-iwi" onclick="exportXLSX_IWI()" disabled>Export calculations (.xlsx)</button>
+      <span class="export-note">Excel export preserves live formulas — every value traces to its input cells.</span>
+    </div>
+
+    <div class="sop-doc" id="sop-iwi"></div>
+  </div>
+  <!-- ══════════════ IWP DETERMINATION TAB ══════════════ -->
+  <div class="tab-panel" id="panel-iwp">
+    <div class="card no-print">
+      <h3>Support &amp; test conditions <span style="font-family:var(--font-body);font-weight:400;font-size:0.78rem;color:var(--muted)">— determine the incipient wetness point once per support lot</span></h3>
+      <div class="grid2">
+        <div class="fg"><label for="iwp-support">Support</label>
+          <select id="iwp-support" onchange="iwpSupportChanged()">
+            <option value="">— select support —</option>
+            <option value="SiO2">SiO₂ (silica, fumed)</option>
+            <option value="gAl2O3">γ-Al₂O₃</option>
+            <option value="aAl2O3">α-Al₂O₃</option>
+            <option value="TiO2">TiO₂ (titania, P25)</option>
+            <option value="CeO2">CeO₂ (ceria)</option>
+            <option value="ZrO2">ZrO₂ (zirconia)</option>
+            <option value="MgO">MgO (magnesia)</option>
+            <option value="ZSM5">ZSM-5 zeolite</option>
+            <option value="C">Activated carbon</option>
+            <option value="SiC">SiC (silicon carbide)</option>
+            <option value="La2O3">La₂O₃ (lanthana)</option>
+            <option value="custom">Custom / not listed</option>
+          </select>
+        </div>
+        <div class="fg" id="iwp-supname-wrap" style="display:none"><label for="iwp-supname">Custom support name</label>
+          <input type="text" id="iwp-supname" placeholder="e.g. SBA-15"></div>
+        <div class="fg"><label for="iwp-solvent">Titration liquid</label>
+          <select id="iwp-solvent">
+            <option value="water">Milli-Q water</option>
+            <option value="ethanol">Anhydrous ethanol (&ge;99.5%)</option>
+            <option value="acetone">Anhydrous acetone (&ge;99.5%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="fg"><label for="iwp-mass">Support mass for test (g)</label>
+          <input type="number" id="iwp-mass" min="0.05" step="0.05" value="1.00" placeholder="e.g. 1.00"></div>
+        <div class="fg"><label for="iwp-measured">Measured saturation volume (mL) <span class="hint">— optional; fills the calc if you've run it</span></label>
+          <input type="number" id="iwp-measured" min="0.01" step="0.01" placeholder="blank = titration template"></div>
+        <div class="fg"><label for="iwp-pv">Literature pore volume (mL/g) <span class="hint">— optional override</span></label>
+          <input type="number" id="iwp-pv" min="0.01" step="0.01" placeholder="from support"></div>
+      </div>
+      <div class="box box-info" style="margin-bottom:0">This procedure measures the incipient wetness point — the liquid volume that just saturates the pores. Determine it once per support lot; the impregnation SOP then uses <strong>90%</strong> of this value as the synthesis volume.</div>
+    </div>
+    <div class="export-bar no-print">
+      <button class="btn btn-primary" id="btn-pdf-iwp" onclick="exportPDF('iwp')" disabled>Export SOP as PDF</button>
+      <button class="btn btn-outline" id="btn-xlsx-iwp" onclick="exportXLSX_IWP()" disabled>Export worksheet (.xlsx)</button>
+      <span class="export-note">Enter a measured volume to fill the pore-volume and synthesis-volume cells, or leave blank for a titration template.</span>
+    </div>
+    <div class="sop-doc" id="sop-iwp"></div>
+  </div>
+  <!-- ══════════════ CARBIDE TAB ══════════════ -->
+  <div class="tab-panel" id="panel-carb">
+    <div class="card no-print">
+      <h3>Sample</h3>
+      <div class="toggle-row">
+        <label style="margin:0">Composition</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-cmono" onclick="setCarbType('mono')">Monometallic</button>
+          <button class="toggle-btn" id="btn-cbi" onclick="setCarbType('bi')">Bimetallic</button>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="fg"><label for="cb-metal" id="cb-metal-lbl">Metal <span class="hint">— carburizable metals only</span></label>
+          <select id="cb-metal">
+            <option value="">— select metal —</option>
+            <option value="W">Tungsten (W)</option>
+            <option value="Mo">Molybdenum (Mo)</option>
+            <option value="Fe">Iron (Fe)</option>
+            <option value="V">Vanadium (V)</option>
+            <option value="Nb">Niobium (Nb)</option>
+            <option value="Ta">Tantalum (Ta)</option>
+            <option value="Ti">Titanium (Ti)</option>
+            <option value="Zr">Zirconium (Zr)</option>
+            <option value="Hf">Hafnium (Hf)</option>
+            <option value="Cr">Chromium (Cr)</option>
+          </select>
+        </div>
+        <div class="fg" id="cb-metal2-wrap" style="display:none"><label for="cb-metal2">Metal 2 <span class="hint">— carbide former or promoter</span></label>
+          <select id="cb-metal2">
+            <option value="">— select —</option>
+            <optgroup label="Carbide formers">
+              <option value="W">Tungsten (W)</option>
+              <option value="Mo">Molybdenum (Mo)</option>
+              <option value="Fe">Iron (Fe)</option>
+              <option value="V">Vanadium (V)</option>
+              <option value="Nb">Niobium (Nb)</option>
+              <option value="Ta">Tantalum (Ta)</option>
+              <option value="Ti">Titanium (Ti)</option>
+              <option value="Zr">Zirconium (Zr)</option>
+              <option value="Hf">Hafnium (Hf)</option>
+              <option value="Cr">Chromium (Cr)</option>
+            </optgroup>
+            <optgroup label="Promoters (do not carburize)">
+              <option value="Ni">Nickel (Ni)</option>
+              <option value="Co">Cobalt (Co)</option>
+              <option value="Cu">Copper (Cu)</option>
+              <option value="Mn">Manganese (Mn)</option>
+              <option value="Ce">Cerium (Ce)</option>
+              <option value="La">Lanthanum (La)</option>
+              <option value="K">Potassium (K)</option>
+              <option value="Cs">Cesium (Cs)</option>
+              <option value="Na">Sodium (Na)</option>
+              <option value="Ca">Calcium (Ca)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fg"><label for="cb-form">Sample form</label>
+          <select id="cb-form">
+            <option value="supported">Supported oxide (from IWI + calcination)</option>
+            <option value="unsupported">Unsupported oxide (direct calcination)</option>
+            <option value="supportremoved">Support-removed (carbon-templated) oxide</option>
+          </select>
+        </div>
+        <div class="fg"><label for="cb-mass">Sample mass (g)</label>
+          <input type="number" id="cb-mass" min="0.05" step="0.05" placeholder="e.g. 0.50"></div>
+        <div class="fg" style="grid-column:span 2"><label for="cb-desc">Sample label <span class="hint">— free text, e.g. 15W/SiO2-cal</span></label>
+          <input type="text" id="cb-desc" placeholder="e.g. 15W/SiO2-cal"></div>
+      </div>
+    </div>
+
+    <div class="card no-print">
+      <h3>Carburization program</h3>
+      <div class="toggle-row">
+        <label style="margin:0">Method</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-tpc" onclick="setCarbMethod('TPC')">TPC — temperature-programmed</button>
+          <button class="toggle-btn" id="btn-isc" onclick="setCarbMethod('ISC')">ISC — isothermal</button>
+        </div>
+      </div>
+      <div class="grid4">
+        <div class="fg"><label for="cb-ch4">CH4 in H2 (vol%)</label><input type="number" id="cb-ch4" value="21" step="1"></div>
+        <div class="fg"><label for="cb-flow">Carburizing gas flow (mL/min)</label><input type="number" id="cb-flow" value="155" step="1"></div>
+        <div class="fg"><label for="cb-tubeid">Reactor tube I.D. (mm) <span class="hint">— sets superficial velocity</span></label><input type="number" id="cb-tubeid" value="5.7" step="0.1" min="0.5"></div>
+        <div class="fg"><label for="cb-equil">Equilibration at 25 &deg;C (min)</label><input type="number" id="cb-equil" value="30" step="5"></div>
+      </div>
+      <div class="mwline" id="cb-vel-readout" style="margin:-4px 0 12px">Superficial velocity: <strong>—</strong></div>
+      <div class="grid4">
+        <div class="fg"><label for="cb-ramp">Ramp rate (&deg;C/min)</label><input type="number" id="cb-ramp" value="2.1" step="0.1"></div>
+        <div class="fg"><label for="cb-temp">Carburization temp (&deg;C)</label><input type="number" id="cb-temp" value="835" step="5"></div>
+        <div class="fg"><label for="cb-dur">Carburization duration (h)</label><input type="number" id="cb-dur" value="5" step="0.25"></div>
+        <div class="fg" id="cb-int-wrap"><label for="cb-intT"><input type="checkbox" id="cb-int" checked style="width:auto;margin-right:6px;vertical-align:middle">Intermediate hold (TPC)</label>
+          <div style="display:flex;gap:6px">
+            <input type="number" id="cb-intT" value="590" step="5" title="Intermediate hold temperature (C)">
+            <input type="number" id="cb-intM" value="30" step="5" title="Intermediate hold duration (min)">
+          </div>
+          <span class="hint" style="font-size:0.62rem;color:#8a97a8">temp (&deg;C) / hold (min)</span>
+        </div>
+      </div>
+      <div class="grid4">
+        <div class="fg"><label for="cb-h2t">H2 flush after carburization (h)</label><input type="number" id="cb-h2t" value="0.5" step="0.25"></div>
+        <div class="fg"><label for="cb-h2f">H2 flush flow (mL/min)</label><input type="number" id="cb-h2f" value="155" step="1"></div>
+        <div class="fg"><label for="cb-passt">Passivation duration (h)</label><input type="number" id="cb-passt" value="3" step="0.5"></div>
+        <div class="fg"><label for="cb-passgas">Passivation gas</label><input type="text" id="cb-passgas" value="1% O2/N2"></div>
+      </div>
+      <div class="box box-info" id="cb-method-note" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="export-bar no-print">
+      <button class="btn btn-primary" id="btn-pdf-carb" onclick="exportPDF('carb')" disabled>Export SOP as PDF</button>
+      <button class="btn btn-outline" id="btn-xlsx-carb" onclick="exportXLSX_Carb()" disabled>Export program (.xlsx)</button>
+      <span class="export-note">Program timeline exports with formulas (segment times computed from ramp rates).</span>
+    </div>
+
+    <div class="sop-doc" id="sop-carb"></div>
+  </div>
+</div>
+<footer>Porosoff Research Group &middot; Department of Chemical &amp; Sustainability Engineering &middot; University of Rochester &middot; Rochester, NY 14627</footer>
+<script>
+/* ══════════════════════ DATABASES ══════════════════════ */
+const H2O = 18.015;
+/* Precursors: anhMW = anhydrous MW; hyd = default waters of hydration
+   (null = variable "x" — user must enter from the CoA/assay);
+   stoich = metal atoms per formula unit; tags drive compatibility checks. */
+const METALS = {
+  Ni:{aw:58.693, precursors:[
+    {name:"Ni(NO3)2·6H2O", cas:"13478-00-7", anhMW:182.70, hyd:6, purity:98, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"NiCl2·6H2O", cas:"7791-20-0", anhMW:129.60, hyd:6, purity:98, stoich:1, tags:["chloride","tmcation"]},
+    {name:"Ni(CH3COO)2·4H2O", cas:"6018-89-9", anhMW:176.78, hyd:4, purity:99, stoich:1, tags:["acetate","tmcation"]}]},
+  Cu:{aw:63.546, precursors:[
+    {name:"Cu(NO3)2·3H2O", cas:"10031-43-3", anhMW:187.56, hyd:3, purity:99, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"CuCl2·2H2O", cas:"10125-13-0", anhMW:134.45, hyd:2, purity:99, stoich:1, tags:["chloride","tmcation"]},
+    {name:"Cu(CH3COO)2·H2O", cas:"6046-93-1", anhMW:181.63, hyd:1, purity:98, stoich:1, tags:["acetate","tmcation"]}]},
+  Fe:{aw:55.845, precursors:[
+    {name:"Fe(NO3)3·9H2O", cas:"7782-61-8", anhMW:241.86, hyd:9, purity:98, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"FeCl3·6H2O", cas:"10025-77-1", anhMW:162.20, hyd:6, purity:97, stoich:1, tags:["chloride","tmcation"]}]},
+  Co:{aw:58.933, precursors:[
+    {name:"Co(NO3)2·6H2O", cas:"10026-22-9", anhMW:182.94, hyd:6, purity:98, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"CoCl2·6H2O", cas:"7791-13-1", anhMW:129.84, hyd:6, purity:98, stoich:1, tags:["chloride","tmcation"]},
+    {name:"Co(CH3COO)2·4H2O", cas:"6147-53-1", anhMW:177.02, hyd:4, purity:99, stoich:1, tags:["acetate","tmcation"]}]},
+  Pt:{aw:195.084, precursors:[
+    {name:"H2PtCl6·6H2O (chloroplatinic acid)", cas:"18497-13-7", anhMW:409.81, hyd:6, purity:99.9, stoich:1, tags:["chloride","chloroanion"]},
+    {name:"Pt(NH3)4(NO3)2", cas:"20634-12-2", anhMW:387.21, hyd:0, purity:99, stoich:1, tags:["nitrate","ammine"]}]},
+  Pd:{aw:106.42, precursors:[
+    {name:"Pd(NO3)2·xH2O", cas:"10102-05-3", anhMW:230.43, hyd:null, purity:99, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"PdCl2", cas:"7647-10-1", anhMW:177.33, hyd:0, purity:99.9, stoich:1, tags:["chloride","chloroanion"], note:"Dissolve in dilute HCl (forms [PdCl₄]²⁻)."},
+    {name:"Pd(NH3)4Cl2·H2O", cas:"13933-31-8", anhMW:245.43, hyd:1, purity:99, stoich:1, tags:["chloride","ammine"]}]},
+  Ru:{aw:101.07, precursors:[
+    {name:"RuCl3·xH2O", cas:"14898-67-0", anhMW:207.43, hyd:null, purity:99.9, stoich:1, tags:["chloride","tmcation"]},
+    {name:"Ru(NO)(NO3)3 (nitrosyl nitrate)", cas:"34513-98-9", anhMW:317.10, hyd:0, purity:99, stoich:1, tags:["nitrate","tmcation"]}]},
+  Rh:{aw:102.906, precursors:[
+    {name:"RhCl3·xH2O", cas:"20765-98-4", anhMW:209.26, hyd:null, purity:99.9, stoich:1, tags:["chloride","tmcation"]},
+    {name:"Rh(NO3)3·2H2O", cas:"13465-43-5", anhMW:288.92, hyd:2, purity:99, stoich:1, tags:["nitrate","tmcation"]}]},
+  Ag:{aw:107.868, precursors:[
+    {name:"AgNO3", cas:"7761-88-8", anhMW:169.87, hyd:0, purity:99.9, stoich:1, tags:["nitrate","silver"]},
+    {name:"AgCH3COO", cas:"563-63-3", anhMW:166.91, hyd:0, purity:99, stoich:1, tags:["acetate","silver"]}]},
+  Au:{aw:196.967, precursors:[
+    {name:"HAuCl4·3H2O", cas:"16961-25-4", anhMW:339.79, hyd:3, purity:99.9, stoich:1, tags:["chloride","chloroanion"]}]},
+  Mo:{aw:95.95, precursors:[
+    {name:"(NH4)6Mo7O24·4H2O (AHM)", cas:"12054-85-2", anhMW:1163.80, hyd:4, purity:99, stoich:7, tags:["pom"]}]},
+  W:{aw:183.84, precursors:[
+    {name:"(NH4)6H2W12O40·xH2O (AMT)", cas:"12028-48-7", anhMW:2956.30, hyd:null, purity:99.99, stoich:12, tags:["pom"], note:"Hydration varies by lot — take x (or W assay wt%) from the certificate of analysis."},
+    {name:"WCl6", cas:"13283-01-7", anhMW:396.57, hyd:0, purity:99, stoich:1, tags:["chloride","tmcation"], note:"Moisture-sensitive; use anhydrous ethanol, handle in glovebox/dry conditions."}]},
+  Zn:{aw:65.38, precursors:[
+    {name:"Zn(NO3)2·6H2O", cas:"10196-18-6", anhMW:189.40, hyd:6, purity:98, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"ZnCl2", cas:"7646-85-7", anhMW:136.30, hyd:0, purity:99, stoich:1, tags:["chloride","tmcation"]}]},
+  Mn:{aw:54.938, precursors:[
+    {name:"Mn(NO3)2·4H2O", cas:"20694-39-7", anhMW:178.95, hyd:4, purity:97, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"MnCl2·4H2O", cas:"13446-34-9", anhMW:125.84, hyd:4, purity:98, stoich:1, tags:["chloride","tmcation"]}]},
+  Cr:{aw:51.996, precursors:[
+    {name:"Cr(NO3)3·9H2O", cas:"7789-02-8", anhMW:238.01, hyd:9, purity:99, stoich:1, tags:["nitrate","tmcation"]},
+    {name:"CrCl3·6H2O", cas:"10060-12-5", anhMW:158.36, hyd:6, purity:98, stoich:1, tags:["chloride","tmcation"]}]},
+  V:{aw:50.942, precursors:[
+    {name:"NH4VO3 (ammonium metavanadate)", cas:"7803-55-6", anhMW:116.98, hyd:0, purity:99, stoich:1, tags:["pom"], note:"Low solubility in cold water — dissolve warm (60-80 C) or with oxalic acid."},
+    {name:"VOSO4·xH2O", cas:"27774-13-6", anhMW:163.00, hyd:null, purity:99, stoich:1, tags:["sulfate","tmcation"]}]},
+  Sn:{aw:118.71, precursors:[
+    {name:"SnCl2·2H2O", cas:"10025-69-1", anhMW:189.62, hyd:2, purity:98, stoich:1, tags:["chloride","tmcation"], note:"Hydrolyzes readily — dissolve in a few drops of dilute HCl to keep the solution clear."},
+    {name:"SnCl4·5H2O", cas:"10026-06-9", anhMW:260.52, hyd:5, purity:98, stoich:1, tags:["chloride","tmcation"], note:"Moisture-sensitive and fumes in air; weigh quickly and dissolve in dilute HCl."}]},
+  K:{aw:39.098, precursors:[
+    {name:"KNO3", cas:"7757-79-1", anhMW:101.10, hyd:0, purity:99, stoich:1, tags:["nitrate"]},
+    {name:"K2CO3", cas:"584-08-7", anhMW:138.21, hyd:0, purity:99, stoich:2, tags:["carbonate"], note:"Two K per formula unit (handled automatically). Basic — may react with acidic precursor solutions."},
+    {name:"CH3COOK (potassium acetate)", cas:"127-08-2", anhMW:98.14, hyd:0, purity:99, stoich:1, tags:["acetate"]}]}
+};
+const SUPPORTS = {
+  SiO2:{name:"SiO2", full:"Silicon(IV) oxide, amorphous fumed", sa:"175-225 m²/g", pvDefault:0.90, notes:"High pore volume; high loadings may require multi-step impregnation."},
+  gAl2O3:{name:"gamma-Al2O3", full:"γ-phase aluminum oxide (99.9% metal basis)", sa:"100-150 m²/g", pvDefault:0.45, notes:"Avoid strongly basic solutions (alumina dissolution); point of zero charge ~8."},
+  aAl2O3:{name:"alpha-Al2O3", full:"α-phase aluminum oxide (99.9% metal basis)", sa:"2-4 m²/g", pvDefault:0.10, notes:"Very low surface area and pore volume — expect small synthesis volumes; weak metal-support interaction."},
+  TiO2:{name:"TiO2", sa:"~50 m²/g", pvDefault:0.35, notes:"Keep calcination below ~500 C to preserve the anatase fraction."},
+  CeO2:{name:"CeO2", sa:"80-150 m²/g", pvDefault:0.25, notes:"Redox-active support; Ce³⁺/Ce⁴⁺ couple relevant for oxygen storage."},
+  ZrO2:{name:"ZrO2", sa:"50-100 m²/g", pvDefault:0.20, notes:"Phase (monoclinic/tetragonal) depends on calcination temperature."},
+  MgO:{name:"MgO", sa:"~100 m²/g", pvDefault:0.40, notes:"Basic support; sensitive to moisture and CO2 — minimize air exposure."},
+  ZSM5:{name:"ZSM-5 zeolite", sa:"~400 m²/g", pvDefault:0.20, notes:"Ion exchange often preferred; IWI can block micropores."},
+  C:{name:"Activated carbon", sa:"800-1200 m²/g", pvDefault:1.10, notes:"Do NOT calcine in air — the support combusts. Thermal steps under N₂/Ar only (unless intentionally combusting to make support-removed oxide)."},
+  SiC:{name:"SiC", sa:"~25 m²/g", pvDefault:0.15, notes:"Chemically inert; surface functionalization may improve anchoring."},
+  La2O3:{name:"La2O3", sa:"~30 m²/g", pvDefault:0.15, notes:"Highly basic; reacts with atmospheric CO2 — handle under inert gas."}
+};
+const CARB_METALS = {
+  W:{oxide:"WO3", carbides:"beta-W2C / delta-WC", phaseCtrl:true},
+  Mo:{oxide:"MoO3", carbides:"beta-Mo2C / alpha-MoC1-x"},
+  Fe:{oxide:"Fe2O3", carbides:"Fe3C (cementite) / Fe5C2"},
+  V:{oxide:"V2O5", carbides:"VC / V8C7"},
+  Nb:{oxide:"Nb2O5", carbides:"NbC / Nb2C"},
+  Ta:{oxide:"Ta2O5", carbides:"TaC / Ta2C"},
+  Ti:{oxide:"TiO2", carbides:"TiC"},
+  Zr:{oxide:"ZrO2", carbides:"ZrC"},
+  Hf:{oxide:"HfO2", carbides:"HfC"},
+  Cr:{oxide:"Cr2O3", carbides:"Cr3C2 / Cr7C3"}
+};
+/* promoter oxides (second-metal species that stay as dispersed metal/oxide, not bulk carbide) */
+const CARB_PROMO_OXIDE = {Ni:"NiO",Co:"Co3O4",Cu:"CuO",Mn:"MnOx",Ce:"CeO2",La:"La2O3",K:"K2O",Cs:"Cs2O",Na:"Na2O",Ca:"CaO"};
+/* Table S1 (Perera et al., ACS Catal.) — unsupported WO3, TPC at 835 C */
+const W_PHASE_TABLE = [
+  ["0 h","99.7 % beta-W2C","0.3 % delta-WC"],
+  ["1 h","77.3 % beta-W2C","22.7 % delta-WC"],
+  ["2 h","66.7 % beta-W2C","33.3 % delta-WC"],
+  ["3 h","49.4 % beta-W2C","50.6 % delta-WC"],
+  ["4 h","33.6 % beta-W2C","66.4 % delta-WC"],
+  ["5 h","0 % beta-W2C","100 % delta-WC"]
+];
+
+/* ══════════════════════ STATE & HELPERS ══════════════════════ */
+let catType='mono', strategy='co', batchMode='support', carbMethod='TPC', carbType='mono';
+let lastP=null, lastC=null, lastQ=null;
+const $=id=>document.getElementById(id);
+const f=(n,d)=>Number(n).toFixed(d);
+/* display precisions: weighing targets to 0.001 g (mg); volumes 0.01 mL; mmol 0.01 */
+const fm=n=>f(n,3), fv=n=>f(n,2), fmol=n=>f(n*1000,2);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const greek=s=>String(s).replace(/\balpha-/g,'\u03b1-').replace(/\bbeta-/g,'\u03b2-').replace(/\bgamma-/g,'\u03b3-').replace(/\bdelta-/g,'\u03b4-').replace(/\bepsilon-/g,'\u03b5-').replace(/\bomega-/g,'\u03c9-').replace(/\bsigma-/g,'\u03c3-').replace(/\btheta-/g,'\u03b8-');
+/* chem(): escape, convert greek-letter prefixes, then subscript stoichiometric digits (and -x). Use only on neutral chemical formulas — not on prose with charges or figure refs. */
+const chem=str=>greek(esc(String(str))).replace(/([A-Za-z\)\]])(\d+(?:-x)?)/g,'$1<sub>$2</sub>');
+const TAG_LABELS={nitrate:"nitrate",chloride:"chloride",sulfate:"sulfate",acetate:"acetate",pom:"polyoxometalate / oxoanion (W, Mo, V)",ammine:"cationic ammine complex",chloroanion:"anionic chloro complex (acidic)",silver:"Ag+ salt",tmcation:"simple transition-metal cation"};
+
+function switchTab(t){
+  ['iwi','iwp','carb'].forEach(x=>{
+    $('tab-'+x).classList.toggle('active',x===t);
+    $('panel-'+x).classList.toggle('active',x===t);
+  });
+}
+function nMetals(){return {mono:1,bi:2,tri:3}[catType];}
+function buildOrderOptions(){
+  const sel=$('seq-order'); if(!sel)return;
+  const prev=sel.value;
+  const perms=catType==='tri'?['123','132','213','231','312','321']:['12','21'];
+  sel.innerHTML=perms.map(p=>`<option value="${p}">${p.split('').map(c=>'Metal '+c).join(' → ')}</option>`).join('');
+  sel.value=perms.includes(prev)?prev:perms[0];
+}
+function setCatType(t){
+  catType=t;
+  ['mono','bi','tri'].forEach(x=>$('btn-'+x).classList.toggle('active',x===t));
+  $('slot2').style.display=(t==='bi'||t==='tri')?'':'none';
+  $('slot3').style.display=t==='tri'?'':'none';
+  $('bi-strategy-wrap').style.display=t==='mono'?'none':'';
+  buildOrderOptions();
+  $('seq-opts').style.display=(t!=='mono'&&strategy==='seq')?'':'none';
+  $('iwp3-wrap').style.display=t==='tri'?'':'none';
+  recalcIWI();
+}
+function setStrategy(s){
+  strategy=s;
+  $('btn-co').classList.toggle('active',s==='co');
+  $('btn-seq').classList.toggle('active',s==='seq');
+  $('seq-opts').style.display=(catType!=='mono'&&s==='seq')?'':'none';
+  recalcIWI();
+}
+function setBatchMode(m){
+  batchMode=m;
+  $('btn-msup').classList.toggle('active',m==='support');
+  $('btn-mcat').classList.toggle('active',m==='catalyst');
+  $('in-msup').style.display=m==='support'?'':'none';
+  $('in-mcat').style.display=m==='catalyst'?'':'none';
+  recalcIWI();
+}
+
+/* ══════════════════════ METAL SLOTS ══════════════════════ */
+function slotHTML(i){
+  const opts=Object.keys(METALS).map(m=>`<option value="${m}">${m}</option>`).join('');
+  return `
+  <div class="slot-title">Metal ${i}</div>
+  <div class="grid4">
+    <div class="fg"><label for="metal${i}">Metal</label>
+      <select id="metal${i}" onchange="onMetalChange(${i})"><option value="">— select —</option>${opts}</select></div>
+    <div class="fg"><label for="prec${i}">Precursor</label>
+      <select id="prec${i}" onchange="onPrecChange(${i})"><option value="">— select metal first —</option></select></div>
+    <div class="fg"><label for="wt${i}">Target loading (wt% metal)</label>
+      <input type="number" id="wt${i}" min="0.1" max="60" step="0.1" placeholder="e.g. 15" oninput="recalcIWI()"></div>
+    <div class="fg"><label for="purity${i}">Assay / purity (%)</label>
+      <input type="number" id="purity${i}" min="1" max="100" step="0.01" oninput="recalcIWI()"></div>
+  </div>
+  <div class="grid4">
+    <div class="fg"><label for="hyd${i}">Hydration x (mol H2O / mol) <span class="hint" id="hydhint${i}"></span></label>
+      <input type="number" id="hyd${i}" min="0" step="0.1" oninput="recalcIWI()"></div>
+    <div class="fg" style="grid-column:span 3;justify-content:flex-end">
+      <div class="mwline" id="mwline${i}">Effective MW: <strong>—</strong></div>
+      <div class="mwline" id="casline${i}"></div>
+    </div>
+  </div>
+  <div class="custom-panel" id="cust${i}">
+    <div class="grid4">
+      <div class="fg"><label for="cas${i}">CAS number</label>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="cas${i}" placeholder="e.g. 13478-00-7">
+          <button class="btn btn-outline btn-sm" onclick="casLookup(${i})" type="button">Lookup</button>
+        </div></div>
+      <div class="fg"><label for="cname${i}">Compound name</label><input type="text" id="cname${i}" oninput="recalcIWI()"></div>
+      <div class="fg"><label for="cmw${i}">MW as entered (g/mol) <span class="hint">— hydration adds to this</span></label>
+        <input type="number" id="cmw${i}" min="1" step="0.01" oninput="recalcIWI()"></div>
+      <div class="fg"><label for="cstoich${i}">Metal atoms / formula unit</label>
+        <input type="number" id="cstoich${i}" min="1" step="1" value="1" oninput="recalcIWI()"></div>
+    </div>
+    <div class="grid4">
+      <div class="fg"><label for="ctag${i}">Chemical class <span class="hint">— for compatibility check</span></label>
+        <select id="ctag${i}" onchange="recalcIWI()">
+          <option value="nitrate,tmcation">Nitrate (metal cation)</option>
+          <option value="chloride,tmcation">Chloride (metal cation)</option>
+          <option value="sulfate,tmcation">Sulfate (metal cation)</option>
+          <option value="acetate,tmcation">Acetate (metal cation)</option>
+          <option value="pom">Polyoxometalate / oxoanion (W, Mo, V type)</option>
+          <option value="ammine">Cationic ammine complex</option>
+          <option value="chloride,chloroanion">Anionic chloro complex (acid)</option>
+          <option value="silver,nitrate">Silver salt</option>
+          <option value="other">Other / unknown</option>
+        </select></div>
+    </div>
+    <div class="box box-info" id="casmsg${i}" style="display:none"></div>
+    <div class="box box-warn" style="margin-bottom:0">Verify whether the looked-up MW already includes waters of hydration. PubChem often returns the anhydrous parent — if the MW above is the hydrate, set hydration x = 0.</div>
+  </div>`;
+}
+function onMetalChange(i){
+  const m=$('metal'+i).value, sel=$('prec'+i);
+  sel.innerHTML='';
+  if(!m){sel.innerHTML='<option value="">— select metal first —</option>';recalcIWI();return;}
+  METALS[m].precursors.forEach((p,idx)=>{const o=document.createElement('option');o.value=idx;o.textContent=p.name;sel.appendChild(o);});
+  const oc=document.createElement('option');oc.value='custom';oc.textContent='Custom precursor (CAS lookup / manual)…';sel.appendChild(oc);
+  onPrecChange(i);
+}
+function onPrecChange(i){
+  const m=$('metal'+i).value, v=$('prec'+i).value;
+  const isCustom=v==='custom';
+  $('cust'+i).style.display=isCustom?'block':'none';
+  if(!isCustom&&m){
+    const p=METALS[m].precursors[parseInt(v)||0];
+    $('purity'+i).value=p.purity;
+    if(p.hyd===null){$('hyd'+i).value='';$('hyd'+i).placeholder='enter x from CoA';$('hydhint'+i).textContent='— variable (·xH2O): required';}
+    else{$('hyd'+i).value=p.hyd;$('hydhint'+i).textContent=p.hyd===0?'— anhydrous':'';}
+  } else if(isCustom){
+    if(!$('purity'+i).value)$('purity'+i).value=99;
+    $('hyd'+i).value=$('hyd'+i).value||0;$('hydhint'+i).textContent='';
+  }
+  recalcIWI();
+}
+async function casLookup(i){
+  const cas=$('cas'+i).value.trim(), msg=$('casmsg'+i);
+  if(!cas){return;}
+  msg.style.display='block';msg.textContent='Looking up '+cas+' on PubChem…';
+  try{
+    const r=await fetch(`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(cas)}/property/MolecularWeight,MolecularFormula,Title/JSON`);
+    if(!r.ok)throw new Error('not found');
+    const d=await r.json(), pr=d.PropertyTable.Properties[0];
+    $('cname'+i).value=pr.Title||cas;
+    $('cmw'+i).value=parseFloat(pr.MolecularWeight);
+    const m=$('metal'+i).value;
+    let st=1;
+    if(m){const re=new RegExp(m+'(\\d*)','g');let mm,tot=0;while((mm=re.exec(pr.MolecularFormula))!==null){tot+=mm[1]?parseInt(mm[1]):1;}if(tot>0)st=tot;}
+    $('cstoich'+i).value=st;
+    msg.className='box box-ok';
+    msg.innerHTML=`Found <strong>${esc(pr.Title||cas)}</strong> — formula ${esc(pr.MolecularFormula)}, MW ${pr.MolecularWeight} g/mol. Detected ${st} ${esc(m||'metal')} atom(s)/formula — verify before use.`;
+  }catch(e){
+    msg.className='box box-danger';
+    msg.textContent='PubChem lookup failed for "'+cas+'". Check the CAS number or enter the MW manually (requires internet access).';
+  }
+  recalcIWI();
+}
+function readSlot(i){
+  const m=$('metal'+i).value; if(!m)return null;
+  const v=$('prec'+i).value;
+  const wt=parseFloat($('wt'+i).value); if(isNaN(wt)||wt<=0)return null;
+  const purity=parseFloat($('purity'+i).value); if(isNaN(purity)||purity<=0||purity>100)return null;
+  const x=parseFloat($('hyd'+i).value);
+  let name,cas,anhMW,stoich,tags,note='',hydRequired=false;
+  if(v==='custom'){
+    name=$('cname'+i).value.trim()||('Custom '+m+' precursor');
+    cas=$('cas'+i).value.trim()||'—';
+    anhMW=parseFloat($('cmw'+i).value); if(isNaN(anhMW)||anhMW<=0)return null;
+    stoich=parseInt($('cstoich'+i).value)||1;
+    tags=$('ctag'+i).value.split(',').filter(t=>t!=='other');
+  }else{
+    const p=METALS[m].precursors[parseInt(v)||0];
+    name=p.name;cas=p.cas;anhMW=p.anhMW;stoich=p.stoich;tags=p.tags;note=p.note||'';
+    if(p.hyd===null)hydRequired=true;
+  }
+  if(isNaN(x)){ if(hydRequired)return {incomplete:true,reason:`Metal ${i}: ${name} has variable hydration — enter x from the certificate of analysis.`}; }
+  const xEff=isNaN(x)?0:x;
+  const effMW=anhMW+xEff*H2O;
+  return {i,sym:m,aw:METALS[m].aw,name,cas,anhMW,x:xEff,effMW,purity,stoich,tags,note,wt};
+}
+
+/* ══════════════════════ COMPATIBILITY ══════════════════════ */
+function compatCheck(a,b){
+  const has=(s,t)=>s.tags.includes(t);
+  const warnings=[];
+  const pair=(t1,t2)=>((has(a,t1)&&has(b,t2))||(has(a,t2)&&has(b,t1)));
+  if((has(a,'silver')&&(has(b,'chloride')||has(b,'chloroanion')))||(has(b,'silver')&&(has(a,'chloride')||has(a,'chloroanion'))))
+    warnings.push({lvl:'danger',msg:'Ag⁺ + chloride: AgCl will precipitate immediately on mixing. Co-impregnation from a single solution is not possible — use sequential impregnation or a chloride-free precursor.'});
+  if(pair('silver','sulfate'))
+    warnings.push({lvl:'danger',msg:'Ag⁺ + sulfate: Ag₂SO₄ is sparingly soluble and will precipitate at typical IWI concentrations. Use sequential impregnation or different anions.'});
+  if(pair('pom','tmcation'))
+    warnings.push({lvl:'danger',msg:'Polyoxometalate anion (tungstate/molybdate/vanadate) + transition-metal cation: an insoluble mixed salt (e.g., NiWO₄, CoMoO₄-type) is likely to precipitate. Recommended: sequential impregnation, or complex the cation (e.g., citric acid) with pH control.'});
+  if(pair('ammine','chloroanion'))
+    warnings.push({lvl:'danger',msg:'Cationic ammine complex + anionic chloro complex: a Magnus-type double salt (e.g., [Pt(NH₃)₄][PtCl₆]) will precipitate. Use sequential impregnation or matched-charge precursors.'});
+  if(pair('pom','ammine'))
+    warnings.push({lvl:'warn',msg:'Polyoxometalate + cationic ammine complex: ion pairing may precipitate an ammine-polyoxometalate salt. Test-mix small volumes before committing the batch.'});
+  return warnings;
+}
+/* ══════════════════════ IWI CALC ══════════════════════ */
+function calcIWI(){
+  const N=nMetals();
+  const slots=[];
+  for(let i=1;i<=N;i++)slots.push(readSlot(i));
+  for(const s of slots){ if(s&&s.incomplete)return s; }
+  if(slots.some(s=>!s))return null;
+  const support=$('support').value; if(!support)return null;
+  const sup=SUPPORTS[support];
+  const totalWt=slots.reduce((a,s)=>a+s.wt,0);
+  if(totalWt>=100)return null;
+  let mSup,mCat;
+  if(batchMode==='support'){
+    mSup=parseFloat($('mass-support').value); if(isNaN(mSup)||mSup<=0)return null;
+    slots.forEach(s=>s.massMetal=mSup*s.wt/(100-totalWt));
+    mCat=mSup+slots.reduce((a,s)=>a+s.massMetal,0);
+  }else{
+    mCat=parseFloat($('mass-catalyst').value); if(isNaN(mCat)||mCat<=0)return null;
+    slots.forEach(s=>s.massMetal=mCat*s.wt/100);
+    mSup=mCat*(1-totalWt/100);
+  }
+  slots.forEach(s=>{
+    s.molMetal=s.massMetal/s.aw;
+    s.molPrec=s.molMetal/s.stoich;
+    s.massPrec=s.molPrec*s.effMW/(s.purity/100);
+  });
+  const pvInput=parseFloat($('pv').value);
+  const pv=(!isNaN(pvInput)&&pvInput>0)?pvInput:sup.pvDefault;
+  const iwpRaw=parseFloat($('iwp-vol').value);
+  const hasIWP=!isNaN(iwpRaw)&&iwpRaw>0;
+  const vol=hasIWP?iwpRaw*0.9:pv*mSup;
+  const iwp2raw=parseFloat($('iwp2').value);
+  const hasIWP2=!isNaN(iwp2raw)&&iwp2raw>0;
+  const vol2=hasIWP2?iwp2raw*0.9:vol;
+  const iwp3raw=parseFloat($('iwp3').value);
+  const hasIWP3=!isNaN(iwp3raw)&&iwp3raw>0;
+  const vol3=hasIWP3?iwp3raw*0.9:vol2;
+  const solventKey=$('solvent').value;
+  const slabel={water:"Milli-Q water",ethanol:"anhydrous ethanol (>=99.5%)",acetone:"anhydrous acetone (>=99.5%)"}[solventKey];
+  const dryT=parseFloat($('dryT').value)||60, dryH=parseFloat($('dryH').value)||12;
+  const calT=parseFloat($('calT').value)||550, calH=parseFloat($('calH').value)||6, calR=parseFloat($('calR').value)||2;
+  const rampMin=(calT-25)/calR;
+  const warnings=[];
+  for(let i=0;i<slots.length;i++)for(let j=i+1;j<slots.length;j++){
+    compatCheck(slots[i],slots[j]).forEach(w=>warnings.push({lvl:w.lvl,
+      msg:(slots.length>2?`Metal ${slots[i].i} (${slots[i].sym}) + Metal ${slots[j].i} (${slots[j].sym}) — `:'')+w.msg}));
+  }
+  const order=(N>1&&strategy==='seq')?$('seq-order').value:'123'.slice(0,N);
+  const seqSlots=order.split('').map(ch=>slots[parseInt(ch)-1]);
+  return {slots,seqSlots,order,support,sup,totalWt,mSup,mCat,pv,hasIWP,iwpRaw,vol,hasIWP2,iwp2raw,vol2,hasIWP3,iwp3raw,vol3,
+          solventKey,slabel,dryT,dryH,calT,calH,calR,rampMin,warnings,
+          isAC:support==='C',catType,strategy,batchMode};
+}
+
+function recalcIWI(){
+  const P=calcIWI();
+  const cb=$('compat-box');
+  if(P&&P.incomplete){cb.innerHTML=`<div class="box box-warn">${esc(P.reason)}</div>`;lastP=null;}
+  else if(P&&P.warnings&&P.warnings.length){
+    const sev=P.warnings.some(w=>w.lvl==='danger');
+    const head=(P.strategy==='co')
+      ?'<strong>Chemical incompatibility — co-impregnation will form a precipitate:</strong>'
+      :'<strong>Note — these precursors are incompatible in one solution</strong> (sequential impregnation avoids the issue):';
+    cb.innerHTML=`<div class="box ${sev&&P.strategy==='co'?'box-danger':'box-warn'}">${head}<ul style="margin:6px 0 0 18px">${P.warnings.map(w=>`<li>${esc(w.msg)}</li>`).join('')}</ul></div>`;
+  }
+  else if(P&&P.catType!=='mono'){cb.innerHTML='<div class="box box-ok">No known precipitation issue among these precursors. Confirm by test-mixing small volumes before committing the batch.</div>';}
+  else cb.innerHTML='';
+  // update MW lines
+  [1,2,3].forEach(i=>{
+    if((i===2&&catType==='mono')||(i===3&&catType!=='tri'))return;
+    const s=readSlot(i);
+    if(s&&!s.incomplete){
+      $('mwline'+i).innerHTML=`Effective MW: <strong>${f(s.effMW,2)} g/mol</strong> &nbsp;(${f(s.anhMW,2)} + ${f(s.x,1)} × 18.015)`;
+      $('casline'+i).innerHTML=`CAS ${esc(s.cas)} &nbsp;·&nbsp; ${s.stoich} ${esc(s.sym)}/formula ${s.note?'&nbsp;·&nbsp; <span style="color:var(--warn-tx)">'+esc(s.note)+'</span>':''}`;
+    }else{$('mwline'+i).innerHTML='Effective MW: <strong>—</strong>';$('casline'+i).innerHTML='';}
+  });
+  const pvEl=$('pv'), supSel=$('support').value;
+  if(supSel&&SUPPORTS[supSel]&&!pvEl.value)pvEl.placeholder=SUPPORTS[supSel].pvDefault+' (lit.)';
+  lastP=(P&&!P.incomplete)?P:null;
+  $('btn-pdf-iwi').disabled=!lastP; $('btn-xlsx-iwi').disabled=!lastP;
+  if(lastP)renderIWI(lastP); else $('sop-iwi').style.display='none';
+}
+
+/* ══════════════════════ IWI SOP RENDER ══════════════════════ */
+function catName(P){
+  return P.slots.map(s=>`${f(s.wt,1)}${P.slots.length>1?'':' '}wt% ${s.sym}`).join(' – ')+` / ${P.sup.name}`;
+}
+function calcTablesHTML(P){
+  let h='';
+  P.slots.forEach(s=>{
+    h+=`<h5>Metal ${s.i} — ${esc(s.sym)} from ${chem(s.name)}</h5>
+    <table class="calc-table">
+      <tr><td class="k">Metal mass</td><td class="frm">${P.batchMode==='support'
+        ?`m<sub>Sup</sub> × wt%/(100 − Σwt%) = ${fm(P.mSup)} × ${f(s.wt,1)}/${f(100-P.totalWt,1)}`
+        :`m<sub>cat</sub> × wt%/100 = ${fm(P.mCat)} × ${f(s.wt,1)}/100`}</td><td class="v">${fm(s.massMetal)} g</td></tr>
+      <tr><td class="k">Moles of ${esc(s.sym)}</td><td class="frm">m/AW = ${fm(s.massMetal)}/${f(s.aw,2)}</td><td class="v">${fmol(s.molMetal)} mmol</td></tr>
+      <tr><td class="k">Moles of precursor</td><td class="frm">n<sub>${esc(s.sym)}</sub>/${s.stoich}</td><td class="v">${fmol(s.molPrec)} mmol</td></tr>
+      <tr><td class="k">Effective MW</td><td class="frm">${f(s.anhMW,2)} + ${f(s.x,1)} × 18.015 &nbsp;(·${f(s.x,1)}H<sub>2</sub>O)</td><td class="v">${f(s.effMW,2)} g/mol</td></tr>
+      <tr><td class="k">Precursor mass to weigh</td><td class="frm">n × MW / (assay/100) = ${fmol(s.molPrec)}×10<sup>−3</sup> × ${f(s.effMW,2)} / ${f(s.purity/100,3)}</td><td class="v">${fm(s.massPrec)} g</td></tr>
+    </table>
+    <div class="hl"><span class="k">Weigh out — ${chem(s.name)} (CAS ${esc(s.cas)})</span><span class="v">${fm(s.massPrec)} g &nbsp;±0.001 g</span></div>`;
+  });
+  return h;
+}
+function volCalcHTML(P){
+  return P.hasIWP
+    ?`<table class="calc-table">
+       <tr><td class="k">V<sub>IWP,sat</sub> (measured)</td><td class="frm">experimental, Milli-Q water</td><td class="v">${fv(P.iwpRaw)} mL</td></tr>
+       <tr><td class="k">Implied pore volume</td><td class="frm">${fv(P.iwpRaw)} / ${fm(P.mSup)}</td><td class="v">${f(P.iwpRaw/P.mSup,2)} mL/g</td></tr>
+       <tr><td class="k">Synthesis volume (90% rule)</td><td class="frm">${fv(P.iwpRaw)} × 0.90</td><td class="v">${fv(P.vol)} mL</td></tr>
+     </table>`
+    :`<table class="calc-table">
+       <tr><td class="k">Literature pore volume (${chem(P.sup.name)})</td><td class="frm">fallback — no IWP measured</td><td class="v">${f(P.pv,2)} mL/g</td></tr>
+       <tr><td class="k">Synthesis volume</td><td class="frm">${f(P.pv,2)} × ${fm(P.mSup)}</td><td class="v">${fv(P.vol)} mL</td></tr>
+     </table>
+     <div class="box box-warn">No IWP entered — using the literature pore-volume fallback. Experimental determination (IWP Determination tab) is strongly recommended.</div>`;
+}
+function solutionSteps(P,slotsInSolution,vol,cycleTag){
+  const names=slotsInSolution.map(s=>`${fm(s.massPrec)} g of ${chem(s.name)} (assay ${s.purity}%)`).join(' and ');
+  const notes=slotsInSolution.filter(s=>s.note).map(s=>`<li>${chem(s.name)}: ${s.note}</li>`).join('');
+  return `<ol class="steps">
+    <li>Weigh ${names} onto a <strong>weigh paper or weigh boat</strong> on the analytical balance, then transfer to the dissolution vial. Do not tare a vial or beaker directly — a heavier tared container reduces the effective sensitivity of the balance, and some solid may be lost in transfer (note any loss).</li>
+    <li>Using a calibrated micropipette, measure ${fv(vol)} mL of ${esc(P.slabel)} and add to the precursor${slotsInSolution.length>1?'s':''}.</li>
+    <li>Dissolve completely by <strong>vortexing (~30 s)</strong> or <strong>sonicating (1–2 min)</strong>. If not fully dissolved, warm gently to 40 °C and vortex again. Record the solution color and appearance in the lab notebook.${slotsInSolution.length>1?' Confirm the mixed solution stays clear — any turbidity or precipitate means the pair is incompatible for co-impregnation; switch to sequential.':''}</li>
+  </ol>
+  ${notes?`<div class="box box-info"><strong>Precursor notes:</strong><ul style="margin:4px 0 0 18px">${notes}</ul></div>`:''}
+  <div class="box box-info"><strong>Multi-step impregnation (solubility limit):</strong> if the precursor${slotsInSolution.length>1?'s':''} will not fully dissolve in ${fv(vol)} mL, split the total mass into two equal portions. Impregnate with the first portion, then <strong>dry (${P.dryT} °C, ${P.dryH} h) and calcine (${P.calT} °C)</strong> before impregnating with the second — drying alone is not sufficient; calcining between steps decomposes the first layer and restores pore access.</div>`;
+}
+function impregnationSteps(P,vol){
+  return `<ol class="steps">
+    <li>Transfer the dried support to the impregnation vessel. Have a glass stir rod and a <strong>flat metal spatula</strong> at hand — the rod is the mixing tool; the spatula is for scraping adhered material off the rod back into the bulk after each pass.</li>
+    <li>Add the solution <strong>one layer of droplets at a time</strong> — roughly <strong>8 droplets per addition</strong> (about 10–20% of the total volume, ${fv(vol*0.10)}–${fv(vol*0.20)} mL), placed across the powder surface in a single layer. Do not concentrate drops in one spot, and do not mix between individual drops.</li>
+    <li>Mix only <strong>after each layer</strong> is placed — a light folding-and-turning motion with the glass rod that <strong>breaks up any clumps</strong>; never press or compact the powder. Scrape the rod clean with the spatula after each pass, then place the next layer.</li>
+    <li>Continue adding and mixing over at least 10 min total. The powder should stay uniformly damp — no pooling, no dry patches.</li>
+    <li>After the full ${fv(vol)} mL is in, mix a further 5 min and inspect: uniformly colored and moist, with no dry streaks.</li>
+  </ol>`;
+}
+function dryCalSteps(P){
+  const dry=P.isAC
+    ?`Transfer to a ceramic crucible or quartz boat and dry at ${P.dryT} °C for ${P.dryH} h <strong>under flowing N<sub>2</sub></strong> — do NOT heat activated carbon in air unless the intent is combusting the template.`
+    :`Transfer to a ceramic crucible or quartz boat and dry in the oven at ${P.dryT} °C for ${P.dryH} h. Do not exceed ${P.dryT} °C — rapid drying drives precursor migration out of the pores to the external surface.`;
+  const cal=P.isAC
+    ?`Skip air calcination for activated-carbon-supported samples (the support combusts) — unless preparing a <em>support-removed</em> oxide, in which case calcine in static air per the group procedure and expect complete combustion of the carbon.`
+    :`Load into a ceramic crucible in the box/muffle furnace in <strong>static air</strong> (no gas flow). Ramp from room temperature to ${P.calT} °C at ${P.calR} °C/min (~${Math.round(P.rampMin)} min), hold ${P.calH} h at ${P.calT} °C, then cool passively. <em>These conditions are sample-dependent — adjust temperature, hold, and ramp to the specific precursor/support.</em>`;
+  return `<h5>Drying</h5><ol class="steps"><li>${dry}</li><li>The dried solid should be free-flowing and uniformly colored; record any color change.</li></ol>
+  <h5>Calcination</h5><ol class="steps"><li>${cal}</li><li>Allow the furnace to cool below 50 °C before opening; transfer immediately to a desiccator.</li></ol>`;
+}
+function renderIWI(P){
+  const dateStr=new Date().toISOString().split('T')[0];
+  const kind={mono:'monometallic',bi:'bimetallic',tri:'trimetallic'}[P.catType];
+  const stratLabel=P.catType==='mono'?kind:kind+(P.strategy==='co'?' — co-impregnation':' — sequential impregnation');
+  let procedure='';
+  const supName=chem(P.sup.name);
+  // Support preparation is a per-lot activity (bulk drying + IWP determination), NOT repeated each synthesis.
+  const oneTime=`<div class="onetime">
+    <h4 style="margin-top:0">Support preparation <span class="onetime-tag">— once per support lot, not per synthesis</span></h4>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:10px">Prepare the support lot once; every synthesis on that lot reuses the same dried support and the same measured incipient wetness point.</p>
+    <h5>Bulk drying</h5>
+    <ol class="steps">
+      <li>Dry a working quantity of ${supName} at 120 °C for 2 h to remove physisorbed water, then store in a desiccator. Prepare <strong>~50% more than any single synthesis needs</strong> (for this batch, ≈ ${f(P.mSup*1.5,1)} g), since mass is lost to handling; the exact amount is not critical.</li>
+    </ol>
+    <h5>Incipient wetness point</h5>
+    <ol class="steps">
+      <li>Determine the incipient wetness point of this support lot once, using the <strong>IWP Determination tab</strong> (droplet-layer titration to the pie-crust endpoint). Enter the measured saturation volume in the form; the synthesis volume below is 90% of it.</li>
+    </ol>
+    ${volCalcHTML(P)}
+    <div class="hl"><span class="k">Synthesis volume (this batch)</span><span class="v">${fv(P.vol)} mL of ${esc(P.slabel)}</span></div>
+  </div>`;
+  const preA=`<h4>Part A — Weigh support</h4><ol class="steps">
+    <li>Weigh out <strong>${f(P.mSup,2)} g (±0.01 g)</strong> of the dried ${supName} (prepared per <em>Support preparation</em> above) onto a <strong>weigh paper or weigh boat</strong> and transfer to the impregnation vessel; keep covered.</li></ol>`;
+  if(P.catType==='mono'||P.strategy==='co'){
+    procedure=preA
+      +`<h4>Part B — Precursor solution</h4>`+solutionSteps(P,P.slots,P.vol)
+      +`<h4>Part C — Impregnation</h4>`+impregnationSteps(P,P.vol)
+      +`<h4>Part D — Drying and calcination</h4>`+dryCalSteps(P);
+  }else{
+    const vols=[P.vol,P.vol2,P.vol3];
+    const meas=[null,P.hasIWP2?P.iwp2raw:null,P.hasIWP3?P.iwp3raw:null];
+    procedure=preA;
+    P.seqSlots.forEach((s,idx)=>{
+      procedure+=`<h4>Cycle ${idx+1} — ${esc(s.sym)} (${chem(s.name)})</h4>`
+        +`<h5>Solution</h5>`+solutionSteps(P,[s],vols[idx])
+        +`<h5>Impregnation</h5>`+impregnationSteps(P,vols[idx])
+        +dryCalSteps(P);
+      if(idx<P.seqSlots.length-1){
+        procedure+=`<div class="box box-warn"><strong>Between cycles:</strong> each metal-oxide layer reduces the pore volume. Re-run the <em>IWP determination</em> (IWP Determination tab) on the calcined cycle-${idx+1} intermediate and enter it in the form ("IWP after cycle ${idx+1}"). ${meas[idx+1]?`Recorded: ${fv(meas[idx+1])} mL → cycle-${idx+2} volume ${fv(vols[idx+1])} mL.`:`No cycle-${idx+2} IWP entered — the SOP reuses the previous volume (${fv(vols[idx+1])} mL); expect it to slightly over-wet.`}</div>`;
+      }
+    });
+  }
+  const safety=[];
+  P.slots.forEach(s=>{
+    if(["Pt","Pd","Ru","Rh","Au"].includes(s.sym))safety.push(`Noble-metal precursor (${s.sym}): chloride salts may release HCl vapor — weigh in a fume hood; minimize waste.`);
+    if(s.sym==='Cr')safety.push('Chromium: Cr(VI) species are carcinogenic. Work in a fume hood; dispose per the heavy-metals protocol.');
+    if(s.sym==='V')safety.push('Vanadium compounds are toxic by inhalation — avoid dusting; weigh in a fume hood.');
+    if(s.tags.includes('nitrate'))safety.push(`${s.name}: nitrate salts are oxidizers — keep away from organics and do not grind.`);
+  });
+  if(P.isAC)safety.push('Activated carbon: combusts if heated in air. All thermal steps under N₂/Ar unless combustion is intended.');
+  const uniq=[...new Set(safety)];
+  $('sop-iwi').innerHTML=`
+    <span class="doc-eyebrow">Porosoff Research Group · Standard Operating Procedure</span>
+    <h2>Incipient Wetness Impregnation — ${chem(catName(P))}</h2>
+    <div class="doc-meta">${dateStr} · ${esc(stratLabel)} · ${P.batchMode==='support'?`support mass ${f(P.mSup,2)} g`:`final catalyst mass ${fm(P.mCat)} g`} · solvent: ${esc(P.slabel)}</div>
+    <div class="sum-grid">
+      ${P.slots.map(s=>`<div class="sum-cell"><div class="k">${chem(s.name)}</div><div class="v">${fm(s.massPrec)} g</div></div>`).join('')}
+      <div class="sum-cell"><div class="k">Synthesis volume</div><div class="v">${fv(P.vol)} mL</div></div>
+      <div class="sum-cell"><div class="k">Support (after drying)</div><div class="v">${f(P.mSup,2)} g</div></div>
+      <div class="sum-cell"><div class="k">Support to pre-dry</div><div class="v">~${f(P.mSup*1.5,1)} g</div></div>
+      <div class="sum-cell"><div class="k">Final catalyst</div><div class="v">${fm(P.mCat)} g</div></div>
+      <div class="sum-cell"><div class="k">Drying</div><div class="v">${P.dryT}&nbsp;°C / ${P.dryH}&nbsp;h</div></div>
+      <div class="sum-cell"><div class="k">Calcination (static air)</div><div class="v">${P.calT}&nbsp;°C / ${P.calH}&nbsp;h @ ${P.calR}&nbsp;°C/min</div></div>
+    </div>
+    <h4>Calculations</h4>
+    <table class="calc-table">
+      ${P.batchMode==='support'
+        ?`<tr><td class="k">Support mass (input)</td><td class="frm">user-specified</td><td class="v">${fm(P.mSup)} g</td></tr>
+           <tr><td class="k">Total metal loading</td><td class="frm">Σ wt%</td><td class="v">${f(P.totalWt,1)} wt%</td></tr>
+           <tr><td class="k">Final catalyst mass</td><td class="frm">m<sub>sup</sub> + Σ m<sub>metal</sub></td><td class="v">${fm(P.mCat)} g</td></tr>`
+        :`<tr><td class="k">Final catalyst mass (input)</td><td class="frm">user-specified</td><td class="v">${fm(P.mCat)} g</td></tr>
+           <tr><td class="k">Total metal loading</td><td class="frm">Σ wt%</td><td class="v">${f(P.totalWt,1)} wt%</td></tr>
+           <tr><td class="k">Support mass needed</td><td class="frm">m<sub>cat</sub> × (1 − Σwt%/100)</td><td class="v">${fm(P.mSup)} g</td></tr>`}
+      <tr><td class="k">Verification — actual total loading</td><td class="frm">Σ m<sub>metal</sub> / m<sub>cat</sub> × 100</td><td class="v">${f(P.slots.reduce((a,s)=>a+s.massMetal,0)/P.mCat*100,2)} wt%</td></tr>
+    </table>
+    ${calcTablesHTML(P)}
+    ${oneTime}
+    <h4>Procedure</h4>
+    ${P.warnings.length&&P.strategy==='co'?`<div class="box box-danger"><strong>Compatibility warning:</strong> ${P.warnings.map(w=>esc(w.msg)).join(' ')}</div>`:''}
+    ${procedure}
+    <h4>Safety</h4>
+    <ol class="steps">${uniq.map(s=>`<li>${esc(s)}</li>`).join('')}<li>Nitrile gloves, lab coat, and safety glasses throughout. Dispose of metal-containing waste per institutional hazardous-waste regulations.</li></ol>
+    <h4>Support notes</h4>
+    <p style="font-size:0.85rem">${chem(P.sup.name)}${P.sup.full?` (${esc(P.sup.full)})`:''} — surface area ${esc(P.sup.sa)}. ${esc(P.sup.notes)}</p>`;
+  $('sop-iwi').style.display='block';
+}
+/* ══════════════════════ IWP DETERMINATION ══════════════════════ */
+function iwpSupportChanged(){
+  $('iwp-supname-wrap').style.display=($('iwp-support').value==='custom')?'':'none';
+  recalcIWP();
+}
+function calcIWP(){
+  const key=$('iwp-support').value;
+  if(!key)return null;
+  let sup;
+  if(key==='custom'){
+    const nm=($('iwp-supname').value||'').trim();
+    if(!nm)return {incomplete:true};
+    sup={name:nm, full:'', sa:'—', pvDefault:null, notes:'Custom support — enter a literature pore volume if one is known.'};
+  }else{ sup=SUPPORTS[key]; if(!sup)return null; }
+  const mass=parseFloat($('iwp-mass').value);
+  if(isNaN(mass)||mass<=0)return null;
+  const solvent=$('iwp-solvent').value;
+  const slabel={water:'Milli-Q water',ethanol:'anhydrous ethanol (\u226599.5%)',acetone:'anhydrous acetone (\u226599.5%)'}[solvent];
+  const pvOv=parseFloat($('iwp-pv').value);
+  const pv=!isNaN(pvOv)?pvOv:(sup.pvDefault!=null?sup.pvDefault:null);
+  const measRaw=parseFloat($('iwp-measured').value);
+  const hasMeas=!isNaN(measRaw)&&measRaw>0;
+  return {sup,mass,solvent,slabel,pv,hasMeas,
+    meas:hasMeas?measRaw:null,
+    impliedPV:hasMeas?measRaw/mass:null,
+    synthVol:hasMeas?measRaw*0.9:null,
+    expVol:pv!=null?pv*mass:null};
+}
+function renderIWP(Q){
+  const dateStr=new Date().toISOString().split('T')[0];
+  const supName=chem(Q.sup.name);
+  const isWater=Q.solvent==='water';
+  const pvTxt=Q.pv!=null?`${f(Q.pv,2)} mL/g`:'not specified';
+  const calc = Q.hasMeas
+    ? `<table class="calc-table">
+        <tr><td class="k">Support mass (test)</td><td class="frm">weighed</td><td class="v">${fm(Q.mass)} g</td></tr>
+        <tr><td class="k">V<sub>IWP,sat</sub> (measured)</td><td class="frm">experimental, ${esc(Q.slabel)}</td><td class="v">${fv(Q.meas)} mL</td></tr>
+        <tr><td class="k">Incipient-wetness pore volume</td><td class="frm">V<sub>IWP,sat</sub> / m = ${fv(Q.meas)} / ${fm(Q.mass)}</td><td class="v">${f(Q.impliedPV,2)} mL/g</td></tr>
+        <tr><td class="k">Synthesis volume for IWI (90% rule)</td><td class="frm">V<sub>IWP,sat</sub> \u00d7 0.90</td><td class="v">${fv(Q.synthVol)} mL / ${fm(Q.mass)} g</td></tr>
+       </table>
+       ${Q.pv!=null?`<div class="box ${Math.abs(Q.impliedPV-Q.pv)/Q.pv>0.2?'box-warn':'box-ok'}">Measured pore volume ${f(Q.impliedPV,2)} mL/g vs. literature ${f(Q.pv,2)} mL/g — ${Math.abs(Q.impliedPV-Q.pv)/Q.pv>0.2?'differs by more than 20%; repeat with a fresh aliquot to confirm.':'within 20%, consistent.'}</div>`:''}`
+    : `<table class="calc-table">
+        <tr><td class="k">Support mass (test)</td><td class="frm">weighed</td><td class="v">${fm(Q.mass)} g</td></tr>
+        <tr><td class="k">V<sub>IWP,sat</sub></td><td class="frm">record from titration</td><td class="v">____ mL</td></tr>
+        <tr><td class="k">Incipient-wetness pore volume</td><td class="frm">V<sub>IWP,sat</sub> / ${fm(Q.mass)}</td><td class="v">____ mL/g</td></tr>
+        <tr><td class="k">Synthesis volume for IWI (90% rule)</td><td class="frm">V<sub>IWP,sat</sub> \u00d7 0.90</td><td class="v">____ mL</td></tr>
+       </table>
+       <div class="box box-info">Expected endpoint \u2248 ${Q.expVol!=null?`${fv(Q.expVol)} mL (${pvTxt} \u00d7 ${fm(Q.mass)} g)`:'unknown \u2014 no literature pore volume on file'}. Record the actual volume and enter it in the form above (or in the IWI tab) to compute the pore volume and synthesis volume automatically.</div>`;
+  const flam = !isWater ? `<li>${esc(Q.slabel)} is flammable and volatile \u2014 work in a fume hood with no ignition sources, and keep the vessel covered between additions so evaporation does not bias the endpoint.</li>`:'';
+  $('sop-iwp').innerHTML = `
+    <span class="doc-eyebrow">Porosoff Research Group \u00b7 Standard Operating Procedure</span>
+    <h2>Incipient Wetness Point Determination \u2014 ${supName}</h2>
+    <div class="doc-meta">${dateStr} \u00b7 test mass ${fm(Q.mass)} g \u00b7 titrant: ${esc(Q.slabel)}${Q.pv!=null?` \u00b7 lit. pore volume ${f(Q.pv,2)} mL/g`:''}</div>
+    <div class="sum-grid">
+      <div class="sum-cell"><div class="k">Support</div><div class="v">${supName}</div></div>
+      <div class="sum-cell"><div class="k">Test mass</div><div class="v">${fm(Q.mass)} g</div></div>
+      <div class="sum-cell"><div class="k">Titrant</div><div class="v">${esc(Q.slabel)}</div></div>
+      ${Q.hasMeas
+        ? `<div class="sum-cell"><div class="k">Measured V<sub>IWP,sat</sub></div><div class="v">${fv(Q.meas)} mL</div></div>
+           <div class="sum-cell"><div class="k">Pore volume</div><div class="v">${f(Q.impliedPV,2)} mL/g</div></div>
+           <div class="sum-cell"><div class="k">Synthesis vol (90%)</div><div class="v">${fv(Q.synthVol)} mL</div></div>`
+        : `<div class="sum-cell"><div class="k">Expected endpoint</div><div class="v">${Q.expVol!=null?`~${fv(Q.expVol)} mL`:'\u2014'}</div></div>
+           <div class="sum-cell"><div class="k">Lit. pore volume</div><div class="v">${pvTxt}</div></div>`}
+    </div>
+    <h4>Purpose</h4>
+    <p style="font-size:0.9rem">Determine the incipient wetness point of this support lot \u2014 the volume of ${esc(Q.slabel)} that exactly fills the pore network with no excess free liquid. The impregnation SOP uses 90% of this value as the solution volume so the metal-precursor solution is fully absorbed into the pores. Perform once per support lot; re-measure if the lot, the calcination history, or a prior impregnation layer changes the pore structure.</p>
+    <h4>Materials</h4>
+    <ol class="steps">
+      <li>Dried ${supName} (see Bulk drying below); analytical balance (\u00b10.1 mg); calibrated micropipette or burette dispensing ${esc(Q.slabel)}; a clean glass vial or watch glass; a glass or PTFE stir rod; spatula; desiccator.</li>
+    </ol>
+    <h4>Bulk drying <span class="onetime-tag">\u2014 per support lot</span></h4>
+    <ol class="steps">
+      <li>Dry a working quantity of ${supName} at 120 \u00b0C for 2 h to remove physisorbed water, then cool in a desiccator \u2265 30 min.${isWater?'':' For a non-aqueous titrant, make sure the support is thoroughly dry so residual water does not bias the endpoint.'}</li>
+    </ol>
+    <h4>Saturation-point titration</h4>
+    <ol class="steps">
+      <li>Weigh <strong>${fm(Q.mass)} g (\u00b10.001 g)</strong> of the dried ${supName} into a clean vial or onto a watch glass; record the exact mass.</li>
+      <li>Fill the micropipette or burette with ${esc(Q.slabel)}; record the starting volume.</li>
+      <li>Add liquid <strong>one layer of droplets at a time</strong> (~8 droplets, spread across the surface), mixing gently with the stir rod <strong>only after each layer</strong> \u2014 a light folding-and-turning motion that breaks up any clumps, not after every individual drop. Slow down as you approach the endpoint.</li>
+      <li>Watch the texture: free-flowing powder \u2192 clumping \u2192 a cohesive mass resembling a <strong>raw pie crust</strong> (crumbly but holding together, damp throughout, no dry pockets and no glistening free liquid). The endpoint is the first point at which the whole mass is uniformly damp with no dry powder remaining.</li>
+      <li>If a droplet pools or the mass turns glossy or pasty, you have passed the endpoint \u2014 note it and repeat with a fresh aliquot, approaching more slowly.</li>
+      <li>Record the total liquid added as V<sub>IWP,sat</sub>. Run at least two determinations; values within ~20% (ideally &lt; 10%) are reliable \u2014 average them.</li>
+    </ol>
+    <h4>Calculation</h4>
+    ${calc}
+    <div class="hl"><span class="k">${Q.hasMeas?'Incipient wetness point':'To compute, enter the measured volume'}</span><span class="v">${Q.hasMeas?`${f(Q.impliedPV,2)} mL/g \u00b7 synthesis ${fv(Q.synthVol)} mL / ${fm(Q.mass)} g`:'PV = V\u2081\u2081\u2082\u209a,\u209b\u2090\u209c / m ; synthesis = V \u00d7 0.90'}</span></div>
+    <h4>Safety</h4>
+    <ol class="steps">
+      ${flam}
+      <li>Nitrile gloves, lab coat, and safety glasses. Fine oxide powders can be respiratory irritants \u2014 weigh in a fume hood or use a dust mask.</li>
+    </ol>
+    ${(Q.sup.full||Q.sup.notes)?`<h4>Support notes</h4><p style="font-size:0.85rem">${supName}${Q.sup.full?` (${esc(Q.sup.full)})`:''}${(Q.sup.sa&&Q.sup.sa!=='\u2014')?` \u2014 surface area ${esc(Q.sup.sa)}`:''}. ${esc(Q.sup.notes||'')}</p>`:''}`;
+  $('sop-iwp').style.display='block';
+}
+function recalcIWP(){
+  const Q=calcIWP();
+  const key=$('iwp-support').value;
+  if(key&&key!=='custom'&&SUPPORTS[key]&&!$('iwp-pv').value)$('iwp-pv').placeholder=SUPPORTS[key].pvDefault+' (lit.)';
+  lastQ=(Q&&!Q.incomplete)?Q:null;
+  $('btn-pdf-iwp').disabled=!lastQ; $('btn-xlsx-iwp').disabled=!lastQ;
+  if(lastQ)renderIWP(lastQ); else $('sop-iwp').style.display='none';
+}
+function setCarbType(t){
+  carbType=t;
+  $('btn-cmono').classList.toggle('active',t==='mono');
+  $('btn-cbi').classList.toggle('active',t==='bi');
+  $('cb-metal2-wrap').style.display=t==='bi'?'':'none';
+  $('cb-metal-lbl').innerHTML=t==='bi'?'Metal 1 <span class="hint">— primary carbide former</span>':'Metal <span class="hint">— carburizable metals only</span>';
+  recalcCarb();
+}
+function setCarbMethod(m){
+  carbMethod=m;
+  $('btn-tpc').classList.toggle('active',m==='TPC');
+  $('btn-isc').classList.toggle('active',m==='ISC');
+  $('cb-ramp').value=m==='TPC'?2.1:10;
+  $('cb-int-wrap').style.display=m==='TPC'?'':'none';
+  recalcCarb();
+}
+function calcCarb(){
+  const sym=$('cb-metal').value; if(!sym)return null;
+  const mass=parseFloat($('cb-mass').value); if(isNaN(mass)||mass<=0)return null;
+  const m=CARB_METALS[sym];
+  const bi=carbType==='bi';
+  const sym2=bi?$('cb-metal2').value:''; if(bi&&!sym2)return null;
+  const promo=bi&&!CARB_METALS[sym2];      // true if metal 2 is a promoter (non-carbide-former)
+  const c={
+    sym, oxide:m.oxide, carbides:m.carbides, phaseCtrl:!!m.phaseCtrl,
+    bi, sym2, promo,
+    oxide2:bi?(promo?(CARB_PROMO_OXIDE[sym2]||sym2+'-oxide'):CARB_METALS[sym2].oxide):'',
+    carbides2:(bi&&!promo)?CARB_METALS[sym2].carbides:'',
+    form:$('cb-form').value, mass,
+    label:$('cb-desc').value.trim()||`${bi?sym+'-'+sym2:sym}-oxide sample`,
+    method:carbMethod,
+    ch4:parseFloat($('cb-ch4').value)||21,
+    flow:parseFloat($('cb-flow').value)||155,
+    tubeID:parseFloat($('cb-tubeid').value)||5.7,
+    equil:parseFloat($('cb-equil').value)||30,
+    ramp:parseFloat($('cb-ramp').value)||(carbMethod==='TPC'?2.1:10),
+    temp:parseFloat($('cb-temp').value)||835,
+    dur:parseFloat($('cb-dur').value),
+    useInt:carbMethod==='TPC'&&$('cb-int').checked,
+    intT:parseFloat($('cb-intT').value)||590,
+    intM:parseFloat($('cb-intM').value)||30,
+    h2t:parseFloat($('cb-h2t').value)||0.5,
+    h2f:parseFloat($('cb-h2f').value)||155,
+    passt:parseFloat($('cb-passt').value)||3,
+    passgas:$('cb-passgas').value||'1% O2/N2'
+  };
+  if(isNaN(c.dur)||c.dur<0)return null;
+  if(c.useInt&&c.intT>=c.temp)c.useInt=false;
+  // superficial velocity is set by flow rate and tube bore, not independent:
+  // v (cm/s) = [Q (mL/min) / 60] / A,  A = π (d/2)²  with d = tube I.D.
+  c.area=Math.PI*Math.pow(c.tubeID/20,2);   // cm² (tubeID mm → radius cm = mm/20)
+  c.vel=(c.flow/60)/c.area;                  // cm/s, evaluated at the set (reference) flow
+  // species description
+  if(!bi){ c.species=`${sym} (${c.oxide} → ${c.carbides})`; }
+  else if(promo){ c.species=`${sym2}-promoted ${sym} carbide (${c.oxide} + ${c.oxide2} → ${sym2}/${c.carbides})`; }
+  else { c.species=`${sym}–${sym2} bimetallic carbide (${c.oxide} + ${c.oxide2} → ${sym}–${sym2} carbide)`; }
+  // segment durations (min), each tagged with start/end temperature and a gas key for the plot
+  c.seg=[];
+  const gas=`${c.ch4}% CH4/H2, ${c.flow} mL/min`;
+  const CG='carb';
+  if(c.method==='TPC'){
+    c.seg.push({gas, gasKey:CG, action:'Equilibrate at 25 °C', t:c.equil, Ts:25, Te:25});
+    if(c.useInt){
+      c.seg.push({gas, gasKey:CG, action:`Ramp 25 → ${c.intT} °C @ ${c.ramp} °C/min`, t:(c.intT-25)/c.ramp, Ts:25, Te:c.intT});
+      c.seg.push({gas, gasKey:CG, action:`Hold at ${c.intT} °C`, t:c.intM, Ts:c.intT, Te:c.intT});
+      c.seg.push({gas, gasKey:CG, action:`Ramp ${c.intT} → ${c.temp} °C @ ${c.ramp} °C/min`, t:(c.temp-c.intT)/c.ramp, Ts:c.intT, Te:c.temp});
+    }else{
+      c.seg.push({gas, gasKey:CG, action:`Ramp 25 → ${c.temp} °C @ ${c.ramp} °C/min`, t:(c.temp-25)/c.ramp, Ts:25, Te:c.temp});
+    }
+    c.seg.push({gas, gasKey:CG, action:`Carburize at ${c.temp} °C`, t:c.dur*60, Ts:c.temp, Te:c.temp, hold:true});
+  }else{
+    c.seg.push({gas:`N2, ${c.flow} mL/min`, gasKey:'n2', action:'Equilibrate at 25 °C', t:c.equil, Ts:25, Te:25});
+    c.seg.push({gas:`N2, ${c.flow} mL/min`, gasKey:'n2', action:`Ramp 25 → ${c.temp} °C @ ${c.ramp} °C/min`, t:(c.temp-25)/c.ramp, Ts:25, Te:c.temp});
+    c.seg.push({gas, gasKey:CG, action:`Switch to CH4/H2 — carburize at ${c.temp} °C`, t:c.dur*60, Ts:c.temp, Te:c.temp, hold:true});
+  }
+  c.seg.push({gas:`H2, ${c.h2f} mL/min`, gasKey:'h2', action:`H2 flush at ${c.temp} °C (removes excess surface carbon)`, t:c.h2t*60, Ts:c.temp, Te:c.temp});
+  c.seg.push({gas:'H2', gasKey:'h2', action:'Passive cooling to 25 °C', t:null, Ts:c.temp, Te:25, cooling:true});
+  c.seg.push({gas:c.passgas, gasKey:'pass', action:`Passivation at 25 °C`, t:c.passt*60, Ts:25, Te:25});
+  c.totalProg=c.seg.reduce((a,s)=>a+(s.t||0),0);
+  c.coolMin=Math.max(30,(c.temp-25)/12);   // nominal natural-cool estimate for the plot only (dashed)
+  return c;
+}
+function recalcCarb(){
+  $('cb-method-note').innerHTML = carbMethod==='TPC'
+    ?'<strong>TPC:</strong> the sample sees the carburizing gas from room temperature — reduction and carburization occur during the ramp (cf. Figure S4a). Default ramp 2.1 °C/min with an intermediate hold at 590 °C.'
+    :'<strong>ISC:</strong> the ramp is under N<sub>2</sub>; the carburizing gas is introduced only once the target temperature is reached (cf. Figure S4b). Default ramp 10 °C/min.';
+  // live superficial-velocity readout (independent of the rest of the form being complete)
+  const flow=parseFloat($('cb-flow').value), id=parseFloat($('cb-tubeid').value);
+  const ro=$('cb-vel-readout');
+  if(ro){
+    if(flow>0&&id>0){
+      const area=Math.PI*Math.pow(id/20,2);
+      ro.innerHTML=`Superficial velocity: <strong>${f((flow/60)/area,1)} cm/s</strong> &nbsp;= (${flow}/60 mL·s⁻¹) / (π·(${f(id,1)}/2 mm)²), at the set flow`;
+    } else ro.innerHTML='Superficial velocity: <strong>—</strong>';
+  }
+  const C=calcCarb(); lastC=C;
+  $('btn-pdf-carb').disabled=!C; $('btn-xlsx-carb').disabled=!C;
+  if(C)renderCarb(C); else $('sop-carb').style.display='none';
+}
+function fmtMin(t){ if(t==null)return '—'; const h=Math.floor(t/60),m=Math.round(t%60); return h?`${h} h ${m} min`:`${m} min`; }
+const GAS_STYLE={
+  carb:{c:'#c8a951',label:'CH₄/H₂ (carburizing)'},
+  n2:{c:'#6b7a91',label:'N₂ (inert)'},
+  h2:{c:'#3d6098',label:'H₂ (flush / cool)'},
+  pass:{c:'#b5643f',label:'passivation'}
+};
+function carbProfileSVG(C){
+  // build timeline (cooling uses nominal estimate, drawn dashed)
+  let tC=0; const bands=[]; const lines=[];
+  C.seg.forEach(s=>{
+    const d=(s.t==null)?C.coolMin:s.t; const t0=tC,t1=tC+d;
+    bands.push({t0,t1,key:s.gasKey,cooling:!!s.cooling});
+    lines.push({t0,t1,Ts:s.Ts,Te:s.Te,cooling:!!s.cooling,hold:!!s.hold});
+    tC=t1;
+  });
+  const total=tC||1;
+  const maxT=Math.max(200,Math.ceil(C.temp/100)*100);
+  const W=720,H=326,L=56,R=706,PT=20,PB=176; // temp plot area
+  const GY=192,GH=15;                          // gas track
+  const AX=GY+GH+2;                            // x-axis baseline (under gas track)
+  const xF=t=>L+(t/total)*(R-L);
+  const yF=T=>PB-(T/maxT)*(PB-PT);
+  // y grid + labels
+  const yStep=maxT<=400?100:200; let yEls='';
+  for(let T=0;T<=maxT;T+=yStep){
+    const y=yF(T);
+    yEls+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${R}" y2="${y.toFixed(1)}" stroke="#e7ddc7" stroke-width="1"/>`;
+    yEls+=`<text x="${L-8}" y="${(y+3).toFixed(1)}" text-anchor="end" font-family="'DM Mono',monospace" font-size="10" fill="#5a6a80">${T}</text>`;
+  }
+  // x ticks
+  const cands=[5,10,15,20,30,45,60,90,120,180,240,300,360,480,600,720,900,1200];
+  let step=cands.find(s=>total/s<=7)||1500;
+  const inH=step>=60; let xEls='';
+  for(let t=0;t<=total+0.001;t+=step){
+    const x=xF(t);
+    xEls+=`<line x1="${x.toFixed(1)}" y1="${PT}" x2="${x.toFixed(1)}" y2="${PB}" stroke="#f0e9d8" stroke-width="1"/>`;
+    const lbl=inH?(t/60).toFixed((t%60===0)?0:1):String(Math.round(t));
+    xEls+=`<text x="${x.toFixed(1)}" y="${AX+13}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#5a6a80">${lbl}</text>`;
+  }
+  // hold shading (carburization hold in temp area)
+  let holdEls='';
+  lines.filter(l=>l.hold).forEach(l=>{
+    holdEls+=`<rect x="${xF(l.t0).toFixed(1)}" y="${PT}" width="${(xF(l.t1)-xF(l.t0)).toFixed(1)}" height="${PB-PT}" fill="#c8a951" opacity="0.08"/>`;
+  });
+  // gas bands
+  let gasEls=''; const present=new Set();
+  bands.forEach(b=>{
+    present.add(b.key); const st=GAS_STYLE[b.key];
+    const x=xF(b.t0), w=xF(b.t1)-xF(b.t0);
+    gasEls+=`<rect x="${x.toFixed(1)}" y="${GY}" width="${w.toFixed(1)}" height="${GH}" fill="${st.c}" opacity="${b.cooling?0.4:0.9}"${b.cooling?' stroke="#3d6098" stroke-width="1" stroke-dasharray="3 2"':''}/>`;
+  });
+  // temperature line (per-segment; cooling dashed)
+  let tEls='';
+  lines.forEach(l=>{
+    tEls+=`<line x1="${xF(l.t0).toFixed(1)}" y1="${yF(l.Ts).toFixed(1)}" x2="${xF(l.t1).toFixed(1)}" y2="${yF(l.Te).toFixed(1)}" stroke="#0a1628" stroke-width="2" fill="none"${l.cooling?' stroke-dasharray="5 3" opacity="0.7"':''} stroke-linejoin="round" stroke-linecap="round"/>`;
+  });
+  // axes
+  const axes=`<line x1="${L}" y1="${PT}" x2="${L}" y2="${PB}" stroke="#c8a951" stroke-width="1"/>
+    <line x1="${L}" y1="${PB}" x2="${R}" y2="${PB}" stroke="#c8a951" stroke-width="1"/>
+    <text x="${L-8}" y="${GY+GH-3}" text-anchor="end" font-family="'DM Mono',monospace" font-size="9" fill="#5a6a80">gas</text>
+    <text transform="translate(14,${(PT+PB)/2}) rotate(-90)" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#5a6a80" letter-spacing="0.5">Temperature (°C)</text>
+    <text x="${(L+R)/2}" y="${AX+30}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#5a6a80">Time (${inH?'h':'min'})${C.method==='TPC'?'':' — ramp under N₂, gas switched at temperature'}</text>`;
+  // legend
+  let lx=L, ly=AX+42, legend='';
+  [...present].forEach(k=>{
+    const st=GAS_STYLE[k];
+    legend+=`<rect x="${lx}" y="${ly-8}" width="12" height="9" fill="${st.c}" opacity="0.9"/>`;
+    legend+=`<text x="${lx+16}" y="${ly}" font-family="'DM Sans',sans-serif" font-size="10" fill="#1a2535">${st.label}</text>`;
+    lx += 16 + (st.label.length*5.6) + 20;
+  });
+  legend+=`<text x="${R}" y="${ly}" text-anchor="end" font-family="'DM Sans',sans-serif" font-size="9" fill="#8a97a8" font-style="italic">dashed = passive cool (not programmed)</text>`;
+  return `<svg viewBox="0 0 ${W} ${H+16}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#fffdf8;border:1px solid var(--border-light);border-radius:2px">
+    ${yEls}${xEls}${holdEls}${gasEls}${tEls}${axes}${legend}</svg>`;
+}
+function renderCarb(C){
+  const dateStr=new Date().toISOString().split('T')[0];
+  const formTxt={supported:'supported oxide (post-IWI, calcined)',unsupported:'unsupported oxide (direct calcination of precursor)',supportremoved:'support-removed oxide (carbon template combusted during calcination)'}[C.form];
+  const progRows=C.seg.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.action)}</td><td>${chem(s.gas)}</td><td>${fmtMin(s.t)}</td></tr>`).join('');
+  const phase=(!C.bi&&C.sym==='W')?`
+    <h4>Phase control — unsupported W<sub>x</sub>C via TPC at 835 °C</h4>
+    <p style="font-size:0.85rem;color:var(--muted)">Rietveld phase fractions vs. hold time (Perera, Ciuffetelli &amp; Porosoff, <em>ACS Catal.</em>, Table S1). Set the carburization duration to target the phase:</p>
+    <table class="prog-table"><tr><th>Hold at 835 °C</th><th>β-W<sub>2</sub>C</th><th>δ-WC</th></tr>
+    ${W_PHASE_TABLE.map(r=>`<tr><td>${r[0]}</td><td>${r[1].replace(' % beta-W2C','%')}</td><td>${r[2].replace(/ % delta-WC|%$/g,'%').replace('% %','%')}</td></tr>`).join('')}</table>
+    <div class="box box-info">0 h hold → phase-pure β-W<sub>2</sub>C; 5 h hold → phase-pure δ-WC. Intermediate times give two-phase mixtures.</div>`:'';
+  const steps=C.method==='TPC'?`
+    <li>Load ${fm(C.mass)} g of ${esc(C.label)} onto quartz wool at the center of the horizontal tube furnace; position the thermocouple at the bed. Leak-check all fittings before introducing flammable gas.</li>
+    <li>Introduce ${C.ch4}% CH₄/H₂ at ${C.flow} mL/min through the ${f(C.tubeID,1)} mm I.D. tube (superficial velocity ${f(C.vel,1)} cm/s) and equilibrate at 25 °C for ${C.equil} min.</li>
+    <li>Run the temperature program in the table above under continuous CH₄/H₂ flow — ramp at ${C.ramp} °C/min${C.useInt?` with an intermediate hold at ${C.intT} °C for ${C.intM} min`:''}, then hold at ${C.temp} °C for ${C.dur} h.</li>`
+    :`
+    <li>Load ${fm(C.mass)} g of ${esc(C.label)} onto quartz wool at the center of the horizontal tube furnace; position the thermocouple at the bed. Leak-check all fittings.</li>
+    <li>Introduce N₂ at ${C.flow} mL/min through the ${f(C.tubeID,1)} mm I.D. tube (superficial velocity ${f(C.vel,1)} cm/s) and equilibrate at 25 °C for ${C.equil} min.</li>
+    <li>Ramp to ${C.temp} °C at ${C.ramp} °C/min under N₂.</li>
+    <li>At ${C.temp} °C, switch the flow from N₂ to ${C.ch4}% CH₄/H₂ (${C.flow} mL/min) and carburize for ${C.dur} h.</li>`;
+  $('sop-carb').innerHTML=`
+    <span class="doc-eyebrow">Porosoff Research Group · Standard Operating Procedure</span>
+    <h2>Carbide Synthesis — ${esc(C.label)} via ${C.method}</h2>
+    <div class="doc-meta">${dateStr} · ${chem(C.species)} · ${esc(formTxt)} · sample ${fm(C.mass)} g</div>
+    <div class="sum-grid">
+      <div class="sum-cell"><div class="k">Method</div><div class="v">${C.method}</div></div>
+      <div class="sum-cell"><div class="k">Carburizing gas</div><div class="v">${C.ch4}% CH₄/H₂</div></div>
+      <div class="sum-cell"><div class="k">Flow / velocity</div><div class="v">${C.flow}&nbsp;mL/min · ${f(C.vel,1)}&nbsp;cm/s</div></div>
+      <div class="sum-cell"><div class="k">Temperature</div><div class="v">${C.temp} °C</div></div>
+      <div class="sum-cell"><div class="k">Hold</div><div class="v">${C.dur} h</div></div>
+      <div class="sum-cell"><div class="k">Total program (excl. cooling)</div><div class="v">${fmtMin(C.totalProg)}</div></div>
+    </div>
+    <h4>Carburization profile</h4>
+    ${carbProfileSVG(C)}
+    <h4>Temperature &amp; gas program</h4>
+    <table class="prog-table"><tr><th>#</th><th>Segment</th><th>Gas</th><th>Duration</th></tr>${progRows}</table>
+    <h4>Procedure</h4>
+    <ol class="steps">
+      ${steps}
+      <li>After the carburization hold, switch the flow to pure H₂ (${C.h2f} mL/min) and maintain at ${C.temp} °C for ${C.h2t} h to remove excess surface carbon.</li>
+      <li>Passively cool to 25 °C under flowing H₂. Do not open the furnace or expose to air.</li>
+      <li>At 25 °C, switch to ${chem(C.passgas)} and passivate for ${C.passt} h to form a thin protective oxide layer — fresh carbides are pyrophoric and will oxidize uncontrollably in air without passivation.</li>
+      <li>Transfer the passivated sample to a desiccator (or glovebox for air-free work). If the catalyst will be used for reaction, pre-reduce (e.g., 350 °C in H₂ for 2 h) to remove the passivation layer before testing.</li>
+    </ol>
+    ${C.bi?`<div class="box box-info">${C.promo
+      ?`<strong>Bimetallic (promoted) sample:</strong> both metals are carburized together in a single program. ${esc(C.sym2)} is not expected to form a bulk carbide under these conditions — it should remain as a dispersed ${chem(C.oxide2)}/metallic promoter on the ${esc(C.sym)} carbide. Confirm the phase assignment by XRD; a segregated ${esc(C.sym2)} phase may still appear at high loading.`
+      :`<strong>Bimetallic carbide:</strong> ${esc(C.sym)} and ${esc(C.sym2)} are co-carburized in a single program from a mixed oxide precursor. The carburization onset and the phases formed depend on composition — the single-metal reference values (temperature, duration) are a starting point; verify by XRD and adjust the hold accordingly. Intimate mixing of the two oxides in the precursor is important for a homogeneous mixed carbide.`}</div>`:''}
+    ${phase}
+    <h4>Safety</h4>
+    <ol class="steps">
+      <li>CH₄ and H₂ are flammable — leak-check before heating; vent effluent to exhaust; no ignition sources near the outlet.</li>
+      <li>CO is evolved during carburization of oxide precursors — the furnace outlet must vent to a fume exhaust; CO monitor recommended.</li>
+      <li>Fresh (unpassivated) carbides are pyrophoric — never expose to air before the ${chem(C.passgas)} passivation is complete.</li>
+      <li>High-temperature furnace: heat-resistant gloves for loading/unloading; verify over-temperature interlocks.</li>
+    </ol>
+    <p style="font-size:0.78rem;color:var(--muted);margin-top:1rem">Conditions default to the group procedure for WOₓ carburization (Perera et al., <em>ACS Catal.</em>; Figure S4) — all parameters above are sample-dependent and editable in the form.</p>`;
+  $('sop-carb').style.display='block';
+}
+
+/* ══════════════════════ EXPORTS ══════════════════════ */
+function exportPDF(which){
+  const panel=$('panel-'+which);
+  panel.classList.add('print-me');
+  const old=document.title;
+  document.title = which==='iwi'
+    ? `IWI_SOP_${catName(lastP).replace(/[^A-Za-z0-9.]+/g,'_')}`
+    : which==='iwp'
+    ? `IWP_Determination_${(lastQ?lastQ.sup.name:'support').replace(/[^A-Za-z0-9.]+/g,'_')}`
+    : `Carbide_SOP_${lastC.label.replace(/[^A-Za-z0-9.]+/g,'_')}_${lastC.method}`;
+  const done=()=>{panel.classList.remove('print-me');document.title=old;window.removeEventListener('afterprint',done);};
+  window.addEventListener('afterprint',done);
+  window.print();
+}
+/* xlsx helper: rows = arrays of cells; cell = value | {v,f,t} ; returns worksheet */
+function rowsToWS(rows,cols){
+  const ws={};
+  rows.forEach((cells,r)=>cells.forEach((cell,c)=>{
+    if(cell===null||cell===undefined||cell==='')return;
+    const ref=XLSX.utils.encode_cell({r,c});
+    if(typeof cell==='object')ws[ref]={t:'n',...cell};
+    else if(typeof cell==='number')ws[ref]={t:'n',v:cell};
+    else ws[ref]={t:'s',v:String(cell)};
+  }));
+  ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:rows.length-1,c:(cols||5)-1}});
+  ws['!cols']=[{wch:36},{wch:16},{wch:16},{wch:16},{wch:10},{wch:60}];
+  return ws;
+}
+function exportXLSX_IWI(){
+  const P=lastP; if(!P)return;
+  const n=P.slots.length;
+  const COLS=['B','C','D'].slice(0,n);
+  const rows=[]; const push=r=>{rows.push(r);return rows.length;};
+  /* row layout: A label · B/C/D metal columns · E unit · F notes */
+  const row=(label,cells,unit,note)=>{const c=[label,'','','',unit||'',note||''];(cells||[]).forEach((v,k)=>{c[1+k]=v;});return push(c);};
+  const one=(label,cell,unit,note)=>row(label,[cell],unit,note);
+  const per=fn=>P.slots.map((s,k)=>fn(s,COLS[k]));
+  const sum=r=>COLS.map(c=>c+r).join('+');
+  const stratTxt=P.catType==='mono'?'monometallic':({bi:'bimetallic',tri:'trimetallic'}[P.catType])+(P.strategy==='co'?' — co-impregnation':' — sequential impregnation');
+  push([`IWI calculation sheet — ${catName(P)}`,'','','','','',`Generated ${new Date().toISOString().split('T')[0]} · ${stratTxt}`]);
+  push([]);
+  row('INPUTS',['Metal 1','Metal 2','Metal 3'].slice(0,n),'Unit','Notes');
+  row('Metal',per(s=>s.sym));
+  row('Precursor',per(s=>s.name));
+  row('CAS',per(s=>s.cas));
+  const rWT=row('Target loading',per(s=>s.wt),'wt%','on final catalyst basis');
+  const rAW=row('Atomic weight',per(s=>s.aw),'g/mol');
+  const rAMW=row('Anhydrous MW',per(s=>s.anhMW),'g/mol');
+  const rX=row('Hydration x',per(s=>s.x),'mol H2O/mol','from CoA where variable');
+  const rEMW=row('Effective MW',per((s,c)=>({v:s.effMW,f:`${c}${rAMW}+${c}${rX}*18.015`})),'g/mol','= anhydrous MW + x × 18.015');
+  const rPUR=row('Assay / purity',per(s=>s.purity),'%');
+  const rST=row('Metal atoms per formula unit',per(s=>s.stoich));
+  push([]);
+  let rMS,rMC;
+  if(P.batchMode==='support'){ rMS=one('Support mass (input)',P.mSup,'g','user-specified'); }
+  else { rMC=one('Final catalyst mass (input)',P.mCat,'g','user-specified'); }
+  const rSUM=one('Sum of loadings',{v:P.totalWt,f:sum(rWT)},'wt%');
+  const rIWP=one('IWP saturation volume (measured)',P.hasIWP?P.iwpRaw:'','mL',P.hasIWP?'Milli-Q water, experimental':'not measured — PV fallback used');
+  const rPV=one('Literature pore volume',P.pv,'mL/g',P.sup.name);
+  push([]);
+  row('CALCULATIONS',['Metal 1','Metal 2','Metal 3'].slice(0,n),'Unit','Formula');
+  let rMM;
+  if(P.batchMode==='support'){
+    rMM=row('Metal mass',per((s,c)=>({v:s.massMetal,f:`$B$${rMS}*${c}${rWT}/(100-$B$${rSUM})`})),'g','m_sup × wt% / (100 − Σwt%)');
+  }else{
+    rMM=row('Metal mass',per((s,c)=>({v:s.massMetal,f:`$B$${rMC}*${c}${rWT}/100`})),'g','m_cat × wt%/100');
+    rMS=one('Support mass needed',{v:P.mSup,f:`B${rMC}*(1-B${rSUM}/100)`},'g','m_cat × (1 − Σwt%/100)');
+  }
+  const rNM=row('Metal amount',per((s,c)=>({v:s.molMetal*1000,f:`${c}${rMM}/${c}${rAW}*1000`})),'mmol','m/AW × 1000');
+  const rNP=row('Precursor amount',per((s,c)=>({v:s.molPrec*1000,f:`${c}${rNM}/${c}${rST}`})),'mmol','n_metal / stoich');
+  row('PRECURSOR MASS TO WEIGH',per((s,c)=>({v:s.massPrec,f:`${c}${rNP}/1000*${c}${rEMW}/(${c}${rPUR}/100)`})),'g','n × MW_eff / (assay/100) — weigh ±0.001 g on weigh paper');
+  push([]);
+  const rMCat=one('Final catalyst mass',{v:P.mCat,f:P.batchMode==='support'?`B${rMS}+${sum(rMM)}`:`B${rMC}`},'g');
+  one('Verification — total loading',{v:P.slots.reduce((a,s)=>a+s.massMetal,0)/P.mCat*100,f:`(${sum(rMM)})/B${rMCat}*100`},'wt%','should equal Σ target loadings');
+  one('Support to pre-dry (~50% excess)',{v:P.mSup*1.5,f:`B${rMS}*1.5`},'g','exact amount not critical — covers drying/transfer losses');
+  const rVOL=one('SYNTHESIS VOLUME',{v:P.vol,f:P.hasIWP?`B${rIWP}*0.9`:`B${rPV}*B${rMS}`},'mL',P.hasIWP?'V_IWP,sat × 0.90':'PV × m_support (fallback)');
+  one('Aliquot, 10% of volume',{v:P.vol*0.1,f:`B${rVOL}*0.1`},'mL','per addition (min)');
+  one('Aliquot, 20% of volume',{v:P.vol*0.2,f:`B${rVOL}*0.2`},'mL','per addition (max)');
+  if(n>1&&P.strategy==='seq'){
+    const rIWP2=one('IWP after cycle 1 (measured)',P.hasIWP2?P.iwp2raw:'','mL',P.hasIWP2?'re-measured on calcined intermediate':'not measured — cycle-1 volume reused');
+    const rV2=one('Cycle-2 synthesis volume',{v:P.vol2,f:P.hasIWP2?`B${rIWP2}*0.9`:`B${rVOL}`},'mL');
+    if(n>2){
+      const rIWP3=one('IWP after cycle 2 (measured)',P.hasIWP3?P.iwp3raw:'','mL',P.hasIWP3?'re-measured on calcined intermediate':'not measured — cycle-2 volume reused');
+      one('Cycle-3 synthesis volume',{v:P.vol3,f:P.hasIWP3?`B${rIWP3}*0.9`:`B${rV2}`},'mL');
+    }
+    one('Impregnation order',P.order.split('').map(c=>'Metal '+c).join(' → '),'','dry + calcine between cycles');
+  }
+  push([]);
+  push(['THERMAL TREATMENT','','','','','','static air calcination — sample-dependent']);
+  one('Drying',P.dryT,'°C',`${P.dryH} h`);
+  const rCT=one('Calcination temperature',P.calT,'°C','static air (box furnace)');
+  const rCR=one('Calcination ramp',P.calR,'°C/min');
+  one('Calcination hold',P.calH,'h');
+  one('Ramp time to temperature',{v:P.rampMin,f:`(B${rCT}-25)/B${rCR}`},'min','(T − 25) / ramp');
+  const ws=rowsToWS(rows,6);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'IWI calculations');
+  XLSX.writeFile(wb,`IWI_${catName(P).replace(/[^A-Za-z0-9.]+/g,'_')}.xlsx`);
+}
+function exportXLSX_Carb(){
+  const C=lastC; if(!C)return;
+  const rows=[]; const push=r=>{rows.push(r);return rows.length;};
+  push([`Carbide synthesis program — ${C.label} via ${C.method}`,'','','','',`Generated ${new Date().toISOString().split('T')[0]}`]);
+  push([]);
+  push(['PARAMETERS','Value','','','Unit','Notes']);
+  push(['Composition',C.bi?(C.promo?`${C.sym2}-promoted ${C.sym}`:`${C.sym}–${C.sym2} bimetallic`):'monometallic','','','',C.species]);
+  push(['Metal / oxide / target carbides',`${C.sym} / ${C.oxide}`,'','','',C.carbides]);
+  if(C.bi)push([`Metal 2 (${C.promo?'promoter':'carbide former'})`,`${C.sym2} / ${C.oxide2}`,'','','',C.promo?'remains dispersed metal/oxide':C.carbides2]);
+  push(['Sample form',C.form,'','','','']);
+  push(['Sample mass',C.mass,'','','g','']);
+  push(['Method',C.method,'','','',C.method==='TPC'?'carburizing gas from RT':'ramp under N2; gas switched at temperature']);
+  push(['CH4 in H2',C.ch4,'','','vol%','']);
+  const rFLOW=push(['Gas flow',C.flow,'','','mL/min',`through ${f(C.tubeID,1)} mm I.D. tube`]);
+  const rID=push(['Reactor tube I.D.',C.tubeID,'','','mm','sets the superficial velocity']);
+  const rVEL=push(['Superficial velocity',{v:C.vel,f:`(B${rFLOW}/60)/(PI()*(B${rID}/20)^2)`},'','','cm/s','= (flow/60) / (π·(I.D./2)²), at set flow']);
+  const rEQ=push(['Equilibration at 25 °C',C.equil,'','','min','']);
+  const rRR=push(['Ramp rate',C.ramp,'','','°C/min','']);
+  const rTT=push(['Carburization temperature',C.temp,'','','°C','']);
+  const rDD=push(['Carburization duration',C.dur,'','','h','']);
+  let rIT,rIM;
+  if(C.useInt){ rIT=push(['Intermediate hold temperature',C.intT,'','','°C','TPC only']); rIM=push(['Intermediate hold duration',C.intM,'','','min','']); }
+  const rH2=push(['H2 flush',C.h2t,'','','h',`${C.h2f} mL/min at carburization temperature`]);
+  const rPS=push(['Passivation',C.passt,'','','h',`${C.passgas} at 25 °C`]);
+  push([]);
+  push(['PROGRAM TIMELINE','Duration (min)','','','','Formula']);
+  const segRows=[];
+  const rE=push(['Equilibration',{v:C.equil,f:`B${rEQ}`},'','','min','']); segRows.push(rE);
+  if(C.method==='TPC'&&C.useInt){
+    const r1=push(['Ramp 25 → intermediate',{v:(C.intT-25)/C.ramp,f:`(B${rIT}-25)/B${rRR}`},'','','min','(T_int − 25)/ramp']); segRows.push(r1);
+    const r2=push(['Intermediate hold',{v:C.intM,f:`B${rIM}`},'','','min','']); segRows.push(r2);
+    const r3=push(['Ramp intermediate → final',{v:(C.temp-C.intT)/C.ramp,f:`(B${rTT}-B${rIT})/B${rRR}`},'','','min','(T − T_int)/ramp']); segRows.push(r3);
+  }else{
+    const r1=push([C.method==='TPC'?'Ramp 25 → final (CH4/H2)':'Ramp 25 → final (N2)',{v:(C.temp-25)/C.ramp,f:`(B${rTT}-25)/B${rRR}`},'','min','(T − 25)/ramp']); segRows.push(r1);
+  }
+  const rC=push(['Carburization hold',{v:C.dur*60,f:`B${rDD}*60`},'','','min','']); segRows.push(rC);
+  const rF=push(['H2 flush',{v:C.h2t*60,f:`B${rH2}*60`},'','','min','']); segRows.push(rF);
+  push(['Passive cooling to 25 °C','—','','','','duration not programmed']);
+  const rP=push(['Passivation',{v:C.passt*60,f:`B${rPS}*60`},'','','min','']); segRows.push(rP);
+  push(['TOTAL (excl. cooling)',{v:C.totalProg,f:segRows.map(r=>`B${r}`).join('+')},'','','min','']);
+  const ws=rowsToWS(rows,5);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Carburization program');
+  XLSX.writeFile(wb,`Carbide_${C.label.replace(/[^A-Za-z0-9.]+/g,'_')}_${C.method}.xlsx`);
+}
+
+function exportXLSX_IWP(){
+  const Q=lastQ; if(!Q)return;
+  const rows=[]; const push=r=>{rows.push(r);return rows.length;};
+  push([`IWP determination — ${Q.sup.name}`,'','','','',`Generated ${new Date().toISOString().split('T')[0]} · titrant: ${Q.slabel}`]);
+  push([]);
+  push(['INPUTS','Value','','','Unit','Notes']);
+  const rM=push(['Support mass (test)',Q.mass,'','','g','weighed']);
+  const rV=push(['Measured saturation volume',Q.hasMeas?Q.meas:0,'','','mL','V_IWP,sat — enter your measured value here']);
+  push([]);
+  push(['RESULTS','Value','','','Unit','Formula']);
+  push(['Incipient-wetness pore volume',{v:Q.hasMeas?Q.impliedPV:0,f:`B${rV}/B${rM}`},'','','mL/g','= V_IWP,sat / mass']);
+  push(['Synthesis volume for IWI (90% rule)',{v:Q.hasMeas?Q.synthVol:0,f:`B${rV}*0.9`},'','','mL','= V_IWP,sat × 0.90']);
+  if(Q.pv!=null)push(['Literature pore volume',Q.pv,'','','mL/g','reference value for comparison']);
+  const ws=rowsToWS(rows,6);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'IWP determination');
+  XLSX.writeFile(wb,`IWP_${Q.sup.name.replace(/[^A-Za-z0-9.]+/g,'_')}.xlsx`);
+}
+
+/* ══════════════════════ INIT ══════════════════════ */
+$('slot1').innerHTML=slotHTML(1);
+$('slot2').innerHTML=slotHTML(2);
+$('slot3').innerHTML=slotHTML(3);
+buildOrderOptions();
+['support','solvent','mass-support','mass-catalyst','iwp-vol','pv','iwp2','iwp3','seq-order','dryT','dryH','calT','calH','calR'].forEach(id=>{
+  const el=$(id); if(el){el.addEventListener('input',recalcIWI);el.addEventListener('change',recalcIWI);}
+});
+['cb-metal','cb-metal2','cb-form','cb-mass','cb-desc','cb-ch4','cb-flow','cb-tubeid','cb-equil','cb-ramp','cb-temp','cb-dur','cb-int','cb-intT','cb-intM','cb-h2t','cb-h2f','cb-passt','cb-passgas'].forEach(id=>{
+  const el=$(id); if(el){el.addEventListener('input',recalcCarb);el.addEventListener('change',recalcCarb);}
+});
+['iwp-supname','iwp-solvent','iwp-mass','iwp-measured','iwp-pv'].forEach(id=>{
+  const el=$(id); if(el){el.addEventListener('input',recalcIWP);el.addEventListener('change',recalcIWP);}
+});
+recalcIWI(); recalcCarb(); recalcIWP();
+</script>
+</body>
+</html>

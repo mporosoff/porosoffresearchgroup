@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Group Policies &amp; Procedures — Porosoff Research Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628; --deep:#12203a; --mid:#1e3460;
+  --accent:#c8a951; --gold:#e8c56d; --cream:#fdf8f0;
+  --text:#1a2535; --muted:#5a6a80; --white:#ffffff;
+  --border:rgba(200,169,81,0.25); --border-light:rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:2px;
+  --warn-bg:#fdf3e4; --warn-bd:#e0b25a; --warn-tx:#7a5410;
+  --danger-bg:#fbe9e7; --danger-bd:#c0574a; --danger-tx:#7c2418;
+  --ok-bg:#eef4ec; --ok-bd:#7d9b74; --ok-tx:#2f4d28;
+  --info-bg:#eaf0f6; --info-bd:#6d8db0; --info-tx:#25445f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:var(--mid)}
+.site-nav{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--font-display);color:var(--gold);font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-sub{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.page-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(10,22,40,0.06)}
+.page-nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto;padding:0 1rem}
+.page-nav a{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0.85rem 1.1rem;white-space:nowrap;border-bottom:2px solid transparent}
+.page-nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+.page-nav a.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.hero{padding:2.6rem 0 1.4rem}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;display:block}
+h1.sop-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;color:var(--navy);line-height:1.18}
+h1.sop-title em{font-style:italic;color:var(--accent)}
+.hero .lead{color:var(--muted);font-size:0.95rem;margin-top:0.7rem;max-width:70ch}
+.meta-badges{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.1rem}
+.badge{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text)}
+.badge b{color:var(--navy);font-weight:500}
+.toc{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem 1.3rem;margin:1.4rem 0 2.2rem}
+.toc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.5rem}
+.toc a{font-size:0.85rem;color:var(--mid);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;background:rgba(200,169,81,0.08);border:1px solid var(--border);border-radius:2rem;padding:0.3rem 0.9rem;transition:background .15s,border-color .15s,color .15s}
+.toc a::before{content:"\2193";font-family:var(--font-mono);font-size:0.75rem;color:var(--accent)}
+.toc a:hover{color:var(--navy);background:rgba(200,169,81,0.18);border-color:var(--accent)}
+section.sop{margin:0 0 3rem}
+.sec-head{display:flex;align-items:baseline;gap:0.9rem;border-bottom:2px solid var(--border);padding-bottom:0.6rem;margin-bottom:1.2rem}
+.sec-num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:500}
+h2.sec-title{font-family:var(--font-display);font-size:1.45rem;font-weight:700;color:var(--navy)}
+h3{font-family:var(--font-display);font-size:1.08rem;font-weight:700;color:var(--navy);margin:1.5rem 0 0.7rem}
+section.sop p{margin:0.7rem 0;max-width:80ch}
+ul.plain{margin:0.6rem 0 0.6rem 1.2rem}
+ul.plain li{margin-bottom:0.45rem;max-width:78ch}
+.box{border:1px solid;border-left-width:4px;border-radius:var(--radius);padding:0.85rem 1.1rem;margin:1rem 0;font-size:0.92rem;max-width:82ch}
+.box .box-label{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.box.info{background:var(--info-bg);border-color:var(--info-bd)}.box.info .box-label{color:var(--info-tx)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-bd)}.box.warn .box-label{color:var(--warn-tx)}
+.box.danger{background:var(--danger-bg);border-color:var(--danger-bd)}.box.danger .box-label{color:var(--danger-tx)}
+.box.ok{background:var(--ok-bg);border-color:var(--ok-bd)}.box.ok .box-label{color:var(--ok-tx)}
+.equip-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.4rem;margin:1rem 0}
+.equip-card table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.equip-card td{padding:0.4rem 0.6rem;border-bottom:1px solid var(--border-light);vertical-align:top}
+.equip-card tr:last-child td{border-bottom:none}
+.equip-card td:first-child{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;width:180px}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 2rem 2.4rem;background:var(--white)}
+.footer-inner{max-width:960px;margin:0 auto;font-size:0.8rem;color:var(--muted)}
+.footer-inner a{color:var(--mid)}
+code{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,0.06);padding:0.08em 0.35em;border-radius:2px}
+@media print{
+  .site-nav,.page-nav,.toc{display:none}
+  body{background:#fff}
+  a{color:inherit;text-decoration:none}
+  section.sop{page-break-inside:avoid}
+}
+@media (max-width:640px){
+  .container{padding:0 1.1rem}
+  .site-nav{padding:0 1.1rem}
+  .nav-sub{display:none}
+}
+</style>
+</head>
+<body id="top">
+<nav class="site-nav">
+  <a class="nav-brand" href="https://porosoffresearchgroup.com/group.html">Porosoff Research Group</a>
+  <span class="nav-sub">Group Policies</span>
+</nav>
+<div class="page-nav">
+  <div class="page-nav-inner">
+      <a href="https://porosoffresearchgroup.com/group.html">&#8962; Group Resources</a>
+      <a href="#top" class="active">Overview</a>
+      <a href="#contact">Contact</a>
+      <a href="#safety">Safety</a>
+      <a href="#honesty">Academic Honesty</a>
+      <a href="#data">Data</a>
+      <a href="#deadlines">Deadlines</a>
+      <a href="#responsibilities">Lab Responsibilities</a>
+      <a href="#vacation">Work &amp; Vacation</a>
+  </div>
+</div>
+<div class="container">
+  <div class="hero">
+    <span class="sec-label">Porosoff Research Group</span>
+    <h1 class="sop-title">Policies &amp; <em>Procedures</em></h1>
+    <p class="lead">Group expectations for safety, data management, communication, lab responsibilities, and time off. All members are expected to read and follow these policies.</p>
+    <div class="meta-badges">
+      <span class="badge">Updated: <b>June 3, 2026</b></span>
+      <span class="badge">Labs: <b>Gavett 242 / 245 / 214</b></span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-label">Jump to a section</div>
+    <ul>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#safety">Laboratory Safety</a></li>
+      <li><a href="#honesty">Academic Honesty</a></li>
+      <li><a href="#data">Data Management</a></li>
+      <li><a href="#deadlines">Deadlines</a></li>
+      <li><a href="#responsibilities">Lab Responsibilities</a></li>
+      <li><a href="#vacation">Work &amp; Vacation</a></li>
+    </ul>
+  </div>
+
+  <section class="sop" id="contact">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Contact Information</h2></div>
+    <div class="equip-card">
+      <table>
+        <tr><td>Office</td><td>Wegmans 4405</td></tr>
+        <tr><td>Student offices</td><td>Gavett 235 / 222 / 212</td></tr>
+        <tr><td>Lab</td><td>Gavett 242 / 245 / 214</td></tr>
+        <tr><td>Email</td><td><a href="mailto:marc.porosoff@rochester.edu">marc.porosoff@rochester.edu</a></td></tr>
+        <tr><td>Work phone</td><td>585-276-7401</td></tr>
+        <tr><td>Emergencies</td><td>A cell number is available for emergencies &mdash; ask Prof. Porosoff directly.</td></tr>
+        <tr><td>Slack</td><td><a href="https://porosoffresearchgroup.slack.com/" target="_blank" rel="noopener">porosoffresearchgroup.slack.com</a></td></tr>
+        <tr><td>Website</td><td><a href="https://www.porosoffresearchgroup.com/" target="_blank" rel="noopener">porosoffresearchgroup.com</a></td></tr>
+      </table>
+    </div>
+    <div class="box info"><span class="box-label">Contact policy</span>
+      Prof. Porosoff generally responds to all emails / Slack messages within 24 hours. If it has been longer than 24 hours, please follow up. Use <strong>email</strong> for time-sensitive or professional communication (paper drafts, presentation feedback, etc.); <strong>Slack</strong> is fine for quick questions and clarifications. Responses are slower off-hours &mdash; Slack notifications are not received nights/weekends.</div>
+  </section>
+
+  <section class="sop" id="safety">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Laboratory Safety</h2></div>
+    <ul class="plain">
+      <li>ALL group members must complete the online <strong>&ldquo;EHS Laboratory Safety Training &mdash; Standard Chemical&rdquo;</strong> program through MyPath. Go to <a href="https://mypath.rochester.edu" target="_blank" rel="noopener">mypath.rochester.edu</a>, click <strong>Enter MyPath</strong>, and log in with your NetID.</li>
+      <li>Training must be <strong>renewed yearly</strong>. Submit proof of completion to Prof. Porosoff by <strong>July 31st</strong> each year.</li>
+      <li>Official laboratory hours are <strong>M&ndash;F, 9 am&ndash;5 pm</strong>. Graduate students and undergraduates working over the summer are expected to be in the lab / lab office during this period, barring extenuating circumstances with explicit permission. Schedules have some flexibility for appointments or illness/personal reasons &mdash; use your best judgment; you generally do not need to give explicit notice unless it conflicts with a scheduled group event or you will be away for an extended time.</li>
+      <li>Graduate students may work in the lab alone once trained. Undergraduates may work alone once trained <strong>and given explicit permission</strong>.</li>
+    </ul>
+    <div class="box danger"><span class="box-label">Buddy system</span>
+      If undergraduates work in the lab outside normal hours (nights / weekends), they <strong>MUST use the buddy system</strong>. The only exception is briefly entering the lab to shut down an experiment.</div>
+  </section>
+
+  <section class="sop" id="honesty">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Academic Honesty</h2></div>
+    <p>If you have not reviewed the University's policy on academic honesty and proper conduct for research, it can be found here: <a href="https://www.rochester.edu/college/honesty/" target="_blank" rel="noopener">rochester.edu/college/honesty</a>.</p>
+  </section>
+
+  <section class="sop" id="data">
+    <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Data Management</h2></div>
+    <p>All collected data must be backed up to the shared cloud folder under a folder with your name on <strong>Box</strong>. Details of all experiments must be recorded in the group electronic laboratory notebook on <strong>LabArchives</strong>. Ensure electronic data files can be referenced to the appropriate section of the electronic lab notebook. Contact Prof. Porosoff if you need access to Box or LabArchives.</p>
+  </section>
+
+  <section class="sop" id="deadlines">
+    <div class="sec-head"><span class="sec-num">05</span><h2 class="sec-title">Manuscript / Abstract / Poster Deadlines</h2></div>
+    <p>All documents must be submitted no later than <strong>two weeks prior</strong> to the conference or abstract-submission deadline. The only exception is if a group meeting is scheduled as a practice talk for a conference.</p>
+    <div class="box warn"><span class="box-label">Approval required</span>
+      All submitted abstracts, posters, etc. require <strong>full approval prior to submission</strong> &mdash; these documents reflect on the entire group, and we need enough time to iterate toward a high-quality product.</div>
+  </section>
+
+  <section class="sop" id="responsibilities">
+    <div class="sec-head"><span class="sec-num">06</span><h2 class="sec-title">Laboratory Responsibilities</h2></div>
+
+    <h3>Waste management</h3>
+    <p>Monitor laboratory waste levels and file the online pickup form through <strong>Campus Optics</strong>. Waste pickup requests should be submitted every two weeks to once a month depending on level. Check satellite waste-container levels and request orders for new waste containers.</p>
+
+    <h3>Safety</h3>
+    <p>Monitor potential safety hazards in the lab: ensure all experiments/syntheses are properly labeled, ensure compatible chemical storage, and check for trip hazards and other concerns. Flush eyewash stations and complete the log weekly.</p>
+    <div class="box danger"><span class="box-label">Labeling requirement</span>
+      ALL experiments, beakers, and syntheses <strong>MUST</strong> carry a label with, at minimum: <strong>(1) contents, (2) date, (3) initials</strong> of the responsible party.</div>
+
+    <h3>General housekeeping</h3>
+    <p>Maintain workstations, bench coverings, waste containers, balances, etc. Keep work areas clean and tidy and return all tools/parts to their storage area after use. Do not leave dirty glassware in the sink &mdash; responsible parties must do their dishes, and glassware on the drying rack should be returned to storage once dry.</p>
+
+    <h3>Ordering</h3>
+    <p>Group orders are collected and submitted to the order channel on Box regularly. Urgent orders with prior consent can be sent directly to Prof. Porosoff. Preferred vendors: Thermo Fisher (Alfa Aesar), Sigma-Aldrich, McMaster-Carr, VWR, Electron Microscopy Sciences, Micromeritics, Harrick, Omega, Cole-Parmer, Grainger. Check on deliveries regularly.</p>
+
+    <h3>Gas cylinder management</h3>
+    <p>Cylinder levels must be checked before the start of every experiment, and orders placed when a cylinder is low (~500 psig). The gas manager updates the gas-cylinder inventory sheet on a biweekly (M/F) basis to avoid interruptions:
+      <a href="https://docs.google.com/spreadsheets/d/1Qb_uAJ5R9YMmOawazn3a0szZKC06jPrzXdAb3fKy8gk/edit?usp=sharing" target="_blank" rel="noopener">gas cylinder inventory sheet</a>.</p>
+
+    <h3>Chemical inventory</h3>
+    <p>The first person to arrive each day checks GVT 123 for packages and barcodes, and tags all new chemicals. Update the inventory spreadsheet with CAS numbers, chemical name, container size, and barcode; log chemicals when containers are empty.</p>
+    <div class="box warn"><span class="box-label">Log before use</span>
+      Log new chemical arrivals <strong>BEFORE use</strong> to facilitate yearly reconciliation. Keep the inventory up to date for ALL new arrivals:
+      <a href="https://docs.google.com/spreadsheets/d/1Xc1IwMmmNRz_lgA_s_pijbiG8bcYI6gkZyTm1bo-ju4/edit?gid=674239335#gid=674239335" target="_blank" rel="noopener">chemical inventory sheet</a>.</div>
+
+    <h3>Miscellaneous lab tasks</h3>
+    <p>Acid/base bath monitoring and replacement; Drykeep monitoring and desiccant regeneration.</p>
+
+    <h3>Equipment booking</h3>
+    <p>Be mindful of fellow group members when booking equipment. If an experiment is &lt;12 h, book the equipment only for the necessary number of hours to ensure efficient use. Equipment <strong>cannot be booked for more than three consecutive days</strong>.</p>
+  </section>
+
+  <section class="sop" id="vacation">
+    <div class="sec-head"><span class="sec-num">07</span><h2 class="sec-title">Work / Vacation / Absence Policies</h2></div>
+    <p style="font-size:0.85rem;color:var(--muted)">Adapted from the <a href="https://www.urmc.rochester.edu/education/graduate/trainee-handbook/policies-benefits/vacation-and-holidays.aspx" target="_blank" rel="noopener">URMC trainee handbook</a>.</p>
+    <ul class="plain">
+      <li><strong>Remote desktop software</strong> is permitted to facilitate data analysis and running experiments. This is a privilege that may be revoked at any time without notice.</li>
+      <li>Graduate students are expected to be motivated and driven in their experimental work. Running out of a gas or liquid nitrogen is not an excuse to stop experiments &mdash; know in advance when a consumable is low and order a replacement. If we do run out of LN<sub>2</sub>, borrow from other labs (URNano, etc.). Short work-stoppages add up and can significantly delay projects, publications, and graduation.</li>
+      <li>Graduate students may take <strong>two weeks of vacation (10 business days)</strong> each calendar year (Jan 1&ndash;Dec 31). Vacation does not automatically accrue and can be rolled over only with written permission of the advisor.</li>
+      <li>Email Prof. Porosoff <strong>well in advance (3&ndash;4 weeks notice)</strong> for any planned vacation. Winter-holiday time off is not a problem &mdash; just submit dates with plenty of notice.</li>
+      <li>Semester breaks are <strong>not automatic holidays</strong>. Graduate students are expected to be in their labs or offices during breaks and periods when no classes are held.</li>
+      <li>International students traveling outside the U.S. must submit a <strong>Short Term Absence Notice</strong> so the school can assist in the event of extended security clearance before re-entry.</li>
+      <li>All students are entitled to time off for official University holidays: New Year's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving plus the following Friday, and Christmas Day.</li>
+    </ul>
+  </section>
+</div>
+<footer>
+  <div class="footer-inner">
+    Group Policies &amp; Procedures &middot; Porosoff Research Group, University of Rochester &middot; Last updated June 3, 2026. <a href="#top">&uarr; back to top</a>
+  </div>
+</footer>
+</body>
+</html>

@@ -44,9 +44,10 @@ h1.sop-title em{font-style:italic;color:var(--accent)}
 .badge b{color:var(--navy);font-weight:500}
 .toc{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem 1.3rem;margin:1.4rem 0 2.2rem}
 .toc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
-.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.3rem 1.6rem}
-.toc a{font-size:0.88rem;color:var(--mid);text-decoration:none}
-.toc a:hover{color:var(--accent)}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.5rem}
+.toc a{font-size:0.85rem;color:var(--mid);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;background:rgba(200,169,81,0.08);border:1px solid var(--border);border-radius:2rem;padding:0.3rem 0.9rem;transition:background .15s,border-color .15s,color .15s}
+.toc a::before{content:"↓";font-family:var(--font-mono);font-size:0.75rem;color:var(--accent)}
+.toc a:hover{color:var(--navy);background:rgba(200,169,81,0.18);border-color:var(--accent)}
 section.sop{margin:0 0 3rem}
 .sec-head{display:flex;align-items:baseline;gap:0.9rem;border-bottom:2px solid var(--border);padding-bottom:0.6rem;margin-bottom:1.2rem}
 .sec-num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:500}
@@ -134,7 +135,7 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
     </div>
   </div>
   <div class="toc">
-    <div class="toc-label">On this page</div>
+    <div class="toc-label">Jump to a section</div>
     <ul><li><a href="#split">Split the Series File</a></li><li><a href="#export">Open & Export</a></li></ul>
   </div>
 

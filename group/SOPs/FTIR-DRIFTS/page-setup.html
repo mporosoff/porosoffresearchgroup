@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTIR / DRIFTS — Setup & Sample Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628; --deep:#12203a; --mid:#1e3460;
+  --accent:#c8a951; --gold:#e8c56d; --cream:#fdf8f0;
+  --text:#1a2535; --muted:#5a6a80; --white:#ffffff;
+  --border:rgba(200,169,81,0.25); --border-light:rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:2px;
+  --warn-bg:#fdf3e4; --warn-bd:#e0b25a; --warn-tx:#7a5410;
+  --danger-bg:#fbe9e7; --danger-bd:#c0574a; --danger-tx:#7c2418;
+  --ok-bg:#eef4ec; --ok-bd:#7d9b74; --ok-tx:#2f4d28;
+  --info-bg:#eaf0f6; --info-bd:#6d8db0; --info-tx:#25445f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:var(--mid)}
+.site-nav{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--font-display);color:var(--gold);font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-sub{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.page-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(10,22,40,0.06)}
+.page-nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto;padding:0 1rem}
+.page-nav a{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0.85rem 1.1rem;white-space:nowrap;border-bottom:2px solid transparent}
+.page-nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+.page-nav a.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.hero{padding:2.6rem 0 1.4rem}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;display:block}
+h1.sop-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;color:var(--navy);line-height:1.18}
+h1.sop-title em{font-style:italic;color:var(--accent)}
+.hero .lead{color:var(--muted);font-size:0.95rem;margin-top:0.7rem;max-width:70ch}
+.meta-badges{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.1rem}
+.badge{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text)}
+.badge b{color:var(--navy);font-weight:500}
+.toc{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem 1.3rem;margin:1.4rem 0 2.2rem}
+.toc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.3rem 1.6rem}
+.toc a{font-size:0.88rem;color:var(--mid);text-decoration:none}
+.toc a:hover{color:var(--accent)}
+section.sop{margin:0 0 3rem}
+.sec-head{display:flex;align-items:baseline;gap:0.9rem;border-bottom:2px solid var(--border);padding-bottom:0.6rem;margin-bottom:1.2rem}
+.sec-num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:500}
+h2.sec-title{font-family:var(--font-display);font-size:1.45rem;font-weight:700;color:var(--navy)}
+h3{font-family:var(--font-display);font-size:1.08rem;font-weight:700;color:var(--navy);margin:1.5rem 0 0.7rem}
+section.sop p{margin:0.7rem 0;max-width:76ch}
+ol.steps{counter-reset:step;list-style:none;margin:0.8rem 0}
+ol.steps>li{counter-increment:step;position:relative;padding:0 0 0.95rem 3rem;max-width:76ch}
+ol.steps>li::before{content:counter(step);position:absolute;left:0;top:0.05rem;width:1.9rem;height:1.9rem;border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.78rem;color:var(--navy);background:var(--white)}
+ol.steps ul,ol.steps ol{margin:0.45rem 0 0 1.1rem}
+ol.steps ul li,ol.steps ol li{margin-bottom:0.3rem}
+ul.plain{margin:0.6rem 0 0.6rem 1.2rem}
+ul.plain li{margin-bottom:0.35rem;max-width:74ch}
+.box{border:1px solid;border-left-width:4px;border-radius:var(--radius);padding:0.85rem 1.1rem;margin:1rem 0;font-size:0.92rem;max-width:80ch}
+.box .box-label{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.box.info{background:var(--info-bg);border-color:var(--info-bd)}.box.info .box-label{color:var(--info-tx)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-bd)}.box.warn .box-label{color:var(--warn-tx)}
+.box.danger{background:var(--danger-bg);border-color:var(--danger-bd)}.box.danger .box-label{color:var(--danger-tx)}
+.box.ok{background:var(--ok-bg);border-color:var(--ok-bd)}.box.ok .box-label{color:var(--ok-tx)}
+figure{margin:1.2rem 0;max-width:720px}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--border-light);border-radius:var(--radius);background:var(--white)}
+figcaption{font-size:0.8rem;color:var(--muted);margin-top:0.45rem;font-style:italic}
+figure.narrow{max-width:420px}
+.fig-row{display:flex;flex-wrap:wrap;gap:1.2rem}
+.fig-row figure{flex:1 1 280px;max-width:420px}
+table.sop-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem;background:var(--white)}
+table.sop-table th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;text-align:left;color:var(--navy);background:rgba(200,169,81,0.12);padding:0.6rem 0.8rem;border:1px solid var(--border-light)}
+table.sop-table td{padding:0.55rem 0.8rem;border:1px solid var(--border-light);vertical-align:top}
+table.sop-table tr:nth-child(even) td{background:rgba(10,22,40,0.02)}
+.table-scroll{overflow-x:auto}
+.equip-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.4rem;margin:1rem 0}
+.equip-card h3{margin-top:0}
+.equip-card table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.equip-card td{padding:0.4rem 0.6rem;border-bottom:1px solid var(--border-light);vertical-align:top}
+.equip-card td:first-child{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;width:200px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.4rem 0}
+a.sec-card{display:block;background:var(--white);border:1px solid var(--border-light);border-top:3px solid var(--accent);border-radius:var(--radius);padding:1.2rem 1.3rem;text-decoration:none;color:var(--text);transition:box-shadow .15s}
+a.sec-card:hover{box-shadow:0 6px 18px rgba(10,22,40,0.10)}
+a.sec-card .card-tag{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent)}
+a.sec-card h3{margin:0.35rem 0 0.4rem}
+a.sec-card p{font-size:0.85rem;color:var(--muted)}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 2rem 2.4rem;background:var(--white)}
+.footer-inner{max-width:960px;margin:0 auto;font-size:0.8rem;color:var(--muted)}
+.footer-inner a{color:var(--mid)}
+code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,0.06);padding:0.08em 0.35em;border-radius:2px}
+.path{font-family:var(--font-mono);font-size:0.85em;color:var(--navy)}
+@media print{
+  .site-nav,.page-nav,.toc{display:none}
+  body{background:#fff}
+  a{color:inherit;text-decoration:none}
+  section.sop{page-break-inside:avoid}
+}
+@media (max-width:640px){
+  .container{padding:0 1.1rem}
+  .site-nav{padding:0 1.1rem}
+  .nav-sub{display:none}
+}
+</style>
+</head>
+<body id="top">
+<nav class="site-nav">
+  <a class="nav-brand" href="https://porosoffresearchgroup.com/group.html">Porosoff Research Group</a>
+  <span class="nav-sub">Standard Operating Procedures</span>
+</nav>
+<div class="page-nav">
+  <div class="page-nav-inner">
+      <a href="../index.html">&#8962; All SOPs</a>
+      <a href="index.html">Overview</a>
+      <a href="page-setup.html" class="active">Setup & Sample Prep</a>
+      <a href="page-reaction.html">Pretreatment & Reaction</a>
+      <a href="page-analysis.html">Data Analysis</a>
+  </div>
+</div>
+<div class="container">
+  <div class="hero">
+    <span class="sec-label">Section A — FTIR DRIFTS (T6943)</span>
+    <h1 class="sop-title">Setup &amp; <em>Sample Prep</em></h1>
+    <p class="lead">Detector cooling, KBr dilution, OMNIC configuration, and loading the Praying Mantis reaction chamber.</p>
+    <div class="meta-badges">
+      <span class="badge">Tag: <b>T6943</b></span>
+      <span class="badge">Instrument: <b>Thermo Fisher FTIR</b></span>
+      <span class="badge">S/N: <b>AUP1710427</b></span>
+      <span class="badge">Location: <b>G242</b></span>
+      <span class="badge">Updated: <b>July 2026</b></span>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-label">On this page</div>
+    <ul><li><a href="#prep">Before You Start</a></li><li><a href="#omnic">Configure OMNIC</a></li><li><a href="#load">Load Sample & Support Equipment</a></li></ul>
+  </div>
+
+  <section class="sop" id="prep">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Before You Start</h2></div>
+    <ol class="steps">
+      <li>Check all gas levels (CO&#8322;, H&#8322;, Ar, CO, N&#8322; &mdash; if using for purge).</li>
+      <li>Open the liquid-nitrogen port and remove the cap. Using a funnel, slowly fill the port with liquid
+        nitrogen until full (liquid nitrogen bubbles out from the funnel base). After the liquid settles, add
+        liquid nitrogen again to ensure the dewar is topped off. <strong>Wait at least 1 hour</strong> for the MCT
+        detector to cool sufficiently.</li>
+      <li>Prepare the sample: <strong>50 mg of sample to 500 mg of KBr</strong> (1:10 dilution).</li>
+      <li>Be sure the <strong>Brooks Smart Interface</strong> software is open. Check that the system is depressurized
+        before removing the cover of the reactor cell &mdash; the back-pressure regulator in the Smart Interface
+        should read <strong>~0 psi</strong>.
+        <figure><a href="img/brooks-interface.png" target="_blank"><img src="img/brooks-interface.png" alt="Brooks Smart Interface — flow and back-pressure readout." loading="lazy"></a><figcaption>Brooks Smart Interface — flow and back-pressure readout.</figcaption></figure></li>
+    </ol>
+  </section>
+  <section class="sop" id="omnic">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Configure OMNIC</h2></div>
+    <ol class="steps">
+      <li>Open OMNIC and select the <strong>Expt Set</strong> icon. Click <strong>Open</strong> and select the setup file
+        <span class="path">Standard_lab_IR.exp</span> to load the presets.
+        <div class="fig-row"><figure><a href="img/omnic-exptset.png" target="_blank"><img src="img/omnic-exptset.png" alt="OMNIC toolbar — Expt Set icon." loading="lazy"></a><figcaption>OMNIC toolbar — Expt Set icon.</figcaption></figure><figure><a href="img/omnic-open.png" target="_blank"><img src="img/omnic-open.png" alt="Selecting Standard_lab_IR.exp." loading="lazy"></a><figcaption>Selecting Standard_lab_IR.exp.</figcaption></figure></div></li>
+      <li><strong>Collect tab:</strong> Number of Scans <strong>99</strong>; Resolution <strong>4</strong>; Final Format
+        <strong>Kubelka-Munk</strong>; Correction <strong>None</strong> (no other boxes checked); Background Handling
+        <strong>&ldquo;Collect background before every sample&rdquo;</strong>. For gain, &ldquo;auto gain&rdquo; is often used; the black knob
+        (next to the silver knob that seals the reactor space) is rotated to maximize the peak-to-peak ratio
+        (<strong>2&ndash;9.8</strong>).
+        <figure class="narrow"><a href="img/omnic-collect.png" target="_blank"><img src="img/omnic-collect.png" alt="Collect tab settings." loading="lazy"></a><figcaption>Collect tab settings.</figcaption></figure></li>
+      <li><strong>Bench tab:</strong> Sample Compartment <strong>Main</strong>; Detector <strong>MCT/A</strong>; Beamsplitter
+        <strong>KBr</strong>; Source <strong>IR</strong>; Accessory <strong>DRIFTS</strong>; Window <strong>None</strong>; Range
+        <strong>4000&ndash;650 cm&#8315;&#185;</strong>; Gain <strong>Autogain</strong>; Optical Velocity <strong>1.8988</strong>; Aperture
+        <strong>~150</strong> (as small as possible while maintaining P2P); Sample Shuttle <strong>None</strong>.
+        Do not change other tabs except <strong>Series</strong> (configured later).
+        <figure class="narrow"><a href="img/omnic-bench.png" target="_blank"><img src="img/omnic-bench.png" alt="Bench tab settings." loading="lazy"></a><figcaption>Bench tab settings.</figcaption></figure></li>
+      <li>Save your files in your own folder under <span class="path">C: &gt; My Documents</span>, using a dated folder
+        for each experiment.</li>
+    </ol>
+  </section>
+  <section class="sop" id="load">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Load the Sample &amp; Start Support Equipment</h2></div>
+    <ol class="steps">
+      <li>Load the sample cup with catalyst at the appropriate KBr dilution (1:10 sample:KBr).</li>
+      <li>After loading the catalyst, tighten the dome in a <strong>cross-wise fashion</strong>. Check that all valves in
+        the gas line from the controllers to the back-pressure regulator are open.</li>
+      <li>Turn on the chiller (I/O switch to <strong>I</strong>). Press the power button and press
+        <strong>&#9654;</strong> to start running &mdash; you should hear the pump turn on.</li>
+      <li>Turn on the Harrick temperature controller <strong>Power</strong> and <strong>Heater</strong>. Instructions are on
+        pages 99&ndash;109 of the manual <span class="path">pm pid 1.pdf</span>.</li>
+    </ol>
+    <div class="box info"><span class="box-label">Next</span>Continue to <a href="page-reaction.html">Pretreatment &amp; Reaction</a> for leak checks, backgrounds, and running the series.</div>
+  </section>
+</div>
+<footer>
+  <div class="footer-inner">
+    FTIR / DRIFTS — Setup & Sample Prep &middot; Porosoff Research Group, University of Rochester &middot; Last updated July 2026.
+    Verify all setpoints against your instrument before running. <a href="#top">&uarr; back to top</a>
+  </div>
+</footer>
+</body>
+</html>

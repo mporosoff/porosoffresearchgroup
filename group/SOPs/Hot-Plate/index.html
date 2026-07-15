@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hot Plate — SOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628; --deep:#12203a; --mid:#1e3460;
+  --accent:#c8a951; --gold:#e8c56d; --cream:#fdf8f0;
+  --text:#1a2535; --muted:#5a6a80; --white:#ffffff;
+  --border:rgba(200,169,81,0.25); --border-light:rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:2px;
+  --warn-bg:#fdf3e4; --warn-bd:#e0b25a; --warn-tx:#7a5410;
+  --danger-bg:#fbe9e7; --danger-bd:#c0574a; --danger-tx:#7c2418;
+  --ok-bg:#eef4ec; --ok-bd:#7d9b74; --ok-tx:#2f4d28;
+  --info-bg:#eaf0f6; --info-bd:#6d8db0; --info-tx:#25445f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:var(--mid)}
+.site-nav{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--font-display);color:var(--gold);font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-sub{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.page-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(10,22,40,0.06)}
+.page-nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto;padding:0 1rem}
+.page-nav a{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0.85rem 1.1rem;white-space:nowrap;border-bottom:2px solid transparent}
+.page-nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+.page-nav a.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.hero{padding:2.6rem 0 1.4rem}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;display:block}
+h1.sop-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;color:var(--navy);line-height:1.18}
+h1.sop-title em{font-style:italic;color:var(--accent)}
+.hero .lead{color:var(--muted);font-size:0.95rem;margin-top:0.7rem;max-width:70ch}
+.meta-badges{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.1rem}
+.badge{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text)}
+.badge b{color:var(--navy);font-weight:500}
+.toc{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem 1.3rem;margin:1.4rem 0 2.2rem}
+.toc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.3rem 1.6rem}
+.toc a{font-size:0.88rem;color:var(--mid);text-decoration:none}
+.toc a:hover{color:var(--accent)}
+section.sop{margin:0 0 3rem}
+.sec-head{display:flex;align-items:baseline;gap:0.9rem;border-bottom:2px solid var(--border);padding-bottom:0.6rem;margin-bottom:1.2rem}
+.sec-num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:500}
+h2.sec-title{font-family:var(--font-display);font-size:1.45rem;font-weight:700;color:var(--navy)}
+h3{font-family:var(--font-display);font-size:1.08rem;font-weight:700;color:var(--navy);margin:1.5rem 0 0.7rem}
+section.sop p{margin:0.7rem 0;max-width:76ch}
+ol.steps{counter-reset:step;list-style:none;margin:0.8rem 0}
+ol.steps>li{counter-increment:step;position:relative;padding:0 0 0.95rem 3rem;max-width:76ch}
+ol.steps>li::before{content:counter(step);position:absolute;left:0;top:0.05rem;width:1.9rem;height:1.9rem;border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.78rem;color:var(--navy);background:var(--white)}
+ol.steps ul,ol.steps ol{margin:0.45rem 0 0 1.1rem}
+ol.steps ul li,ol.steps ol li{margin-bottom:0.3rem}
+ul.plain{margin:0.6rem 0 0.6rem 1.2rem}
+ul.plain li{margin-bottom:0.35rem;max-width:74ch}
+.box{border:1px solid;border-left-width:4px;border-radius:var(--radius);padding:0.85rem 1.1rem;margin:1rem 0;font-size:0.92rem;max-width:80ch}
+.box .box-label{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.box.info{background:var(--info-bg);border-color:var(--info-bd)}.box.info .box-label{color:var(--info-tx)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-bd)}.box.warn .box-label{color:var(--warn-tx)}
+.box.danger{background:var(--danger-bg);border-color:var(--danger-bd)}.box.danger .box-label{color:var(--danger-tx)}
+.box.ok{background:var(--ok-bg);border-color:var(--ok-bd)}.box.ok .box-label{color:var(--ok-tx)}
+figure{margin:1.2rem 0;max-width:720px}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--border-light);border-radius:var(--radius);background:var(--white)}
+figcaption{font-size:0.8rem;color:var(--muted);margin-top:0.45rem;font-style:italic}
+figure.narrow{max-width:420px}
+.fig-row{display:flex;flex-wrap:wrap;gap:1.2rem}
+.fig-row figure{flex:1 1 280px;max-width:420px}
+table.sop-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem;background:var(--white)}
+table.sop-table th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;text-align:left;color:var(--navy);background:rgba(200,169,81,0.12);padding:0.6rem 0.8rem;border:1px solid var(--border-light)}
+table.sop-table td{padding:0.55rem 0.8rem;border:1px solid var(--border-light);vertical-align:top}
+table.sop-table tr:nth-child(even) td{background:rgba(10,22,40,0.02)}
+.table-scroll{overflow-x:auto}
+.equip-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.4rem;margin:1rem 0}
+.equip-card h3{margin-top:0}
+.equip-card table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.equip-card td{padding:0.4rem 0.6rem;border-bottom:1px solid var(--border-light);vertical-align:top}
+.equip-card td:first-child{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;width:200px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.4rem 0}
+a.sec-card{display:block;background:var(--white);border:1px solid var(--border-light);border-top:3px solid var(--accent);border-radius:var(--radius);padding:1.2rem 1.3rem;text-decoration:none;color:var(--text);transition:box-shadow .15s}
+a.sec-card:hover{box-shadow:0 6px 18px rgba(10,22,40,0.10)}
+a.sec-card .card-tag{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent)}
+a.sec-card h3{margin:0.35rem 0 0.4rem}
+a.sec-card p{font-size:0.85rem;color:var(--muted)}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 2rem 2.4rem;background:var(--white)}
+.footer-inner{max-width:960px;margin:0 auto;font-size:0.8rem;color:var(--muted)}
+.footer-inner a{color:var(--mid)}
+code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,0.06);padding:0.08em 0.35em;border-radius:2px}
+.path{font-family:var(--font-mono);font-size:0.85em;color:var(--navy)}
+@media print{
+  .site-nav,.page-nav,.toc{display:none}
+  body{background:#fff}
+  a{color:inherit;text-decoration:none}
+  section.sop{page-break-inside:avoid}
+}
+@media (max-width:640px){
+  .container{padding:0 1.1rem}
+  .site-nav{padding:0 1.1rem}
+  .nav-sub{display:none}
+}
+</style>
+</head>
+<body id="top">
+<nav class="site-nav">
+  <a class="nav-brand" href="https://porosoffresearchgroup.com/group.html">Porosoff Research Group</a>
+  <span class="nav-sub">Standard Operating Procedures</span>
+</nav>
+<div class="page-nav">
+  <div class="page-nav-inner">
+      <a href="../index.html">&#8962; All SOPs</a>
+      <a href="#top" class="active">Overview</a>
+      <a href="#oilbath">Oil Bath</a>
+      <a href="#finish">Finishing</a>
+  </div>
+</div>
+<div class="container">
+  <div class="hero">
+    <span class="sec-label">Lab Standard Operating Procedure</span>
+    <h1 class="sop-title">Hot <em>Plate</em></h1>
+    <p class="lead">Temperature, RPM and timer settings, oil-bath setups for uniform heating, and labeling.</p>
+    <div class="meta-badges">
+      <span class="badge">Instrument: <b>Stirring Hot Plate</b></span>
+      <span class="badge">Updated: <b>07/08/2026</b></span>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-label">On this page</div>
+    <ul><li><a href="#setup">Setup & Settings</a></li><li><a href="#oilbath">Oil Bath</a></li><li><a href="#finish">Labeling & Troubleshooting</a></li></ul>
+  </div>
+
+  <section class="sop" id="setup">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Setup &amp; Settings</h2></div>
+    <ol class="steps">
+      <li>Make sure the hot plate is directly plugged into a power source.</li>
+      <li>If a more precise temperature is needed, use a thermocouple and make sure it is firmly fixed and
+        directly touching the surface of the hot plate.
+        <figure class="narrow"><a href="img/hotplate-thermocouple.jpg" target="_blank"><img src="img/hotplate-thermocouple.jpg" alt="Hot plate with thermocouple, retort stand, and control buttons labeled." loading="lazy"></a><figcaption>Hot plate with thermocouple, retort stand, and control buttons labeled.</figcaption></figure></li>
+      <li>Turn on the hot plate using the ON/OFF switch on the left side.</li>
+      <li><strong>Set the temperature:</strong> press the <kbd>Temperature</kbd> button until it blinks, turn the right-hand
+        knob to the desired setpoint, then press the knob to set it.</li>
+      <li><strong>Set the RPM:</strong> same as above but press the <kbd>RPM</kbd> button first.</li>
+      <li><strong>Set the stir time:</strong> same as above but press the <kbd>Time</kbd> button first. To hold indefinitely
+        instead of a fixed time, turn the knob until the time display changes to <strong>&ldquo;HOLD&rdquo;</strong>, then press the knob.</li>
+      <li>Confirm temperature, RPM, and time are set, then place your sample on the hot plate, making sure a
+        stir bar is in the sample if stirring is required.</li>
+      <li>Press the knob to start stirring &mdash; the temperature will start ramping and the timer will start reading.</li>
+    </ol>
+  </section>
+  <section class="sop" id="oilbath">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Uniform Heating with an Oil Bath</h2></div>
+    <ol class="steps">
+      <li>Fill the glass or metal bath with oil up to half its depth.</li>
+      <li>Place the oil bath on the hot plate.</li>
+      <li>Put the thermocouple <strong>inside the oil</strong> instead of on the hot plate surface.</li>
+      <li>Place the longest stir bar available inside the oil.</li>
+      <li>Press the knob to start stirring; the temperature will ramp and the timer will start.</li>
+      <li>Use a clamp attached to the retort stand to securely hold your sample &mdash; preferably in a Teflon
+        container with a second stir bar inside.</li>
+      <li>When the temperature reaches your setpoint, gently lower the Teflon container into the oil by loosening
+        the clamp, and tighten it when the container is halfway into the oil. <strong>Do not submerge the Teflon
+        in the oil.</strong></li>
+      <li>Make sure the clamp holds the Teflon securely so it does not move while stirring.
+        <figure class="narrow"><a href="img/hotplate-oilbath.jpg" target="_blank"><img src="img/hotplate-oilbath.jpg" alt="Oil-bath setup with thermocouple inside the oil." loading="lazy"></a><figcaption>Oil-bath setup with thermocouple inside the oil.</figcaption></figure></li>
+    </ol>
+  </section>
+  <section class="sop" id="finish">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Labeling, Finishing &amp; Troubleshooting</h2></div>
+    <ol class="steps">
+      <li>Label your sample with tape: sample name, initials, and date, plus any relevant safety information
+        (pH, composition, etc.). Place the tape on the monitor of the hot plate.</li>
+      <li>When the experiment is complete, press the knob to stop the stirring and heating.</li>
+    </ol>
+    <div class="box warn"><span class="box-label">Not heating?</span>If the hot plate is not heating properly even when plugged in and switched ON, turn it off and request help to check the fuse status of the hot plate and the wall-outlet circuit.</div>
+  </section>
+</div>
+<footer>
+  <div class="footer-inner">
+    Hot Plate — SOP &middot; Porosoff Research Group, University of Rochester &middot; Last updated 07/08/2026.
+    Verify all setpoints against your instrument before running. <a href="#top">&uarr; back to top</a>
+  </div>
+</footer>
+</body>
+</html>

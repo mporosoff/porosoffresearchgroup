@@ -304,6 +304,11 @@ border-radius: 2px; transition: all 0.3s;
 .ppl-name { font-family: var(--font-display); font-size: 0.93rem; font-weight: 700; color: var(--navy); margin-bottom: 0.15rem; }
 .ppl-role { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
 .ppl-bio  { font-size: 0.77rem; color: var(--muted); line-height: 1.6; }
+/* Role indicator badge (UG / Grad / Postdoc) */
+.role-tag { align-self: flex-start; display: inline-block; font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 0.22rem 0.6rem; border-radius: 20px; margin-bottom: 0.5rem; }
+.role-tag.postdoc { background: rgba(200,169,81,0.16); color: #8a6d1f; border: 1px solid var(--accent); }
+.role-tag.grad { background: rgba(30,52,96,0.08); color: var(--mid); border: 1px solid rgba(30,52,96,0.30); }
+.role-tag.ug { background: rgba(90,106,128,0.08); color: var(--muted); border: 1px solid var(--border-light); }
 
 /* Horizontal grad student cards */
 .grad-grid { display: flex; flex-direction: column; gap: 1.1rem; }

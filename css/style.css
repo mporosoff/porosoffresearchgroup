@@ -316,6 +316,10 @@ border-radius: 2px; transition: all 0.3s;
 .grad-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(200,169,81,0.08); }
 .grad-photo { width: 120px; height: 145px; object-fit: cover; object-position: center center; display: block; border-bottom: 3px solid var(--accent); background: #ffffff; }
 .grad-av { width: 120px; height: 145px; border-radius: 0; font-size: 2rem; border-bottom: 3px solid var(--accent); }
+/* This source photo is taller than the 120:145 box, so a centred crop shaves the
+   top of the head off. Anchor it to the top instead — keeps full headroom at any
+   width, which a percentage would not as the box resizes. */
+.grad-photo[src$="matt-moran.jpg"] { object-position: center top; }
 .grad-info { display: flex; flex-direction: column; }
 
 .alum-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 0.8rem; margin-top: 1.1rem; }

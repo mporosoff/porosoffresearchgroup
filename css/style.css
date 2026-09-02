@@ -446,8 +446,11 @@ border-radius: 2px; transition: all 0.3s;
   .ni-side   { flex-direction: row; align-items: center; gap: 1rem; padding: 1rem 1.25rem; }
   .press-grid { grid-template-columns: 1fr; }
 
-  .pi-block { grid-template-columns: 1fr; }
-  .pi-img, .pi-av { width: 140px; height: 170px; font-size: 2.2rem; }
+  /* Match the group-member cards: same inner padding, and a photo that fills the
+     full width at the same 120:145 ratio. Otherwise the PI headshot renders at
+     140px next to their 312px and reads as an afterthought. */
+  .pi-block { grid-template-columns: 1fr; padding: 1.1rem; }
+  .pi-img, .pi-av { width: 100%; height: auto; aspect-ratio: 120 / 145; font-size: 2.2rem; }
 
   .pod-grid { grid-template-columns: 1fr; }
   .ct-grid  { grid-template-columns: 1fr; }

@@ -453,7 +453,10 @@ border-radius: 2px; transition: all 0.3s;
 
   .ppl-grid { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); }
   .grad-card { grid-template-columns: 1fr; }
-  .grad-photo, .grad-av { width: 100%; height: 260px; }
+  /* Portrait box (same 120:145 ratio as desktop) so headshots aren't blown up
+     and cropped through the tops of heads by a landscape box. Full-bleed to the
+     card's inner width, so no background gutters appear beside the photo. */
+  .grad-photo, .grad-av { width: 100%; height: auto; aspect-ratio: 120 / 145; }
   .alum-grid { grid-template-columns: 1fr; }
 
   .site-footer { flex-direction: column; align-items: flex-start; }

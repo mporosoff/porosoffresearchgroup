@@ -314,7 +314,7 @@ border-radius: 2px; transition: all 0.3s;
 .grad-grid { display: flex; flex-direction: column; gap: 1.1rem; }
 .grad-card { display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; padding: 1.1rem; background: var(--cream); border: 1px solid var(--border-light); align-items: start; transition: border-color 0.2s, box-shadow 0.2s; }
 .grad-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(200,169,81,0.08); }
-.grad-photo { width: 120px; height: 145px; object-fit: contain; object-position: center top; display: block; border-bottom: 3px solid var(--accent); background: #ffffff; }
+.grad-photo { width: 120px; height: 145px; object-fit: cover; object-position: center top; display: block; border-bottom: 3px solid var(--accent); background: #ffffff; }
 .grad-av { width: 120px; height: 145px; border-radius: 0; font-size: 2rem; border-bottom: 3px solid var(--accent); }
 .grad-info { display: flex; flex-direction: column; }
 
@@ -453,7 +453,7 @@ border-radius: 2px; transition: all 0.3s;
 
   .ppl-grid { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); }
   .grad-card { grid-template-columns: 1fr; }
-  .grad-photo, .grad-av { width: 100%; height: 180px; }
+  .grad-photo, .grad-av { width: 100%; height: 260px; }
   .alum-grid { grid-template-columns: 1fr; }
 
   .site-footer { flex-direction: column; align-items: flex-start; }

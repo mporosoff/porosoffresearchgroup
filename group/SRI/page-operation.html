@@ -435,53 +435,74 @@
     </section>
 <section id="files">
       <h2><span class="secnum">6</span>File Organization &amp; Naming</h2>
-      <p class="lead">Right now every run saves loose in the PeakSimple program folder — impossible to search, easy to overwrite, easy to lose. This convention ties every file to a <b>student</b>, a <b>reaction</b>, and a <b>date</b>. Agree on it once; everyone follows it.</p>
+      <p class="lead">Every run on this instrument saves to <b>one fixed location</b> — the default PeakSimple data folder. You don't get to pick the folder from inside the software, so the discipline lives in two places instead: a <b>strict file name</b> that identifies the date, the operator, the channel and the run, and a <b>copy step after the run</b> that moves the data you actually care about somewhere you can find it later.</p>
 
-      <h3>Folder structure</h3>
-      <p>Choose a data root <b>outside</b> the PeakSimple program folder, then nest: student &rarr; reaction&nbsp;+&nbsp;date &rarr; files.</p>
-      <pre style="background:#1f2933;color:#e6f3f5;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.55;margin:14px 0;">D:\GC Data\                              <span style="color:#9fb6bd">&#8592; data root (NOT the PeakSimple program folder)</span>
-&#9492;&#9472; Porosoff_M\                          <span style="color:#9fb6bd">&#8592; student:  LastName_FirstInitial</span>
-   &#9492;&#9472; RWGS_2026-06-08_Pt_450C\          <span style="color:#9fb6bd">&#8592; reaction _ date _ short descriptor</span>
-      &#9500;&#9472; MP_RWGS_Pt_450C_2026-06-08_run01.chr
-      &#9500;&#9472; MP_RWGS_Pt_450C_2026-06-08_run01.asc
-      &#9500;&#9472; MP_RWGS_Pt_450C_2026-06-08_calcheck.chr
-      &#9500;&#9472; results_log.txt
-      &#9492;&#9472; README.txt        <span style="color:#9fb6bd">(catalyst, mass, flows, setpoints, notes)</span></pre>
+      <h3>Where the files land</h3>
+      <p>PeakSimple writes every chromatogram into its <b>default folder</b>, inside the <code>Peak488Win8</code> program directory on <b>Local Disk (C:)</b>:</p>
+      <p style="margin:6px 0"><span class="menu" style="font-size:.95em">C:\Peak488Win8\</span></p>
+      <p>Leave this alone — don't try to redirect the save path. Everything from every operator accumulates here, which is exactly why the file name has to carry all the identifying information.</p>
+
+      <h3>After the run — copy out what you need</h3>
+      <p>Once a run has finished and saved, copy the <b>relevant channel data</b> out of the PeakSimple folder and into the shared data folder on the same drive:</p>
+      <p style="margin:6px 0"><span class="menu" style="font-size:.95em">C:\Data\</span></p>
+      <ol class="steps">
+        <li><b>Wait until the run is fully finished</b> and the file is written. Don't copy a file mid-acquisition.</li>
+        <li><b>Open <code>C:\Peak488Win8\</code></b> in Windows Explorer and find your files — sort by date modified and they'll be at the top.</li>
+        <li><b>Pick only the channels you need.</b> A single injection writes a file per channel; you rarely need all three. Copy the ones you'll actually analyse (typically the methanizer channel for CO/CO₂ and the TCD channel for permanent gases).</li>
+        <li><b>Copy — don't move.</b> Leave the originals in the PeakSimple folder. Paste the copies into <code>C:\Data\</code>.</li>
+        <li><b>Save them under the operators' initials</b> so the work is attributable — either in a subfolder named with your initials, or with the initials already in the file name (they are, if you followed the pattern below).</li>
+      </ol>
 
       <h3>File-name pattern</h3>
-      <p style="margin:6px 0"><span class="menu" style="font-size:.95em">initials_reaction_catalyst_temp_YYYY-MM-DD_run##</span></p>
-      <p style="margin:6px 0">Example: <code>MP_RWGS_Pt_450C_2026-06-08_run01.chr</code> &nbsp;→&nbsp; Marc Porosoff, RWGS over Pt at 450&nbsp;°C, run 1 of that session.</p>
+      <p style="margin:6px 0"><span class="menu" style="font-size:.95em">Date_CH##_S##_Temp_Initials_Run##.CHR</span></p>
+      <p style="margin:6px 0">Example: <code>060826_CH02_S03_450C_MP_Run01.CHR</code> &nbsp;→&nbsp; 8&nbsp;June&nbsp;2026, channel 2 (methanizer), sample 3, reactor at 450&nbsp;°C, Marc Porosoff, run 1 of that session.</p>
+      <table class="tbl" style="margin-top:10px">
+        <tr><th style="width:22%">Field</th><th style="width:20%">Format</th><th>Meaning</th></tr>
+        <tr><td><code>Date</code></td><td><code>MMDDYY</code></td><td>Six digits, no separators — <code>060826</code> for 8 June 2026.</td></tr>
+        <tr><td><code>CH##</code></td><td><code>CH01</code>–<code>CH03</code></td><td><b>Channel number.</b> Zero-padded. Which detector the trace came from.</td></tr>
+        <tr><td><code>S##</code></td><td><code>S01</code>, <code>S02</code>…</td><td><b>Sample number.</b> Which sample/condition you're running in this session.</td></tr>
+        <tr><td><code>Temp</code></td><td>e.g. <code>450C</code></td><td>Reactor temperature for that sample, degrees C, no space.</td></tr>
+        <tr><td><code>Initials</code></td><td>e.g. <code>MP</code></td><td>Operator initials.</td></tr>
+        <tr><td><code>Run##</code></td><td><code>Run01</code>, <code>Run02</code>…</td><td>Repeat injection number — auto-increments in PeakSimple.</td></tr>
+      </table>
+
+      <div class="call warn"><span class="ic">&#9888;</span><b class="lbl">Set the name in <u>every</u> channel — not just Channel 1</b>
+      This is the step people get wrong. The <b>data file name is per-channel</b>: if you only change it in Channel 1, Channels 2 and 3 keep writing under whatever name was there before, and you overwrite or lose the CO/CO₂ and TCD data. Update the name in <b>all three channels</b>, with the matching <code>CH##</code> in each.
+      <ul style="margin:8px 0 0">
+        <li><b>File name → change in every channel.</b> Channel 1 gets <code>CH01</code>, Channel 2 gets <code>CH02</code>, Channel 3 gets <code>CH03</code> — every other field (date, sample number, temperature, initials, run number) stays identical across all three.</li>
+        <li><b>Everything else → Channel 1 only.</b> Events, relays, temperatures, run time and the rest of the method are set once, in Channel&nbsp;1, and apply to the whole run. Don't duplicate them into the other channels.</li>
+      </ul></div>
 
       <h3>The rules</h3>
       <table class="tbl">
         <tr><th style="width:42%">Rule</th><th>Why</th></tr>
-        <tr><td><b>ISO dates</b> — <code>YYYY-MM-DD</code></td><td>Files and folders sort in true date order automatically.</td></tr>
+        <tr><td><b>Keep the field order</b></td><td>Date, channel, sample, temperature, initials, run — always in that order, so the folder sorts by date then channel.</td></tr>
+        <tr><td><b>Zero-pad everything numeric</b> — <code>CH01</code>, <code>S03</code>, <code>Run01</code></td><td>Two digits every time. Without padding, <code>Run10</code> sorts before <code>Run2</code>.</td></tr>
+        <tr><td><b>Temperature as a whole number + C</b></td><td><code>450C</code>, not <code>450 °C</code> or <code>450.0</code>. No spaces, no symbols.</td></tr>
+        <tr><td><b>Initials are not optional</b></td><td>Everyone's data shares one folder. The initials are what make a file yours.</td></tr>
         <tr><td><b>No spaces</b> — use underscores <code>_</code></td><td>Spaces and stray dots (e.g. <code>run 5..ASC</code>) break scripts and look messy.</td></tr>
-        <tr><td><b>Zero-pad run numbers</b> — <code>run01, run02…</code></td><td>They sort correctly and line up with PeakSimple's auto-increment.</td></tr>
-        <tr><td><b>One folder per session</b></td><td>Never mix reactions or dates in a single folder.</td></tr>
-        <tr><td><b>Short but meaningful</b></td><td>Who / what / conditions / when / which run — nothing else.</td></tr>
       </table>
 
-      <h3>Make PeakSimple actually save there</h3>
+      <h3>Setting the name in PeakSimple</h3>
       <ol class="steps">
-        <li><b>Create the folders first</b> in Windows Explorer — the student folder and the <code>reaction_date</code> session folder — before you run.</li>
-        <li><b>Set the save location:</b> <span class="menu">Edit &gt; Overall</span> → fill in <b>Default data file path</b> with that session folder. (This is the Overall controls screen shown in Section 3 — note the "Default data file path" field.)</li>
-        <li><b>Set the data-file base name</b> for each channel to your pattern ending in <code>run01</code>. With auto-increment (already on in your method) PeakSimple saves <code>run01</code>, then <code>run02</code>, <code>run03</code>… automatically.</li>
-        <li><b>Point the results log</b> (Postrun actions) into the same folder, e.g. <code>results_log.txt</code>.</li>
-        <li><b>Save the method</b> with <span class="menu">File &gt; Save control file</span> so the path and naming stick.</li>
+        <li><b>Open the channel's data file settings</b> and enter the base name for that channel following the pattern, ending in <code>Run01</code>. With auto-increment (already on in your method) PeakSimple saves <code>Run01</code>, then <code>Run02</code>, <code>Run03</code>… automatically.</li>
+        <li><b>Repeat for the other two channels</b>, changing only the <code>CH##</code> part. Same date, sample number, temperature, initials and run number.</li>
+        <li><b>Leave the save path as the default</b> — <code>C:\Peak488Win8\</code>. It's the same for everyone.</li>
+        <li><b>Set events, temperatures and run time in Channel 1 only</b> (<span class="menu">Edit &gt; Overall</span> and the channel&nbsp;1 dialogs).</li>
+        <li><b>Save the method</b> with <span class="menu">File &gt; Save control file</span> so the naming sticks.</li>
       </ol>
 
       <div class="call fill"><span class="ic">&#9998;</span><b class="lbl">Your lab's choices</b>
-      Data root (off the program drive): <span class="val" contenteditable="true">D:\GC Data\</span> · Student folder format: <span class="val" contenteditable="true">LastName_FirstInitial</span> · Example session: <span class="val" contenteditable="true">RWGS_YYYY-MM-DD_catalyst_temp</span></div>
+      PeakSimple save folder: <span class="val" contenteditable="true">C:\Peak488Win8\</span> · Copy-to folder: <span class="val" contenteditable="true">C:\Data\</span> · Your initials: <span class="val" contenteditable="true">XX</span></div>
 
       <div class="call warn"><span class="ic">&#9888;</span><b class="lbl">Two PeakSimple gotchas</b>
       <ul style="margin:8px 0 0">
-        <li><b>Control files must stay put.</b> Any <code>.con</code> used by the <a href="#sequence">AutoQueue</a> has to live in the PeakSimple <b>application directory</b> — it can't move into a student folder. Keep methods there but named clearly (e.g. <code>RWGS_master.con</code>); only the <b>data</b> goes in the organized folders.</li>
+        <li><b>Control files must stay put.</b> Any <code>.con</code> used by the <a href="#sequence">AutoQueue</a> has to live in the PeakSimple <b>application directory</b>. Keep methods there and name them clearly (e.g. <code>RWGS_master.con</code>).</li>
         <li><b>Don't move calibration files after linking.</b> <code>.cal</code> and <code>.cpt</code> files are referenced by path inside the method. Pick one permanent location and leave them there, or the links break (see the maintenance checks in <a href="#mymethod">The RWGS Method at a Glance</a>).</li>
       </ul></div>
 
-      <div class="call tip"><span class="ic">&#10003;</span><b class="lbl">Cleaning up the current mess</b>
-      Build the folder tree first, then <b>copy</b> (don't move/delete yet) existing loose <code>.chr</code>/<code>.asc</code> files into the right student/date folders. Once you've confirmed the copies, drop the originals into an <code>Archive_pre-2026\</code> folder rather than deleting. Apply the naming convention to <b>new</b> runs going forward — you don't have to rename history.</div>
+      <div class="call tip"><span class="ic">&#10003;</span><b class="lbl">Do the copy the same day</b>
+      The PeakSimple folder fills up with everyone's runs, and an un-copied file is a file someone else will eventually have to guess about. Copy your channels into <code>C:\Data\</code> before you leave the lab, while you still remember which run was which. Apply the naming convention to <b>new</b> runs going forward — you don't have to rename history.</div>
       <a class="backtop" href="#top">↑ back to top</a>
     </section>
 <section id="cheatsheet">
@@ -552,7 +573,7 @@
             <li><b>Results</b> button → <b>Copy</b> → paste in Excel.</li>
             <li>Many runs: postrun <b>Add to results log</b> → <b>Copy results log</b>.</li>
             <li>Right-click chart → <b>Copy picture</b> for the image.</li>
-            <li><b>Save into</b> <code>…\Student\Reaction_date\</code> — see naming rules.</li>
+            <li>Runs save to <code>C:\Peak488Win8\</code>; copy your channels to <code>C:\Data\</code> after — see naming rules.</li>
           </ol>
         </div>
         <div class="cs-card">

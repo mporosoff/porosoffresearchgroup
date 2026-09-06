@@ -226,6 +226,15 @@
         <tr><td><b>Methanizer</b></td><td>A small heated nickel catalyst with hydrogen, sitting <b>just before the FID</b>. It converts <b>CO and CO₂ into methane</b> on the fly, so the FID can measure CO and CO₂ at <b>low ppm</b> — far more sensitive than the TCD. This is the key to seeing trace CO product and leftover CO₂ in RWGS.</td></tr>
       </table>
 
+      <details class="deep">
+        <summary>Deep dive: how the FID actually works</summary>
+        <p>The <b>Flame Ionization Detector</b> responds to essentially any molecule with a <b>carbon&ndash;hydrogen bond</b>, burning it in a small hydrogen/air flame and counting the ions produced. Response is poor or absent for compounds without C&ndash;H bonds (e.g. H₂S, CCl₄, NH₃), and the flame <b>destroys the sample</b> as it measures.</p>
+        <p>Because the FID is <b>mass-sensitive rather than concentration-sensitive</b>, changes in carrier flow rate have little effect on its response. It is sensitive across a wide range &mdash; roughly <b>0.1 ppm to nearly 100%</b> &mdash; stable day to day, and largely immune to dirty samples or column bleed.</p>
+        <p><b>On this SRI FID specifically:</b> a <b>ceramic ignitor</b> runs hot continuously and re-lights the flame automatically, so it survives water injections and backflush pressure surges. It sits perpendicular to the stainless-steel jet without penetrating the flame. Opposite it, a positively charged <b>collector electrode</b> gathers the ions as each component is pyrolyzed and doubles as the FID exhaust vent. The signal passes through an electrometer amplifier with <b>HIGH</b>, <b>HIGH (filtered)</b> and <b>MEDIUM</b> gain settings.</p>
+        <p>H₂ and air flows are set by electronic pressure controllers, adjustable from the GC's front panel; a thermostatted aluminum block holds the detector temperature (adjustable up to <b>375&nbsp;°C</b>). Air can come from the built-in compressor, and the optional built-in hydrogen generator supplies ~20&nbsp;mL/min at up to 25&nbsp;psi.</p>
+        <p style="font-size:.85rem;color:var(--muted)">Source: SRI Instruments &mdash; <i>Flame Ionization Detector (FID)</i> documentation.</p>
+      </details>
+
       <figure>
         <svg viewBox="0 0 760 300" role="img" aria-label="Schematic of the SRI 8610C gas flow path">
           <defs>

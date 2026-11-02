@@ -115,10 +115,13 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
 <div class="page-nav">
   <div class="page-nav-inner">
       <a href="../index.html">&#8962; All SOPs</a>
-      <a href="index.html">Overview</a>
-      <a href="page-calibration.html" class="active">Calibration</a>
-      <a href="page-identification.html">Identification</a>
-      <a href="page-integration.html">Integration</a>
+        <a href="index.html">Overview</a>
+        <a href="page-reactor.html">Reactor &amp; Run</a>
+        <a href="page-calibration.html" class="active">Calibration</a>
+        <a href="page-identification.html">Identification</a>
+        <a href="page-integration.html">Integration</a>
+        <a href="page-data.html">Data Analysis</a>
+        <a href="page-reference.html">Valves &amp; Troubleshooting</a>
   </div>
 </div>
 <div class="container">
@@ -131,12 +134,12 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
       <span class="badge">Model: <b>Agilent 7890 GC</b></span>
       <span class="badge">S/N: <b>US17383018</b></span>
       <span class="badge">Location: <b>G242</b></span>
-      <span class="badge">Updated: <b>July 2026</b></span>
+      <span class="badge">Updated: <b>November 2026</b></span>
     </div>
   </div>
   <div class="toc">
     <div class="toc-label">Jump to a section</div>
-    <ul><li><a href="#reactant">Reactant Gases (MFCs)</a></li><li><a href="#validation">Validation</a></li><li><a href="#singlepoint">Single-Point (Hydrocarbons)</a></li></ul>
+    <ul><li><a href="#reactant">Reactant Gases (MFCs)</a></li><li><a href="#validation">Validation</a></li><li><a href="#singlepoint">Single-Point (Hydrocarbons)</a></li><li><a href="#delete">Delete a Datapoint</a></li></ul>
   </div>
 
   <section class="sop" id="reactant">
@@ -208,10 +211,31 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
       <li>Repeat <strong>3 times</strong> at the same calibration level to average the calibration points.</li>
     </ol>
   </section>
+  <section class="sop" id="delete">
+    <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Deleting a Calibration Curve Datapoint</h2></div>
+    <p>Sometimes a single calibration point is an outlier and needs to be removed <em>without</em> deleting the whole calibration curve. There are two approaches.</p>
+    <h3>Method A &mdash; via the injection result file</h3>
+    <ol class="steps">
+      <li><strong>Identify the outlier.</strong> Open a random sequence, link it with the target method, navigate to the compound's calibration curve, and identify the outlier point. Note its <strong>level number</strong> and <strong>file location</strong>.</li>
+      <li><strong>Close without saving.</strong> Close the sequence <em>without</em> saving the method.</li>
+      <li><strong>Open the injection result.</strong> Open the specific injection result file that corresponds to the outlier datapoint and link it to the method.</li>
+      <li><strong>Clear the level values.</strong> Delete any values at the level of the datapoint. Open the injection list, set <strong>Sample Type</strong> to <strong>Calibration</strong>, and choose <strong>&ldquo;Clear calibration at the current level&rdquo;</strong>.</li>
+      <li><strong>Reprocess &amp; save.</strong> Reprocess the data &mdash; the datapoint should no longer appear. Save the method and update the master method.</li>
+      <li><strong>Rebuild the curve (optional).</strong> Open any injections to add back to the method and create a new calibration curve for the component.</li>
+    </ol>
+    <h3>Method B &mdash; quick delete</h3>
+    <ol class="steps">
+      <li>Find the original calibration file for the datapoint(s) to remove.</li>
+      <li>Click <strong>Reprocess</strong> and link the file to the desired method.</li>
+      <li>Delete the level, then <strong>uncheck the Use box</strong> in the calibration table.</li>
+      <li>Click <strong>Save Method</strong> first, then <strong>Save Results</strong>.</li>
+      <li>Click <strong>Reprocess All</strong> to confirm the point is removed.</li>
+    </ol>
+  </section>
 </div>
 <footer>
   <div class="footer-inner">
-    Agilent 7890 GC — Calibration &middot; Porosoff Research Group, University of Rochester &middot; Last updated July 2026.
+    Agilent 7890 GC — Calibration &middot; Porosoff Research Group, University of Rochester &middot; Last updated November 2026.
     Verify all setpoints against your instrument before running. <a href="#top">&uarr; back to top</a>
   </div>
 </footer>

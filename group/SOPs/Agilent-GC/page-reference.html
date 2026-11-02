@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agilent 7890 GC — Valve System & Troubleshooting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628; --deep:#12203a; --mid:#1e3460;
+  --accent:#c8a951; --gold:#e8c56d; --cream:#fdf8f0;
+  --text:#1a2535; --muted:#5a6a80; --white:#ffffff;
+  --border:rgba(200,169,81,0.25); --border-light:rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:2px;
+  --warn-bg:#fdf3e4; --warn-bd:#e0b25a; --warn-tx:#7a5410;
+  --danger-bg:#fbe9e7; --danger-bd:#c0574a; --danger-tx:#7c2418;
+  --ok-bg:#eef4ec; --ok-bd:#7d9b74; --ok-tx:#2f4d28;
+  --info-bg:#eaf0f6; --info-bd:#6d8db0; --info-tx:#25445f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:var(--mid)}
+.site-nav{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--font-display);color:var(--gold);font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-sub{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.page-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(10,22,40,0.06)}
+.page-nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto;padding:0 1rem}
+.page-nav a{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0.85rem 1.1rem;white-space:nowrap;border-bottom:2px solid transparent}
+.page-nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+.page-nav a.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.hero{padding:2.6rem 0 1.4rem}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;display:block}
+h1.sop-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;color:var(--navy);line-height:1.18}
+h1.sop-title em{font-style:italic;color:var(--accent)}
+.hero .lead{color:var(--muted);font-size:0.95rem;margin-top:0.7rem;max-width:70ch}
+.meta-badges{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.1rem}
+.badge{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text)}
+.badge b{color:var(--navy);font-weight:500}
+.toc{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem 1.3rem;margin:1.4rem 0 2.2rem}
+.toc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.5rem}
+.toc a{font-size:0.85rem;color:var(--mid);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;background:rgba(200,169,81,0.08);border:1px solid var(--border);border-radius:2rem;padding:0.3rem 0.9rem;transition:background .15s,border-color .15s,color .15s}
+.toc a::before{content:"↓";font-family:var(--font-mono);font-size:0.75rem;color:var(--accent)}
+.toc a:hover{color:var(--navy);background:rgba(200,169,81,0.18);border-color:var(--accent)}
+section.sop{margin:0 0 3rem}
+.sec-head{display:flex;align-items:baseline;gap:0.9rem;border-bottom:2px solid var(--border);padding-bottom:0.6rem;margin-bottom:1.2rem}
+.sec-num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:500}
+h2.sec-title{font-family:var(--font-display);font-size:1.45rem;font-weight:700;color:var(--navy)}
+h3{font-family:var(--font-display);font-size:1.08rem;font-weight:700;color:var(--navy);margin:1.5rem 0 0.7rem}
+section.sop p{margin:0.7rem 0;max-width:76ch}
+ul.plain{margin:0.6rem 0 0.6rem 1.2rem}
+ul.plain li{margin-bottom:0.4rem;max-width:76ch}
+figure{margin:1.2rem 0;max-width:860px}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--border-light);border-radius:var(--radius);background:var(--white)}
+figcaption{font-size:0.8rem;color:var(--muted);margin-top:0.45rem;font-style:italic}
+.box{border:1px solid;border-left-width:4px;border-radius:var(--radius);padding:0.85rem 1.1rem;margin:1rem 0;font-size:0.92rem;max-width:80ch}
+.box .box-label{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.box.info{background:var(--info-bg);border-color:var(--info-bd)}.box.info .box-label{color:var(--info-tx)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-bd)}.box.warn .box-label{color:var(--warn-tx)}
+.box.danger{background:var(--danger-bg);border-color:var(--danger-bd)}.box.danger .box-label{color:var(--danger-tx)}
+table.sop-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem;background:var(--white)}
+table.sop-table th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;text-align:left;color:var(--navy);background:rgba(200,169,81,0.12);padding:0.6rem 0.8rem;border:1px solid var(--border-light)}
+table.sop-table td{padding:0.55rem 0.8rem;border:1px solid var(--border-light);vertical-align:top}
+table.sop-table tr:nth-child(even) td{background:rgba(10,22,40,0.02)}
+table.sop-table td:first-child{white-space:nowrap}
+.table-scroll{overflow-x:auto}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 2rem 2.4rem;background:var(--white)}
+.footer-inner{max-width:960px;margin:0 auto;font-size:0.8rem;color:var(--muted)}
+.footer-inner a{color:var(--mid)}
+code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,0.06);padding:0.08em 0.35em;border-radius:2px}
+.path{font-family:var(--font-mono);font-size:0.85em;color:var(--navy)}
+@media print{
+  .site-nav,.page-nav,.toc{display:none}
+  body{background:#fff}
+  a{color:inherit;text-decoration:none}
+  section.sop{page-break-inside:avoid}
+}
+@media (max-width:640px){
+  .container{padding:0 1.1rem}
+  .site-nav{padding:0 1.1rem}
+  .nav-sub{display:none}
+}
+</style>
+</head>
+<body id="top">
+<nav class="site-nav">
+  <a class="nav-brand" href="https://porosoffresearchgroup.com/group.html">Porosoff Research Group</a>
+  <span class="nav-sub">Standard Operating Procedures</span>
+</nav>
+<div class="page-nav">
+  <div class="page-nav-inner">
+      <a href="../index.html">&#8962; All SOPs</a>
+      <a href="index.html">Overview</a>
+      <a href="page-reactor.html">Reactor &amp; Run</a>
+      <a href="page-calibration.html">Calibration</a>
+      <a href="page-identification.html">Identification</a>
+      <a href="page-integration.html">Integration</a>
+      <a href="page-data.html">Data Analysis</a>
+      <a href="page-reference.html" class="active">Valves &amp; Troubleshooting</a>
+  </div>
+</div>
+<div class="container">
+  <div class="hero">
+    <span class="sec-label">Reactor 242 — Agilent 7890 GC (U2136)</span>
+    <h1 class="sop-title">Valve System &amp; <em>Troubleshooting</em></h1>
+    <p class="lead">The GC's gas-routing valve system and columns, plus fixes for the problems you're most likely to hit while running a reaction.</p>
+    <div class="meta-badges">
+      <span class="badge">GC: <b>Agilent 7890 (U2136)</b></span>
+      <span class="badge">Commissioned: <b>09/07/2017</b></span>
+      <span class="badge">Updated: <b>November 2026</b></span>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-label">Jump to a section</div>
+    <ul>
+      <li><a href="#valves">Valve System</a></li>
+      <li><a href="#columns">Column Reference</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ul>
+  </div>
+
+  <section class="sop" id="valves">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Valve System Reference</h2></div>
+    <p>The GC valve system (Agilent 7890, University of Rochester, commissioned 09/07/2017) controls gas-flow routing through the columns and sample loops. In the reference schematic below, <strong>all valves are shown in the OFF position</strong>.</p>
+    <div class="table-scroll"><table class="sop-table">
+      <tr><th>Valve / component</th><th>Function</th></tr>
+      <tr><td>4 / 904</td><td>Sample-selection valve &mdash; routes Sample&nbsp;1 or Sample&nbsp;2 in; Common Sample Vent out</td></tr>
+      <tr><td>3 / 701</td><td>Valve with 250&nbsp;µL loop &mdash; front section</td></tr>
+      <tr><td>2 / 800 / 502 / 870</td><td>Central multi-function valve with 250&nbsp;µL loop and SAMPLE VENT</td></tr>
+      <tr><td>1 / 702</td><td>Rear valve routing to Col&nbsp;3&nbsp;M2 / VENT</td></tr>
+      <tr><td>5 / 933 (M2)</td><td>Mandrel 41&nbsp;mm &mdash; Column&nbsp;3&nbsp;M2 carrier</td></tr>
+      <tr><td>6 / 933 (M1)</td><td>Mandrel 41&nbsp;mm &mdash; Column&nbsp;1&nbsp;M1 carrier</td></tr>
+      <tr><td>CAP (114)</td><td>Front capillary inlet with valve 860</td></tr>
+      <tr><td>EPC / PCM&nbsp;B</td><td>Front Inlet (Electronic Pressure Control) and Front Aux Channels&nbsp;1 &amp; 2</td></tr>
+    </table></div>
+    <figure><a href="img/valve-system-schematic.jpg" target="_blank"><img src="img/valve-system-schematic.jpg" alt="Agilent 7890 Valve System schematic (U. of Rochester, 09/07/2017): flow path from injection port through the valve compartment to the TCD and FID detectors. All valves shown in OFF position." loading="lazy"></a><figcaption>Agilent 7890 valve-system schematic (U. of Rochester, 09/07/2017): full flow path from the injection port through the valve compartment to the TCD and FID detectors. All valves shown in the OFF position.</figcaption></figure>
+  </section>
+
+  <section class="sop" id="columns">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Column Reference</h2></div>
+    <div class="table-scroll"><table class="sop-table">
+      <tr><th>Column</th><th>Part #</th><th>Type</th><th>Dimensions</th></tr>
+      <tr><td>Col 1, M1</td><td>G3591-81212</td><td>HayeSep A, 80/100 mesh</td><td>2.0 ft × 2.1 mm i.d.</td></tr>
+      <tr><td>Col 2, M1</td><td>G3591-81210</td><td>HayeSep A, 80/100 mesh</td><td>5.0 ft × 2.1 mm i.d.</td></tr>
+      <tr><td>Col 3, M2</td><td>G3591-81209</td><td>MolSieve 5A, 60/80 mesh</td><td>7.0 ft</td></tr>
+      <tr><td>Col 4</td><td>113-4362</td><td>GS-GasPro capillary</td><td>60 m × 0.32 mm i.d.</td></tr>
+    </table></div>
+    <div class="box info"><span class="box-label">Column installation</span>For the GC column installation procedure, refer to the Agilent guide: <a href="https://www.agilent.com/en/products/gas-chromatography/installgccolumn" target="_blank" rel="noopener">How to install a GC column</a>. After any column change, re-run calibration and re-identify all peaks (retention times shift).</div>
+  </section>
+
+  <section class="sop" id="troubleshooting">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Troubleshooting Common Issues</h2></div>
+    <div class="table-scroll"><table class="sop-table">
+      <tr><th>Issue</th><th>Solution</th></tr>
+      <tr><td>Temperature controller not powering on</td><td>Press the <strong>RESET</strong> button on the power switch &mdash; it may have tripped off.</td></tr>
+      <tr><td>Heating tape not working</td><td>Check for electrical shorts from heating tape wrapped on itself. Re-wrap the tape on the tubing only, not on other tape. If burnt out, replace it.</td></tr>
+      <tr><td>Bypass or reactor not holding pressure</td><td>Apply Snoop or soap water to all connection points. Bubbles = leak. Tighten carefully &mdash; do not over-tighten.</td></tr>
+      <tr><td>Brooks software shows no gas flow</td><td>Check cylinder pressure &mdash; replace if below 300 psi. For CO: check the EZ gas-cabinet controller on top of the gas cabinet; if it shows a red light, press its <strong>RESET</strong> button.</td></tr>
+      <tr><td>GC sequence aborts when started</td><td>Check the GC monitor for fault notices. Press <strong>Front Det</strong>, <strong>Back Det</strong>, and <strong>Oven</strong> to verify temperature stability. Check the Zero Air cylinder (replace if &lt;300 psi). If all else fails, restart the GC and computer.</td></tr>
+      <tr><td>Hydrocarbons showing in a bypass run</td><td>Residual hydrocarbons in the bypass line. Open the bypass outlet and flush with inert gas. Re-check all fittings for leaks with Snoop.</td></tr>
+      <tr><td>FID detector not igniting</td><td>Confirm the H₂ cylinder is ≥300 psi (replace if not) and restart the GC. If it still fails, manually ignite: <strong>Config &rarr; Front Det</strong> (or Back Det) &rarr; scroll to <strong>Ignore Ignitor</strong> &rarr; set to <strong>True</strong>. Note: with Ignore Ignitor on True, the GC cannot auto-detect whether the flame is lit.</td></tr>
+      <tr><td>Pressure build-up in the second back-pressure regulator</td><td>Replace the filter after the reactor. See the Reactor Maintenance SOP for the detailed procedure.</td></tr>
+    </table></div>
+    <div class="box warn"><span class="box-label">Before each run</span>Work through the <a href="page-reactor.html#checklist">Pre-Run Safety Checklist</a> &mdash; most of these issues are caught there before they interrupt an experiment.</div>
+  </section>
+</div>
+<footer>
+  <div class="footer-inner">
+    Agilent 7890 GC — Valve System &amp; Troubleshooting &middot; Porosoff Research Group, University of Rochester &middot; Last updated November 2026.
+    Verify all setpoints against your instrument before running. <a href="#top">&uarr; back to top</a>
+  </div>
+</footer>
+</body>
+</html>

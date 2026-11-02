@@ -115,23 +115,26 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
 <div class="page-nav">
   <div class="page-nav-inner">
       <a href="../index.html">&#8962; All SOPs</a>
-      <a href="index.html" class="active">Overview</a>
-      <a href="page-calibration.html">Calibration</a>
-      <a href="page-identification.html">Identification</a>
-      <a href="page-integration.html">Integration</a>
+        <a href="index.html" class="active">Overview</a>
+        <a href="page-reactor.html">Reactor &amp; Run</a>
+        <a href="page-calibration.html">Calibration</a>
+        <a href="page-identification.html">Identification</a>
+        <a href="page-integration.html">Integration</a>
+        <a href="page-data.html">Data Analysis</a>
+        <a href="page-reference.html">Valves &amp; Troubleshooting</a>
   </div>
 </div>
 <div class="container">
   <div class="hero">
     <span class="sec-label">Lab Standard Operating Procedure</span>
-    <h1 class="sop-title">Agilent 7890 GC &mdash; <em>Calibration &amp; Data Analysis</em></h1>
-    <p class="lead">Calibrating reactant and product gases, identifying compounds by retention time, and correcting integration in the Agilent Method Development software.</p>
+    <h1 class="sop-title">Agilent 7890 GC &mdash; <em>Reactor 242 Operating Guide</em></h1>
+    <p class="lead">A complete, beginner-friendly guide to the Reactor 242 gas chromatograph &mdash; from loading the catalyst and running a reaction through calibration, peak identification, integration, data analysis, and troubleshooting. All software work happens in Agilent Method Development (OpenLab).</p>
     <div class="meta-badges">
       <span class="badge">Tag: <b>U2136</b></span>
       <span class="badge">Model: <b>Agilent 7890 GC</b></span>
       <span class="badge">S/N: <b>US17383018</b></span>
       <span class="badge">Location: <b>G242</b></span>
-      <span class="badge">Updated: <b>July 2026</b></span>
+      <span class="badge">Updated: <b>November 2026</b></span>
     </div>
   </div>
   <div class="toc">
@@ -141,22 +144,32 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
 
   <section class="sop" id="about">
     <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">What This Guide Covers</h2></div>
-    <p>This guide covers <strong>data-side operation</strong> of the Agilent 7890 gas chromatograph shared by the
-    242 and 245 reactor systems: building calibration curves for reactant and product gases, identifying compounds
-    by retention time on the FID and TCD signals, and correcting peak integration. All work happens in the
+    <p>The <strong>gas chromatograph (GC)</strong> is the instrument you use to identify and quantify the gases produced
+    during catalytic reactions in the Reactor 242 flow system. It separates a gas mixture into individual components
+    (CO, H₂, CO₂, hydrocarbons, …) and measures how much of each is present. This guide takes a new lab member through
+    the whole workflow &mdash; setting up and running a reaction, calibrating and identifying compounds, correcting
+    integration, analyzing the data, and troubleshooting &mdash; with all software work in the
     <strong>Agilent Method Development / Data Analysis</strong> software (OpenLab).</p>
-    <p>For day-to-day reactor operation and injections, refer to the 242 and 245 reactor SOPs &mdash; this guide assumes
-    you already know how to run a Single Sample injection.</p>
+    <div class="box info"><span class="box-label">Two columns, two detectors</span>The GC uses a <strong>TCD</strong> (Thermal Conductivity Detector) for permanent gases &mdash; H₂, CO, CO₂, Ar, O₂ &mdash; and an <strong>FID</strong> (Flame Ionization Detector) for hydrocarbons &mdash; methane, ethane, ethylene, propane, propylene, and heavier species. Each detector has its own calibration and integration settings. Typical reactions studied here: <strong>Fischer&ndash;Tropsch synthesis (FTS)</strong>, <strong>reverse water-gas shift (RWGS)</strong>, and catalyst reduction / activation.</div>
     <div class="card-grid">
-      <a class="sec-card" href="page-calibration.html"><span class="card-tag">Section A</span><h3>Calibration</h3>
-        <p>Multi-point calibration for reactant gases via the Brooks MFCs, validation checks, and single-point
-        calibration for hydrocarbon products using the refinery calibration gas standard.</p></a>
-      <a class="sec-card" href="page-identification.html"><span class="card-tag">Section B</span><h3>Compound Identification</h3>
+      <a class="sec-card" href="page-reactor.html"><span class="card-tag">Start here</span><h3>Reactor Setup &amp; Running a Reaction</h3>
+        <p>Catalyst preparation and loading, reduction &amp; pressurization, running the GC sequence from bypass to
+        reactor, flowrates, and the pre-run safety checklist.</p></a>
+      <a class="sec-card" href="page-calibration.html"><span class="card-tag">Calibration</span><h3>Calibration</h3>
+        <p>Multi-point calibration for reactant gases via the Brooks MFCs, validation, single-point calibration for
+        hydrocarbon products, and deleting an outlier datapoint.</p></a>
+      <a class="sec-card" href="page-identification.html"><span class="card-tag">Identification</span><h3>Compound Identification</h3>
         <p>Time references, expected retention times, TCD elution order on the PLOT Q column, FID size-exclusion logic,
         and assigning or adding peaks.</p></a>
-      <a class="sec-card" href="page-integration.html"><span class="card-tag">Section C</span><h3>Integration Correction</h3>
-        <p>Manual integration of missed or mis-integrated peaks, and tuning the ChemStation integration
-        parameters and timed events.</p></a>
+      <a class="sec-card" href="page-integration.html"><span class="card-tag">Integration</span><h3>Integration Correction</h3>
+        <p>Manual integration of missed or mis-integrated peaks, and tuning the integration parameters and timed
+        events.</p></a>
+      <a class="sec-card" href="page-data.html"><span class="card-tag">Analysis</span><h3>Data Analysis</h3>
+        <p>Loading data and method, checking integrations, generating the report, and processing conversions and
+        selectivities in Excel.</p></a>
+      <a class="sec-card" href="page-reference.html"><span class="card-tag">Reference</span><h3>Valve System &amp; Troubleshooting</h3>
+        <p>The valve-routing system, column reference, and fixes for the problems you're most likely to hit while
+        running a reaction.</p></a>
     </div>
   </section>
   <section class="sop" id="equipment">
@@ -179,7 +192,7 @@ code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,
 </div>
 <footer>
   <div class="footer-inner">
-    Agilent 7890 GC — Calibration, Identification & Integration &middot; Porosoff Research Group, University of Rochester &middot; Last updated July 2026.
+    Agilent 7890 GC — Calibration, Identification & Integration &middot; Porosoff Research Group, University of Rochester &middot; Last updated November 2026.
     Verify all setpoints against your instrument before running. <a href="#top">&uarr; back to top</a>
   </div>
 </footer>

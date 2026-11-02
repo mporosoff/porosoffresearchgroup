@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agilent 7890 GC — Reactor Setup & Running a Reaction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628; --deep:#12203a; --mid:#1e3460;
+  --accent:#c8a951; --gold:#e8c56d; --cream:#fdf8f0;
+  --text:#1a2535; --muted:#5a6a80; --white:#ffffff;
+  --border:rgba(200,169,81,0.25); --border-light:rgba(0,0,0,0.08);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:2px;
+  --warn-bg:#fdf3e4; --warn-bd:#e0b25a; --warn-tx:#7a5410;
+  --danger-bg:#fbe9e7; --danger-bd:#c0574a; --danger-tx:#7c2418;
+  --ok-bg:#eef4ec; --ok-bd:#7d9b74; --ok-tx:#2f4d28;
+  --info-bg:#eaf0f6; --info-bd:#6d8db0; --info-tx:#25445f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:var(--mid)}
+.site-nav{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:var(--font-display);color:var(--gold);font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-sub{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.page-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(10,22,40,0.06)}
+.page-nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto;padding:0 1rem}
+.page-nav a{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0.85rem 1.1rem;white-space:nowrap;border-bottom:2px solid transparent}
+.page-nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+.page-nav a.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.hero{padding:2.6rem 0 1.4rem}
+.sec-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;display:block}
+h1.sop-title{font-family:var(--font-display);font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;color:var(--navy);line-height:1.18}
+h1.sop-title em{font-style:italic;color:var(--accent)}
+.hero .lead{color:var(--muted);font-size:0.95rem;margin-top:0.7rem;max-width:70ch}
+.meta-badges{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.1rem}
+.badge{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.7rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text)}
+.badge b{color:var(--navy);font-weight:500}
+.toc{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem 1.3rem;margin:1.4rem 0 2.2rem}
+.toc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+.toc ul{list-style:none;display:flex;flex-wrap:wrap;gap:0.5rem}
+.toc a{font-size:0.85rem;color:var(--mid);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;background:rgba(200,169,81,0.08);border:1px solid var(--border);border-radius:2rem;padding:0.3rem 0.9rem;transition:background .15s,border-color .15s,color .15s}
+.toc a::before{content:"↓";font-family:var(--font-mono);font-size:0.75rem;color:var(--accent)}
+.toc a:hover{color:var(--navy);background:rgba(200,169,81,0.18);border-color:var(--accent)}
+section.sop{margin:0 0 3rem}
+.sec-head{display:flex;align-items:baseline;gap:0.9rem;border-bottom:2px solid var(--border);padding-bottom:0.6rem;margin-bottom:1.2rem}
+.sec-num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:500}
+h2.sec-title{font-family:var(--font-display);font-size:1.45rem;font-weight:700;color:var(--navy)}
+h3{font-family:var(--font-display);font-size:1.08rem;font-weight:700;color:var(--navy);margin:1.5rem 0 0.7rem}
+section.sop p{margin:0.7rem 0;max-width:76ch}
+ol.steps{counter-reset:step;list-style:none;margin:0.8rem 0}
+ol.steps>li{counter-increment:step;position:relative;padding:0 0 0.95rem 3rem;max-width:76ch}
+ol.steps>li::before{content:counter(step);position:absolute;left:0;top:0.05rem;width:1.9rem;height:1.9rem;border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.78rem;color:var(--navy);background:var(--white)}
+ol.steps ul,ol.steps ol{margin:0.45rem 0 0 1.1rem}
+ol.steps ul li,ol.steps ol li{margin-bottom:0.3rem}
+ul.plain{margin:0.6rem 0 0.6rem 1.2rem}
+ul.plain li{margin-bottom:0.35rem;max-width:74ch}
+ul.check{list-style:none;margin:0.8rem 0}
+ul.check li{position:relative;padding:0.25rem 0 0.25rem 1.9rem;max-width:74ch}
+ul.check li::before{content:"\2610";position:absolute;left:0;top:0.15rem;color:var(--accent);font-size:1.1rem}
+.box{border:1px solid;border-left-width:4px;border-radius:var(--radius);padding:0.85rem 1.1rem;margin:1rem 0;font-size:0.92rem;max-width:80ch}
+.box .box-label{font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.box.info{background:var(--info-bg);border-color:var(--info-bd)}.box.info .box-label{color:var(--info-tx)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-bd)}.box.warn .box-label{color:var(--warn-tx)}
+.box.danger{background:var(--danger-bg);border-color:var(--danger-bd)}.box.danger .box-label{color:var(--danger-tx)}
+.box.ok{background:var(--ok-bg);border-color:var(--ok-bd)}.box.ok .box-label{color:var(--ok-tx)}
+figure{margin:1.2rem 0;max-width:720px}
+figure img{width:100%;height:auto;display:block;border:1px solid var(--border-light);border-radius:var(--radius);background:var(--white)}
+figcaption{font-size:0.8rem;color:var(--muted);margin-top:0.45rem;font-style:italic}
+figure.narrow{max-width:420px}
+.fig-row{display:flex;flex-wrap:wrap;gap:1.2rem}
+.fig-row figure{flex:1 1 280px;max-width:420px}
+table.sop-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem;background:var(--white)}
+table.sop-table th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;text-align:left;color:var(--navy);background:rgba(200,169,81,0.12);padding:0.6rem 0.8rem;border:1px solid var(--border-light)}
+table.sop-table td{padding:0.55rem 0.8rem;border:1px solid var(--border-light);vertical-align:top}
+table.sop-table tr:nth-child(even) td{background:rgba(10,22,40,0.02)}
+.table-scroll{overflow-x:auto}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 2rem 2.4rem;background:var(--white)}
+.footer-inner{max-width:960px;margin:0 auto;font-size:0.8rem;color:var(--muted)}
+.footer-inner a{color:var(--mid)}
+code,kbd{font-family:var(--font-mono);font-size:0.85em;background:rgba(10,22,40,0.06);padding:0.08em 0.35em;border-radius:2px}
+.path{font-family:var(--font-mono);font-size:0.85em;color:var(--navy)}
+@media print{
+  .site-nav,.page-nav,.toc{display:none}
+  body{background:#fff}
+  a{color:inherit;text-decoration:none}
+  section.sop{page-break-inside:avoid}
+}
+@media (max-width:640px){
+  .container{padding:0 1.1rem}
+  .site-nav{padding:0 1.1rem}
+  .nav-sub{display:none}
+}
+</style>
+</head>
+<body id="top">
+<nav class="site-nav">
+  <a class="nav-brand" href="https://porosoffresearchgroup.com/group.html">Porosoff Research Group</a>
+  <span class="nav-sub">Standard Operating Procedures</span>
+</nav>
+<div class="page-nav">
+  <div class="page-nav-inner">
+      <a href="../index.html">&#8962; All SOPs</a>
+      <a href="index.html">Overview</a>
+      <a href="page-reactor.html" class="active">Reactor &amp; Run</a>
+      <a href="page-calibration.html">Calibration</a>
+      <a href="page-identification.html">Identification</a>
+      <a href="page-integration.html">Integration</a>
+      <a href="page-data.html">Data Analysis</a>
+      <a href="page-reference.html">Valves &amp; Troubleshooting</a>
+  </div>
+</div>
+<div class="container">
+  <div class="hero">
+    <span class="sec-label">Reactor 242 — Agilent 7890 GC (U2136)</span>
+    <h1 class="sop-title">Reactor Setup &amp; <em>Running a Reaction</em></h1>
+    <p class="lead">Preparing and loading the catalyst, reduction and pressurization, and running the GC sequence from bypass through to a reaction &mdash; the day-to-day operation that produces the data you'll analyze.</p>
+    <div class="meta-badges">
+      <span class="badge">Reactor: <b>242</b></span>
+      <span class="badge">GC: <b>Agilent 7890 (U2136)</b></span>
+      <span class="badge">Location: <b>G242</b></span>
+      <span class="badge">Updated: <b>November 2026</b></span>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-label">Jump to a section</div>
+    <ul>
+      <li><a href="#catalyst">Prepare the Catalyst</a></li>
+      <li><a href="#load">Load the Reactor</a></li>
+      <li><a href="#reduction">Reduction &amp; Pressurization</a></li>
+      <li><a href="#sequence">Running the GC Sequence</a></li>
+      <li><a href="#switching">Switching Bypass &harr; Reactor</a></li>
+      <li><a href="#flowrates">Reaction Flowrates</a></li>
+      <li><a href="#checklist">Pre-Run Safety Checklist</a></li>
+    </ul>
+  </div>
+
+  <section class="sop" id="catalyst">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Prepare the Catalyst</h2></div>
+    <ol class="steps">
+      <li><strong>Weigh &amp; press.</strong> Load ~<strong>300 mg</strong> of catalyst into the sample-prep pressing die and press into a pellet on the Carver hydraulic press &mdash; <strong>do not exceed 4 metric tons</strong>.
+        <div class="fig-row">
+          <figure><a href="img/reactor-pellet-press.jpg" target="_blank"><img src="img/reactor-pellet-press.jpg" alt="Evacuable pellet press assembly: piston, anvils, die body, O-ring, base, and vacuum fitting." loading="lazy"></a><figcaption>Evacuable pellet press assembly: piston, anvils, die body, O-ring, base, and vacuum fitting.</figcaption></figure>
+          <figure><a href="img/reactor-carver-press.jpg" target="_blank"><img src="img/reactor-carver-press.jpg" alt="Carver hydraulic press used for pellet pressing — do not exceed 4 metric tons." loading="lazy"></a><figcaption>Carver hydraulic press &mdash; do not exceed 4 metric tons.</figcaption></figure>
+        </div></li>
+      <li><strong>Remove the pellet.</strong> Remove the piston rod and anvils. If the anvils are stuck, place two spare anvils on the bottom and gently press to lift them free.
+        <figure class="narrow"><a href="img/reactor-die-topview.jpg" target="_blank"><img src="img/reactor-die-topview.jpg" alt="Top view of die with spare anvils placed on the bottom for pellet removal." loading="lazy"></a><figcaption>Top view of the die with spare anvils placed on the bottom for pellet removal.</figcaption></figure></li>
+      <li><strong>Clean the die.</strong> Wipe with Kimwipes &rarr; blow with house air &rarr; wipe with an acetone-soaked Kimwipe &rarr; blow dry. Ensure no sample remains on the inner wall.</li>
+      <li><strong>Crush &amp; sieve.</strong> Gently crush the pellet with a mortar and pestle (do <em>not</em> grind to a fine powder). Sieve at <strong>212&nbsp;µm</strong>. Repeat until you have enough material.</li>
+    </ol>
+    <div class="box danger"><span class="box-label">Quartz wool safety</span>Load quartz wool <strong>in the fume hood</strong> &mdash; never in open air. It can irritate the lungs. Keep the container closed when not in use.</div>
+  </section>
+
+  <section class="sop" id="load">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Load the Reactor</h2></div>
+    <ol class="steps">
+      <li><strong>Mark the thermocouple position.</strong> Use a stainless-steel rod to measure and mark the length of the thermocouple on the reactor setup <em>before</em> loading, so the catalyst ends up at the correct depth.
+        <figure><a href="img/reactor-thermocouple-rod.jpg" target="_blank"><img src="img/reactor-thermocouple-rod.jpg" alt="Marking the thermocouple position: stainless-steel rod alongside the reactor thermocouple with a tape mark." loading="lazy"></a><figcaption>Marking the thermocouple position with the stainless-steel rod.</figcaption></figure></li>
+      <li><strong>Load catalyst.</strong> Using the marked rod as a guide, load the sieved catalyst into the ¼&quot; stainless-steel reactor, <strong>sandwiched between two small pinches of quartz wool</strong>.
+        <figure><a href="img/reactor-loaded.jpg" target="_blank"><img src="img/reactor-loaded.jpg" alt="Loaded reactor: catalyst between quartz wool, thermocouple mark and gas-flow direction indicated." loading="lazy"></a><figcaption>Loaded reactor &mdash; catalyst between quartz wool, with the thermocouple mark and gas-flow direction noted (the thermocouple runs opposite to the gas flow).</figcaption></figure></li>
+      <li><strong>Connect the reactor.</strong> Connect the ¼&quot; reactor to the gas line and furnace. Insert the thermocouple in the same direction as the stainless-steel rod until it touches the quartz wool.</li>
+    </ol>
+  </section>
+
+  <section class="sop" id="reduction">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Reduction &amp; Pressurization</h2></div>
+    <ol class="steps">
+      <li><strong>Switch to reactor flow.</strong> Switch the 3-way valve to the reactor and start flowing pure H₂ at <strong>40 ml/min</strong> (or the recommended rate).</li>
+      <li><strong>Pressurize to 50 psi.</strong> Turn the pressure regulator to <strong>50 psi</strong> (or recommended). Check for leaks with Snoop at all inlet/outlet connections &mdash; bubbles = leak; tighten.
+        <figure class="narrow"><a href="img/reactor-thermocouple-furnace.jpg" target="_blank"><img src="img/reactor-thermocouple-furnace.jpg" alt="Reactor thermocouple inserted into the furnace — the marked rod sets the correct insertion depth." loading="lazy"></a><figcaption>Reactor thermocouple inserted into the furnace at the marked depth.</figcaption></figure></li>
+      <li><strong>Heat the outlet line.</strong> Start the heating tape on the reactor outlet / GC inlet. Set the Variable Autotransformer to ~<strong>40% (~125&nbsp;°C)</strong> to prevent water condensation in the GC line.</li>
+      <li><strong>Start the reduction program.</strong> Run the reduction heating program &mdash; typically ramp at <strong>10&nbsp;°C/min to 350&nbsp;°C, hold 2&nbsp;hours</strong>.</li>
+    </ol>
+    <div class="table-scroll"><table class="sop-table">
+      <tr><th>Function</th><th>Temperature (°C)</th><th>Ramp rate (°C/min)</th><th>Duration (hr)</th></tr>
+      <tr><td>Catalyst reduction</td><td>350</td><td>10</td><td>2</td></tr>
+      <tr><td>FTS reaction</td><td>300</td><td>10</td><td>12+</td></tr>
+      <tr><td>RWGS reaction</td><td>350</td><td>10</td><td>12+</td></tr>
+    </table></div>
+  </section>
+
+  <section class="sop" id="sequence">
+    <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Running the GC Sequence (Bypass First)</h2></div>
+    <ol class="steps">
+      <li><strong>Set reaction gas flowrates.</strong> In the <strong>Brooks Smart</strong> software, enter the specific reaction gas flowrates (see Section 06). Reduce pressure to 0 psi to flush out the bypass, then pressurize to <strong>300 psi</strong>.</li>
+      <li><strong>Start the GC sequence.</strong> Start the sequence as: <strong>4&ndash;5 bypass runs &rarr; 1 hr spacer &rarr; 36 data points (12 hr run) &rarr; standby</strong>. Confirm the correct acquisition method is selected.</li>
+      <li><strong>Monitor the bypass TCD.</strong> Confirm only reactant gases appear in the TCD at the expected retention times (below). Nitrogen appearing could indicate air entry.
+        <div class="table-scroll"><table class="sop-table">
+          <tr><th>Gas</th><th>Expected TCD retention time</th></tr>
+          <tr><td>H₂</td><td>~2.75 min</td></tr>
+          <tr><td>CO₂</td><td>~3.5 min</td></tr>
+          <tr><td>Ar</td><td>~6 min</td></tr>
+          <tr><td>CO</td><td>~10.5 min</td></tr>
+        </table></div></li>
+    </ol>
+    <div class="box info"><span class="box-label">If nitrogen appears in the TCD</span>Set the GC back-pressure regulator to ~<strong>5 psi</strong>. If it was just residual air in the line, it will disappear after the first 1&ndash;2 bypass runs.</div>
+  </section>
+
+  <section class="sop" id="switching">
+    <div class="sec-head"><span class="sec-num">05</span><h2 class="sec-title">Switching Bypass &harr; Reactor</h2></div>
+    <p>Once the bypass runs look clean, switch the flow from bypass to the reactor:</p>
+    <ol class="steps">
+      <li>Close the bypass outlet.</li>
+      <li>Switch the three-way valve to the reactor.</li>
+      <li>Open the reactor outlet.</li>
+      <li>Wait a few minutes; confirm the GC is at <strong>300 psi</strong>.</li>
+      <li>Double-check gas flowrates, valve positions, temperature, and heating tapes.</li>
+    </ol>
+    <div class="fig-row">
+      <figure><a href="img/valve-reactor-to-bypass.jpg" target="_blank"><img src="img/valve-reactor-to-bypass.jpg" alt="Switching from reactor to bypass, numbered order: 1 Reactor Shutoff Valve, 2 3-Way Valve, 3 Bypass Shutoff Valve." loading="lazy"></a><figcaption>Reactor &rarr; bypass (order): <strong>1</strong> Reactor Shutoff Valve, <strong>2</strong> 3-Way Valve, <strong>3</strong> Bypass Shutoff Valve.</figcaption></figure>
+      <figure><a href="img/valve-bypass-to-reactor.jpg" target="_blank"><img src="img/valve-bypass-to-reactor.jpg" alt="Switching from bypass to reactor, numbered order: 1 Bypass Shutoff Valve, 2 3-Way Valve, 3 Reactor Shutoff Valve." loading="lazy"></a><figcaption>Bypass &rarr; reactor (order): <strong>1</strong> Bypass Shutoff Valve, <strong>2</strong> 3-Way Valve, <strong>3</strong> Reactor Shutoff Valve.</figcaption></figure>
+    </div>
+    <div class="box info"><span class="box-label">GC method files</span>Use <code>242_PlotQ_90C.amx</code> (detects alcohols, ~20 min run) or <code>242_GasPro</code> (heavier hydrocarbons, ~25 min run). Check with lab members if a file name has changed.</div>
+  </section>
+
+  <section class="sop" id="flowrates">
+    <div class="sec-head"><span class="sec-num">06</span><h2 class="sec-title">Typical Reaction Gas Flowrates</h2></div>
+    <div class="table-scroll"><table class="sop-table">
+      <tr><th>Reaction</th><th>CO₂ (ml/min)</th><th>CO (ml/min)</th><th>H₂ (ml/min)</th><th>Ar (ml/min)</th></tr>
+      <tr><td>FTS</td><td>&mdash;</td><td>10</td><td>20</td><td>15</td></tr>
+      <tr><td>RWGS</td><td>10</td><td>&mdash;</td><td>30</td><td>5</td></tr>
+    </table></div>
+    <div class="box warn"><span class="box-label">When the reaction is complete</span>Always set the GC to <strong>SLEEP</strong> mode before leaving.</div>
+  </section>
+
+  <section class="sop" id="checklist">
+    <div class="sec-head"><span class="sec-num">07</span><h2 class="sec-title">Pre-Run Safety Checklist</h2></div>
+    <p>Before starting any experiment, run through this checklist:</p>
+    <ul class="check">
+      <li>Catalyst loaded and reactor connected properly</li>
+      <li>All connections checked with Snoop &mdash; no leaks</li>
+      <li>Gas cylinder pressures all &gt; 300 psi</li>
+      <li>Heating tape wrapped correctly (not on itself)</li>
+      <li>Variable Autotransformer set to ~40% for the outlet line</li>
+      <li>Correct GC acquisition method selected</li>
+      <li>FID and TCD temperatures stable</li>
+      <li>Brooks software showing correct flowrates</li>
+      <li>GC back-pressure regulator set to ~5 psi</li>
+      <li>Quartz wool loaded in the fume hood</li>
+    </ul>
+    <div class="box info"><span class="box-label">Next</span>With the reaction running and data collecting, move on to <a href="page-calibration.html">Calibration</a>, <a href="page-identification.html">Identification</a>, <a href="page-integration.html">Integration</a>, and <a href="page-data.html">Data Analysis</a>.</div>
+  </section>
+</div>
+<footer>
+  <div class="footer-inner">
+    Agilent 7890 GC — Reactor Setup &amp; Running a Reaction &middot; Porosoff Research Group, University of Rochester &middot; Last updated November 2026.
+    Verify all setpoints against your instrument before running. <a href="#top">&uarr; back to top</a>
+  </div>
+</footer>
+</body>
+</html>
